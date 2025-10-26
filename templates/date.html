@@ -21,7 +21,13 @@
                 <div class="col-md-8">
                     <div class="card-body">
                         <h3 class="card-title">{{ date.name }}</h3>
-                        <p class="card-text text-muted">{{ date.place }} ・ {{ date.subject }}</p>
+                        <p class="card-text text-muted">見つけた場所: {{ date.place }}</p>
+                        {%- if date.subject %}
+                        <p class="card-text text-muted">種類: {{ date.subject }}</p>
+                        {%- endif %}
+                        {%- if date.explanatorytext %}
+                        <p class="card-text"><strong>説明:</strong> {{ date.explanatorytext }}</p>
+                        {%- endif %}
                         <p>投稿者: {{ date.user_id }}</p>
                         <p>いいね: {{ date.goodpoint }}</p>
                     </div>

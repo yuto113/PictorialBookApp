@@ -95,7 +95,11 @@
                     </a>
                     <div class="card-body">
                         <h5 class="card-title mb-1">{{ date.name }}</h5>
-                        <p class="card-text text-muted small mb-2">{{ date.place }} ・ {{ date.subject }}</p>
+                        <p class="card-text text-muted small mb-1">見つけた場所: {{ date.place }}</p>
+                        {%- if date.subject %}
+                        <p class="card-text text-muted small mb-1">種類: {{ date.subject }}</p>
+                        {%- endif %}
+                        <!-- explanatorytext は一覧ページには表示しない -->
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
                                 {% if date.user_id == 2 %}
@@ -123,7 +127,7 @@
 
     <footer class="footer text-center">
         <div class="container">
-            <small>© {{ now().year }} 図鑑 — みんなで作るオンライン図鑑</small>
+            <small>© {{ now().year }} 図鑑 — {{ verj }}</small>
         </div>
     </footer>
 

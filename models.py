@@ -22,6 +22,9 @@ class Date(db.Model):
     subject = db.Column(db.Text)
     imagepass = db.Column(db.Text)
     goodpoint = db.Column(db.Integer, default=0)  # いいね数のカラムを追加
+    # 公式ユーザ向けの追加メタ情報
+    # `subject` は公式の「種類」として利用します（既存DBと互換）。
+    explanatorytext = db.Column(db.Text, nullable=True) # 説明文（公式のみ入力）
     
     # リレーションシップ設定
     user = db.relationship(

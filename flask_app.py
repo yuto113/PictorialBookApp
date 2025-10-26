@@ -20,6 +20,13 @@ def utility_now():
     # display times like "2025-10-26 11:44:39" (no microseconds)
     return dict(now=lambda: datetime.now(tz=ZoneInfo("Asia/Tokyo")).replace(microsecond=0))
 
+
+@app.context_processor
+def inject_verj():
+    # Provide a global `verj` variable to all templates.
+    # If a `VERJ` setting exists in config.py, prefer that; otherwise use the default text.
+    return dict(verj=app.config.get('VERJ', 'ver.1.0'))
+
 @app.route('/user')
 def user_page():
     # user_id = session.get('user_id')
@@ -137,15 +144,28 @@ def upload():
     if request.method == 'POST':
         file = request.files['file']
         name = request.form['name']
-        subject = request.form['description']
+        # place（見つけた場所）をフォームで受け取る
+        place = request.form.get('place')
+        # `subject` は公式用の「種類」として扱う（存在しない場合はNone）
+        subject = None
+        explanatorytext = None
+        try:
+            if session.get('user_id') == 2:
+                subject = request.form.get('subject')
+                explanatorytext = request.form.get('explanatorytext')
+        except Exception:
+            subject = None
+            explanatorytext = None
         if file:
             save_date = Date(
                 user_id=session['user_id'],
                 name=name,
+                place=place,
                 subject=subject,
+                explanatorytext=explanatorytext,
                 imagepass=file.filename,
                 goodpoint=0,
-                )
+            )
             db.session.add(save_date)
             db.session.commit()
             file.save(f'static/uploads/{file.filename}')
