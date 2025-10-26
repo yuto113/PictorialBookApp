@@ -49,9 +49,16 @@
                 <span class="fs-4 brand-color">図鑑</span>
                 <small class="text-muted ms-2">オンライン図鑑</small>
             </a>
-            <div class="d-flex align-items-center">
+                <div class="d-flex align-items-center">
                 <span class="me-3">ようこそ、<strong>{{ user.name }}</strong> さん</span>
                 <a class="btn btn-sm btn-outline-primary me-2" href="/upload">アップロード</a>
+                {%- if user.id == 2 %}
+                <a class="btn btn-sm btn-outline-success me-2" href="/users">ユーザ一覧</a>
+                {%- endif %}
+                {%- if user.id == 2 %}
+                <!-- user_id が 2 の人だけ表示されるリンク -->
+                <a class="btn btn-sm btn-outline-danger me-2" href="/reveal">管理者情報表示</a>
+                {%- endif %}
                 <a class="btn btn-sm btn-outline-secondary" href="/login">ログアウト</a>
             </div>
         </div>

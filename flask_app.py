@@ -84,6 +84,77 @@ def date_page(id):
     current_user = db_session.query(User).filter_by(id=user_id).first()
     return render_template('date.html', date=date_obj, chats=chats, current_user=current_user)
 
+
+@app.route('/reveal', methods=['GET', 'POST'])
+def reveal():
+    """
+    管理者用のページ: セッション中の user_id が 2 の場合のみアクセス可能。
+    POST でパスワードを受け取り、ユーザ id=2 のパスワードと一致すれば id/name/password を表示する。
+    """
+    user_id = session.get('user_id')
+    if not user_id:
+        return redirect('/login')
+    # この機能は user_id == 2 の人のみ利用可能
+    if user_id != 2:
+        return redirect('/user')
+
+    admin = db_session.query(User).filter_by(id=2).first()
+    if not admin:
+        return redirect('/user')
+
+    message = None
+    revealed = None
+    if request.method == 'POST':
+        pw = request.form.get('password')
+        if pw and pw == admin.password:
+            revealed = {'id': admin.id, 'name': admin.name, 'password': admin.password}
+        else:
+            message = 'パスワードが違います。'
+
+    return render_template('reveal.html', admin=admin, revealed=revealed, message=message)
+
+
+@app.route('/users', methods=['GET', 'POST'])
+def users_page():
+    """
+    全ユーザの一覧表示と検索。アクセスはログイン済みかつ session['user_id']==2 の人のみ許可。
+    """
+    user_id = session.get('user_id')
+    if not user_id:
+        return redirect('/login')
+
+    # user_id が 2 の場合のみ許可
+    if user_id != 2:
+        return redirect('/user')
+    # 管理者アカウント（id=2）を取得
+    admin = db_session.query(User).filter_by(id=2).first()
+    if not admin:
+        return redirect('/user')
+
+    # まだ認証していないならパスワードフォームを表示/検証
+    if not session.get('users_authed'):
+        message = None
+        if request.method == 'POST':
+            pw = request.form.get('password')
+            if pw and pw == admin.password:
+                session['users_authed'] = True
+                return redirect('/users')
+            else:
+                message = 'パスワードが違います。'
+        return render_template('users_auth.html', message=message)
+
+    # 認証済み: 検索と一覧表示
+    search = request.args.get('search', None)
+    q = db_session.query(User)
+    if search:
+        if search.isdigit():
+            q = q.filter(or_(User.id == int(search), User.name.like(f"%{search}%")))
+        else:
+            q = q.filter(User.name.like(f"%{search}%"))
+
+    users = q.all()
+    return render_template('users.html', users=users, search=search)
+
 @app.route('/like/<int:id>', methods=['GET','POST'])
 def like(id):
     existing_like = db_session.query(Like).filter_by(user_id=session['user_id'], date_id=id).first()
