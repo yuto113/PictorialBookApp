@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="ja">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>図鑑 - {{ date.name }}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+</head>
+
+<body>
+    <div class="container py-4">
+        <a href="/user" class="btn btn-sm btn-outline-secondary mb-3">← 戻る</a>
+
+        <div class="card mb-4">
+            <div class="row g-0">
+                <div class="col-md-4">
+                    <img src="{{ url_for('static', filename='uploads/' + date.imagepass) }}" class="img-fluid rounded-start" alt="{{ date.name }}">
+                </div>
+                <div class="col-md-8">
+                    <div class="card-body">
+                        <h3 class="card-title">{{ date.name }}</h3>
+                        <p class="card-text text-muted">{{ date.place }} ・ {{ date.subject }}</p>
+                        <p>投稿者: {{ date.user_id }}</p>
+                        <p>いいね: {{ date.goodpoint }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <h4>チャット</h4>
+        <div class="mb-3">
+            {% for chat in chats %}
+            <div class="border rounded p-2 mb-2">
+                <div class="d-flex justify-content-between">
+                    <strong>{{ chat.user.name }}</strong>
+                    <small class="text-muted">{{ chat.created_at }}</small>
+                </div>
+                <div class="mt-1">{{ chat.message }}</div>
+            </div>
+            {% else %}
+            <div class="text-muted">まだコメントがありません。投稿してみましょう。</div>
+            {% endfor %}
+        </div>
+
+        <form method="post">
+            <div class="mb-3">
+                <label for="message" class="form-label">メッセージ</label>
+                <textarea class="form-control" id="message" name="message" rows="3" required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">送信</button>
+        </form>
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>

@@ -1,4 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.sql import func
 
 db = SQLAlchemy()
 
@@ -9,6 +10,7 @@ class User(db.Model):
     name = db.Column(db.Text)
     password = db.Column(db.Text)
     likes = db.relationship('Like',back_populates='user')
+    chats = db.relationship('Chat', back_populates='user')
 
 class Date(db.Model):
     __tablename__ = 'date'
@@ -27,6 +29,7 @@ class Date(db.Model):
         backref=db.backref('dates', cascade='all, delete-orphan', passive_deletes=True)
     )
     likes = db.relationship('Like', back_populates='date')
+    chats = db.relationship('Chat', back_populates='date', cascade='all, delete-orphan', passive_deletes=True)
 
 class Like(db.Model):
     __tablename__ = 'like'
@@ -38,3 +41,15 @@ class Like(db.Model):
 
     user = db.relationship('User', back_populates='likes')
     date = db.relationship('Date', back_populates='likes')
+
+class Chat(db.Model):
+    __tablename__ = 'chat'
+    
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id', ondelete='CASCADE'), nullable=False)
+    date_id = db.Column(db.Integer, db.ForeignKey('date.id', ondelete='CASCADE'), nullable=False)
+    message = db.Column(db.Text, nullable=False)
+    created_at = db.Column(db.DateTime(timezone=True), default=func.now(), nullable=False)
+    
+    user = db.relationship('User', back_populates='chats')
+    date = db.relationship('Date', back_populates='chats')

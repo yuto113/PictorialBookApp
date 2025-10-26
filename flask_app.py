@@ -1,8 +1,8 @@
-from flask import Flask, render_template, request,redirect,session
-from models import User,db,Date,Like
-from flask import Flask,request
+from flask import Flask, render_template, request, redirect, session
+from models import User, db, Date, Like, Chat
 from sqlalchemy import or_
 from datetime import datetime
+from zoneinfo import ZoneInfo
 
 app = Flask(__name__)
 app.secret_key='secret_key'
@@ -15,7 +15,10 @@ db_session = db.session
 @app.context_processor
 def utility_now():
     # Provide a `now()` function to Jinja templates (e.g. now().year)
-    return dict(now=lambda: datetime.now())
+    # Return current time in Japan Standard Time (UTC+9)
+    # Return a datetime in JST with microseconds cleared so templates
+    # display times like "2025-10-26 11:44:39" (no microseconds)
+    return dict(now=lambda: datetime.now(tz=ZoneInfo("Asia/Tokyo")).replace(microsecond=0))
 
 @app.route('/user')
 def user_page():
@@ -27,7 +30,8 @@ def user_page():
         Illustrated_ev = request.args.get("ev",None)
         Illustrated_ki = request.args.get("ki",None)
         user_id = session['user_id']
-        user = db_session.query(User).all()
+        # ログイン中のユーザ情報だけ取得する
+        user = db_session.query(User).filter_by(id=user_id).first()
         date = db_session.query(Date)
         if search:
             date = date.filter(
@@ -45,6 +49,33 @@ def user_page():
 
         return render_template('user.html', user=user,dates=date, filter_ev=Illustrated_ev, filter_ki=Illustrated_ki)
     return redirect('/login')
+
+
+@app.route('/date/<int:id>', methods=['GET', 'POST'])
+def date_page(id):
+    # 日付（=データ）ごとの詳細ページとチャットの投稿を扱う
+    user_id = session.get('user_id')
+    if not user_id:
+        return redirect('/login')
+
+    date_obj = db_session.query(Date).filter_by(id=id).first()
+    if not date_obj:
+        return redirect('/user')
+
+    if request.method == 'POST':
+        message = request.form.get('message')
+        if message:
+            # Store created_at in JST so that DB entries reflect Japan time
+            # and remove microseconds for consistent formatting
+            new_chat = Chat(user_id=user_id, date_id=id, message=message,
+                            created_at=datetime.now(tz=ZoneInfo("Asia/Tokyo")).replace(microsecond=0))
+            db_session.add(new_chat)
+            db_session.commit()
+            return redirect(f'/date/{id}')
+
+    chats = db_session.query(Chat).filter_by(date_id=id).order_by(Chat.created_at).all()
+    current_user = db_session.query(User).filter_by(id=user_id).first()
+    return render_template('date.html', date=date_obj, chats=chats, current_user=current_user)
 
 @app.route('/like/<int:id>', methods=['GET','POST'])
 def like(id):
