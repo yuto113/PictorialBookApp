@@ -278,7 +278,9 @@ def upload():
             )
             db.session.add(save_date)
             db.session.commit()
-            file.save(f'static/uploads/{file.filename}')
+            upload_dir = os.path.join('static', 'uploads')
+            os.makedirs(upload_dir, exist_ok=True)
+            file.save(os.path.join(upload_dir, file.filename))
             return render_template('upload.html', upload=file.filename)
     
     # fileを受け取る
