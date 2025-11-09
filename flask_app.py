@@ -29,14 +29,12 @@ def inject_verj():
 
 @app.route('/user')
 def user_page():
-    # user_id = session.get('user_id')
-    # if not user_id:
-    #     return redirect('/login')
-    if session['user_id']:
+    # show user page only when logged in
+    user_id = session.get('user_id')
+    if user_id:
         search = request.args.get("search",None)
         Illustrated_ev = request.args.get("ev",None)
         Illustrated_ki = request.args.get("ki",None)
-        user_id = session['user_id']
         # ログイン中のユーザ情報だけ取得する
         user = db_session.query(User).filter_by(id=user_id).first()
         date = db_session.query(Date)
@@ -88,30 +86,60 @@ def date_page(id):
 @app.route('/reveal', methods=['GET', 'POST'])
 def reveal():
     """
-    管理者用のページ: セッション中の user_id が 2 の場合のみアクセス可能。
-    POST でパスワードを受け取り、ユーザ id=2 のパスワードと一致すれば id/name/password を表示する。
+    自分の情報表示・編集ページ: ログイン済みの全ユーザが利用可能。
+    POST で現在のパスワードを受け取り、正しければ自分の id/name/password を表示する。
+    また表示後は現在のパスワードで確認して名前／パスワードの更新が可能。
     """
     user_id = session.get('user_id')
     if not user_id:
         return redirect('/login')
-    # この機能は user_id == 2 の人のみ利用可能
-    if user_id != 2:
-        return redirect('/user')
 
-    admin = db_session.query(User).filter_by(id=2).first()
-    if not admin:
+    # 対象は「ログイン中のユーザ」本人
+    user = db_session.query(User).filter_by(id=user_id).first()
+    if not user:
         return redirect('/user')
+    # # 管理者（id=2）は自己情報表示／編集対象から除外する
+    # if user.id == 2:
+    #     message = '管理者の自己情報表示はできません。'
+    #     return render_template('reveal.html', user=user, revealed=None, message=message)
+    # （以前は管理者を自己情報確認・編集から除外していましたが、除外しないように変更しました）
 
     message = None
     revealed = None
+    # Two POST flows:
+    # 1) initial confirmation: form posts 'password' to reveal current info
+    # 2) update submission: form posts with 'update' flag and fields to change
     if request.method == 'POST':
-        pw = request.form.get('password')
-        if pw and pw == admin.password:
-            revealed = {'id': admin.id, 'name': admin.name, 'password': admin.password}
-        else:
-            message = 'パスワードが違います。'
+        # Update submission
+        if request.form.get('update'):
+            current_pw = request.form.get('current_password')
+            new_name = request.form.get('name')
+            new_pw = request.form.get('new_password')
+            new_pw2 = request.form.get('new_password2')
 
-    return render_template('reveal.html', admin=admin, revealed=revealed, message=message)
+            # require current password for security
+            if not current_pw or current_pw != user.password:
+                message = '現在のパスワードが違います。'
+            else:
+                if new_pw:
+                    if new_pw != new_pw2:
+                        message = '新しいパスワードが一致しません。'
+                    else:
+                        user.password = new_pw
+                # update name regardless (if provided)
+                if new_name:
+                    user.name = new_name
+                db_session.commit()
+                revealed = {'id': user.id, 'name': user.name, 'password': user.password}
+                message = '更新しました。'
+        else:
+            # Confirmation flow: check password to reveal info
+            pw = request.form.get('password')
+            if pw and pw == user.password:
+                revealed = {'id': user.id, 'name': user.name, 'password': user.password}
+            else:
+                message = 'パスワードが違います。'
+    return render_template('reveal.html', user=user, revealed=revealed, message=message)
 
 
 @app.route('/users', methods=['GET', 'POST'])
@@ -123,27 +151,21 @@ def users_page():
     if not user_id:
         return redirect('/login')
 
-    # user_id が 2 の場合のみ許可
-    if user_id != 2:
-        return redirect('/user')
-    # 管理者アカウント（id=2）を取得
+    # 管理者アカウント（id=2）を取得（パスワード認証は管理者のパスワードを使用）
     admin = db_session.query(User).filter_by(id=2).first()
     if not admin:
         return redirect('/user')
 
-    # まだ認証していないならパスワードフォームを表示/検証
-    if not session.get('users_authed'):
-        message = None
-        if request.method == 'POST':
-            pw = request.form.get('password')
-            if pw and pw == admin.password:
-                session['users_authed'] = True
-                return redirect('/users')
-            else:
-                message = 'パスワードが違います。'
-        return render_template('users_auth.html', message=message)
+    # 現在のログインユーザ情報（トップの確認カードに表示するため）
+    current_user = db_session.query(User).filter_by(id=user_id).first()
 
-    # 認証済み: 検索と一覧表示
+    # 初期値
+    message = None
+    revealed = None
+    users = []
+    users_shown = False
+
+    # 検索クエリは用意するが、ユーザ一覧は password が正しく入力された場合のみ表示する
     search = request.args.get('search', None)
     q = db_session.query(User)
     if search:
@@ -152,25 +174,37 @@ def users_page():
         else:
             q = q.filter(User.name.like(f"%{search}%"))
 
-    users = q.all()
-    return render_template('users.html', users=users, search=search)
+    # POST で受け取ったパスワードが管理者パスワードと一致すれば一覧を表示する
+    if request.method == 'POST':
+        pw = request.form.get('password')
+        if pw and pw == admin.password:
+            # mark revealed for this render (do not persist in session)
+            # 管理者自身が一覧で自分のパスワード等を確認できないようにする
+            if current_user and current_user.id != 2:
+                revealed = {'id': current_user.id, 'name': current_user.name, 'password': current_user.password}
+            users = q.all()
+            users_shown = True
+        else:
+            message = 'パスワードが違います。'
+
+    return render_template('users.html', users=users, search=search, message=message, revealed=revealed, users_shown=users_shown)
 
 @app.route('/like/<int:id>', methods=['GET','POST'])
 def like(id):
-    existing_like = db_session.query(Like).filter_by(user_id=session['user_id'], date_id=id).first()
-    if existing_like:
-        return redirect('/user')
     user_id = session.get('user_id')
     if not user_id:
         return redirect('/login')
+
+    existing_like = db_session.query(Like).filter_by(user_id=user_id, date_id=id).first()
+    if existing_like:
+        return redirect('/user')
+
     new_like = Like(user_id=user_id, date_id=id)
     db.session.add(new_like)
     animal = db_session.query(Date).get(id)
     if animal:
         animal.goodpoint += 1
         db_session.commit()
-    # #     return ({'success': True, 'goodpoint': animal.goodpoint})
-    # # return ({'success': False}), 404
     return redirect('/user')
 
 
@@ -229,7 +263,7 @@ def upload():
             explanatorytext = None
         if file:
             save_date = Date(
-                user_id=session['user_id'],
+                user_id=session.get('user_id'),
                 name=name,
                 place=place,
                 subject=subject,
