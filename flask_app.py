@@ -3,6 +3,7 @@ from models import User, db, Date, Like, Chat
 from sqlalchemy import or_
 from datetime import datetime
 from zoneinfo import ZoneInfo
+import os
 
 app = Flask(__name__)
 app.secret_key='secret_key'
@@ -11,6 +12,10 @@ app.config.from_object('config')
 db.init_app(app)
 db_session = db.session
 
+with app.app_context():
+    db_path = app.config['SQLALCHEMY_DATABASE_URI'].replace('sqlite:///', '')
+    if not os.path.exists(db_path):
+        db.create_all()
 
 @app.context_processor
 def utility_now():
