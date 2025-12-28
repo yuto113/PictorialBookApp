@@ -111,7 +111,7 @@
                                 {% if date.user_id == 2 %}
                                 <span class="badge bg-warning text-dark">公式</span>
                                 {% else %}
-                                <span class="badge bg-secondary">投稿者: {{ date.user_id }}</span>
+                                <span class="badge bg-secondary">投稿者: {{ date.user.name }}</span>
                                 {% endif %}
                                 <span class="badge bg-info text-dark">いいね: {{ date.goodpoint }}</span>
                             </div>

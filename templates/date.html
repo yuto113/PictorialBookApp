@@ -28,7 +28,7 @@
                         {%- if date.explanatorytext %}
                         <p class="card-text"><strong>説明:</strong> {{ date.explanatorytext }}</p>
                         {%- endif %}
-                        <p>投稿者: {{ date.user_id }}</p>
+                        <p>投稿者: {{ date.user.name }}</p>
                         <p>いいね: {{ date.goodpoint }}</p>
                     </div>
                 </div>
