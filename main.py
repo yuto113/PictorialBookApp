@@ -8,6 +8,8 @@ import os
 from datetime import datetime
 from zoneinfo import ZoneInfo
 import shutil
+from header import Header
+from footer import Footer
 
 # データベース設定
 engine = create_engine(config.SQLALCHEMY_DATABASE_URI)
@@ -602,8 +604,10 @@ class PictorialBookApp:
 
     def like_date(self):
         selected = self.date_tree.selection()
+        selected = self.main.date_tree.selection()
         if selected:
             item = self.date_tree.item(selected)
+            item = self.main.date_tree.item(selected)
             date_name = item['values'][0]
             date_obj = db_session.query(Date).filter_by(name=date_name).first()
             if date_obj:
@@ -615,6 +619,7 @@ class PictorialBookApp:
                     db_session.commit()
                     messagebox.showinfo("成功", "いいねしました！")
                     self.load_dates()
+                    self.main.load_dates()
                 else:
                     messagebox.showinfo("情報", "すでにいいねしています")
 
