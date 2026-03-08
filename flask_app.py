@@ -276,7 +276,7 @@ def like(id):
         return redirect('/login')
 
     existing_like = db_session.query(Like).filter_by(user_id=user_id, date_id=id).first()
-    animal = db_session.query(Date).get(id)
+    animal = db_session.query(Date).filter_by(id=id).first()
     if existing_like:
         # いいね解除
         db_session.delete(existing_like)
@@ -285,7 +285,7 @@ def like(id):
     else:
         # いいね追加
         new_like = Like(user_id=user_id, date_id=id)
-        db.session.add(new_like)
+        db_session.add(new_like)
         if animal:
             animal.goodpoint += 1
     db_session.commit()
@@ -298,7 +298,7 @@ def login():
     if request.method == 'POST':
         id = request.form['id']
         password = request.form['password']
-        user = User.query.filter_by(id=id, password=password).first()
+        user = db_session.query(User).filter_by(id=id, password=password).first()
         
         if user:
             session['user_id'] = user.id
@@ -316,8 +316,8 @@ def signup():
         password_s2 = request.form['password_s2']
         if password_s == password_s2:
             new_user = User(name=name, password=password_s)
-            db.session.add(new_user)
-            db.session.commit()
+            db_session.add(new_user)
+            db_session.commit()
             return render_template('signup.html',messege='自分のIDは'+str(new_user.id)+'です')
         else:
             return render_template('signup.html',messege='パスワードが一致しません')
@@ -359,8 +359,8 @@ def upload():
                 ido=ido,
                 keido=keido
             )
-            db.session.add(save_date)
-            db.session.commit()
+            db_session.add(save_date)
+            db_session.commit()
             upload_dir = os.path.join('static', 'uploads')
             os.makedirs(upload_dir, exist_ok=True)
             file.save(os.path.join(upload_dir, file.filename))
