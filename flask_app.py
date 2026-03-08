@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, redirect, session
-from models import User, db, Date, Like, Chat
+from models import User, db, Date, Like, Chat, Friend
 from sqlalchemy import or_
 from datetime import datetime
 from zoneinfo import ZoneInfo
@@ -46,6 +46,7 @@ def user_page():
         search = request.args.get("search",None)
         Illustrated_ev = request.args.get("ev",None)
         Illustrated_ki = request.args.get("ki",None)
+        Illustrated_friend = request.args.get("friend",None)
         # ログイン中のユーザ情報だけ取得する
         user = db_session.query(User).filter_by(id=user_id).first()
         date = db_session.query(Date)
@@ -61,13 +62,22 @@ def user_page():
             date = date.filter(Date.user_id == 2)
         if Illustrated_ev == 'on':
             date = date.filter(Date.user_id != 2)
+        if Illustrated_friend:
+            # 特定のフレンドのデータを表示
+            date = date.filter(Date.user_id == int(Illustrated_friend))
         dates = date.all()
 
         # 各dateに対して、現在のユーザーがいいね済みかをチェック
         for d in dates:
             d.is_liked = db_session.query(Like).filter_by(user_id=user_id, date_id=d.id).first() is not None
 
-        return render_template('user.html', user=user,dates=dates, filter_ev=Illustrated_ev, filter_ki=Illustrated_ki)
+        # フレンドリストを取得
+        friends = db_session.query(User).join(Friend, 
+            ((Friend.user_id == user_id) & (Friend.friend_id == User.id) & (Friend.status == 'accepted')) |
+            ((Friend.friend_id == user_id) & (Friend.user_id == User.id) & (Friend.status == 'accepted'))
+        ).all()
+
+        return render_template('user.html', user=user,dates=dates, filter_ev=Illustrated_ev, filter_ki=Illustrated_ki, filter_friend=Illustrated_friend, friends=friends)
     return redirect('/login')
 
 
@@ -358,6 +368,163 @@ def upload():
     
     # fileを受け取る
     return render_template('upload.html')
+
+
+@app.route('/friend_search', methods=['GET', 'POST'])
+def friend_search():
+    user_id = session.get('user_id')
+    if not user_id:
+        return redirect('/login')
+    
+    if request.method == 'POST':
+        nickname = request.form.get('nickname')
+        if nickname:
+            users = db_session.query(User).filter(User.name.like(f'%{nickname}%')).all()
+            # 各ユーザーとの関係を取得
+            friendships = db_session.query(Friend).filter(
+                (Friend.user_id == user_id) | (Friend.friend_id == user_id)
+            ).all()
+            
+            # 各ユーザーの関係ステータスを計算
+            user_relations = {}
+            for user in users:
+                relation = {'status': 'none', 'is_requester': False}
+                for f in friendships:
+                    if (f.user_id == user.id and f.friend_id == user_id) or (f.friend_id == user.id and f.user_id == user_id):
+                        relation['status'] = f.status
+                        if f.user_id == user_id:
+                            relation['is_requester'] = True
+                        break
+                user_relations[user.id] = relation
+            
+            return render_template('friend_search.html', users=users, search=nickname, user_relations=user_relations, current_user_id=user_id)
+    
+    return render_template('friend_search.html')
+
+
+@app.route('/request_friend/<int:friend_id>', methods=['POST'])
+def request_friend(friend_id):
+    user_id = session.get('user_id')
+    if not user_id:
+        return redirect('/login')
+    
+    # 自分自身をフレンドに申請しない
+    if user_id == friend_id:
+        return redirect('/friend_search')
+    
+    # すでに申請済みかフレンドかチェック
+    existing = db_session.query(Friend).filter(
+        ((Friend.user_id == user_id) & (Friend.friend_id == friend_id)) |
+        ((Friend.user_id == friend_id) & (Friend.friend_id == user_id))
+    ).first()
+    
+    if not existing:
+        new_request = Friend(user_id=user_id, friend_id=friend_id, status='pending')
+        db_session.add(new_request)
+        db_session.commit()
+    
+    return redirect('/friend_search')
+
+
+@app.route('/accept_friend/<int:requester_id>', methods=['POST'])
+def accept_friend(requester_id):
+    user_id = session.get('user_id')
+    if not user_id:
+        return redirect('/login')
+    
+    # 申請を承認
+    request_record = db_session.query(Friend).filter(
+        Friend.user_id == requester_id,
+        Friend.friend_id == user_id,
+        Friend.status == 'pending'
+    ).first()
+    
+    if request_record:
+        request_record.status = 'accepted'
+        db_session.commit()
+    
+    return redirect('/friends')
+
+
+@app.route('/cancel_friend_request/<int:friend_id>', methods=['POST'])
+def cancel_friend_request(friend_id):
+    user_id = session.get('user_id')
+    if not user_id:
+        return redirect('/login')
+    
+    # 自分の申請をキャンセル
+    request_record = db_session.query(Friend).filter(
+        Friend.user_id == user_id,
+        Friend.friend_id == friend_id,
+        Friend.status == 'pending'
+    ).first()
+    
+    if request_record:
+        db_session.delete(request_record)
+        db_session.commit()
+    
+    return redirect('/friend_search')
+
+
+@app.route('/friends')
+def friends():
+    user_id = session.get('user_id')
+    if not user_id:
+        return redirect('/login')
+    
+    # フレンドを取得（acceptedのみ）
+    friends_list = db_session.query(User).join(Friend, 
+        ((Friend.user_id == user_id) & (Friend.friend_id == User.id) & (Friend.status == 'accepted')) |
+        ((Friend.friend_id == user_id) & (Friend.user_id == User.id) & (Friend.status == 'accepted'))
+    ).all()
+    
+    # 承認待ちの申請を取得
+    pending_requests = db_session.query(User).join(Friend,
+        (Friend.user_id == User.id) & (Friend.friend_id == user_id) & (Friend.status == 'pending')
+    ).all()
+    
+    return render_template('friends.html', friends=friends_list, pending_requests=pending_requests)
+
+
+@app.route('/remove_friend/<int:friend_id>', methods=['POST'])
+def remove_friend(friend_id):
+    user_id = session.get('user_id')
+    if not user_id:
+        return redirect('/login')
+    
+    # フレンド関係を削除
+    existing = db_session.query(Friend).filter(
+        ((Friend.user_id == user_id) & (Friend.friend_id == friend_id)) |
+        ((Friend.user_id == friend_id) & (Friend.friend_id == user_id))
+    ).first()
+    
+    if existing:
+        db_session.delete(existing)
+        db_session.commit()
+    
+    return redirect('/friends')
+
+
+@app.route('/friend_data/<int:friend_id>')
+def friend_data(friend_id):
+    user_id = session.get('user_id')
+    if not user_id:
+        return redirect('/login')
+    
+    # フレンドかチェック
+    is_friend = db_session.query(Friend).filter(
+        ((Friend.user_id == user_id) & (Friend.friend_id == friend_id)) |
+        ((Friend.user_id == friend_id) & (Friend.friend_id == user_id))
+    ).first()
+    
+    if not is_friend:
+        return redirect('/friends')
+    
+    # フレンドのデータを取得
+    friend = db_session.query(User).get(friend_id)
+    dates = db_session.query(Date).filter_by(user_id=friend_id).all()
+    
+    return render_template('friend_data.html', friend=friend, dates=dates)
 
 
 if __name__ == '__main__':

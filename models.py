@@ -11,6 +11,10 @@ class User(db.Model):
     password = db.Column(db.Text)
     likes = db.relationship('Like',back_populates='user')
     chats = db.relationship('Chat', back_populates='user')
+    friends = db.relationship('User', secondary='friends', 
+                              primaryjoin='User.id==Friend.user_id',
+                              secondaryjoin='User.id==Friend.friend_id',
+                              backref='friend_of')
 
 class Date(db.Model):
     __tablename__ = 'date'
@@ -58,3 +62,13 @@ class Chat(db.Model):
     
     user = db.relationship('User', back_populates='chats')
     date = db.relationship('Date', back_populates='chats')
+
+class Friend(db.Model):
+    __tablename__ = 'friends'
+    
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id', ondelete='CASCADE'), nullable=False)
+    friend_id = db.Column(db.Integer, db.ForeignKey('user.id', ondelete='CASCADE'), nullable=False)
+    status = db.Column(db.String(20), default='pending')  # pending, accepted, rejected
+    
+    __table_args__ = (db.UniqueConstraint('user_id', 'friend_id', name='_user_friend_uc'),)

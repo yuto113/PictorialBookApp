@@ -52,6 +52,8 @@
                 <div class="d-flex align-items-center">
                 <span class="me-3">ようこそ、<strong>{{ user.name }}</strong> さん</span>
                 <a class="btn btn-sm btn-outline-primary me-2" href="/upload">アップロード</a>
+                <a class="btn btn-sm btn-outline-info me-2" href="/friend_search">フレンド検索</a>
+                <a class="btn btn-sm btn-outline-info me-2" href="/friends">フレンドリスト</a>
                 {%- if user.id%}
                 <a class="btn btn-sm btn-outline-danger me-2" href="/reveal">アカウント設定</a>
                 {%- endif %}
@@ -83,6 +85,14 @@
                         <input class="form-check-input" type="checkbox" id="ki" name="ki"
                             onchange="this.form.submit()" {% if filter_ki %}checked{% endif %}>
                         <label class="form-check-label" for="ki">基本図鑑</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <select class="form-select form-select-sm d-inline-block w-auto" name="friend" onchange="this.form.submit()">
+                            <option value="">フレンド</option>
+                            {% for friend in friends %}
+                            <option value="{{ friend.id }}" {% if filter_friend == friend.id|string %}selected{% endif %}>{{ friend.name }}</option>
+                            {% endfor %}
+                        </select>
                     </div>
                 </form>
             </div>
