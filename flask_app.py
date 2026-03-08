@@ -70,6 +70,7 @@ def user_page():
         # 各dateに対して、現在のユーザーがいいね済みかをチェック
         for d in dates:
             d.is_liked = db_session.query(Like).filter_by(user_id=user_id, date_id=d.id).first() is not None
+            d.chat_count = db_session.query(Chat).filter_by(date_id=d.id).count()
 
         # フレンドリストを取得
         friends = db_session.query(User).join(Friend, 
