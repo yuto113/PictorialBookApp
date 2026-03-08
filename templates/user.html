@@ -117,7 +117,12 @@
                             </div>
                             <div>
                                 <a href="/like/{{ date.id }}" class="btn btn-sm {% if date.is_liked %}btn-danger{% else %}btn-outline-danger{% endif %} me-1">{% if date.is_liked %}いいね解除{% else %}いいね{% endif %}</a>
-                                <a href="/date/{{ date.id }}" class="btn btn-sm btn-outline-primary">詳細</a>
+                                <a href="/date/{{ date.id }}" class="btn btn-sm btn-outline-primary me-1">詳細</a>
+                                {% if date.user_id == user.id or user.id == 2 %}
+                                <form method="post" action="/delete_date/{{ date.id }}" class="d-inline">
+                                    <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('{{ date.name }}のデータを本当に消しますか？')">削除</button>
+                                </form>
+                                {% endif %}
                             </div>
                         </div>
                     </div>

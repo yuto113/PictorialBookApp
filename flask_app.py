@@ -117,6 +117,25 @@ def delete_chat(chat_id):
     return redirect(f'/date/{chat.date_id}')
 
 
+@app.route('/delete_date/<int:date_id>', methods=['POST'])
+def delete_date(date_id):
+    user_id = session.get('user_id')
+    if not user_id:
+        return redirect('/login')
+
+    date_obj = db_session.query(Date).filter_by(id=date_id).first()
+    if not date_obj:
+        return redirect('/user')
+
+    # 自分のデータまたは管理者（ID=2）の場合のみ削除可能
+    if date_obj.user_id != user_id and user_id != 2:
+        return redirect('/user')
+
+    db_session.delete(date_obj)
+    db_session.commit()
+    return redirect('/user')
+
+
 @app.route('/reveal', methods=['GET', 'POST'])
 def reveal():
     """
