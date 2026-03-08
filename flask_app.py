@@ -9,6 +9,9 @@ app = Flask(__name__)
 app.secret_key='secret_key'
 app.config.from_object('config')
 
+# グローバル変数でバージョン情報を管理
+app_verj = None
+
 db.init_app(app)
 db_session = db.session
 
@@ -29,7 +32,10 @@ def utility_now():
 @app.context_processor
 def inject_verj():
     # Provide a global `verj` variable to all templates.
-    # If a `VERJ` setting exists in config.py, prefer that; otherwise use the default text.
+    # If app_verj is set, use that; otherwise use config.py's VERJ setting
+    global app_verj
+    if app_verj:
+        return dict(verj=app_verj)
     return dict(verj=app.config.get('VERJ', 'ver.1.0'))
 
 @app.route('/user')
@@ -55,9 +61,13 @@ def user_page():
             date = date.filter(Date.user_id == 2)
         if Illustrated_ev == 'on':
             date = date.filter(Date.user_id != 2)
-        date = date.all()
+        dates = date.all()
 
-        return render_template('user.html', user=user,dates=date, filter_ev=Illustrated_ev, filter_ki=Illustrated_ki)
+        # 各dateに対して、現在のユーザーがいいね済みかをチェック
+        for d in dates:
+            d.is_liked = db_session.query(Like).filter_by(user_id=user_id, date_id=d.id).first() is not None
+
+        return render_template('user.html', user=user,dates=dates, filter_ev=Illustrated_ev, filter_ki=Illustrated_ki)
     return redirect('/login')
 
 
@@ -192,7 +202,24 @@ def users_page():
         else:
             message = 'パスワードが違います。'
 
-    return render_template('users.html', users=users, search=search, message=message, revealed=revealed, users_shown=users_shown)
+    return render_template('users.html', users=users, search=search, message=message, revealed=revealed, users_shown=users_shown, user_id=user_id)
+
+@app.route('/update_verj', methods=['POST'])
+def update_verj():
+    """
+    User ID が 2（管理者）の場合のみバージョン情報を更新可能
+    """
+    global app_verj
+    user_id = session.get('user_id')
+    if not user_id or user_id != 2:
+        return redirect('/login')
+    
+    verj = request.form.get('verj')
+    if verj:
+        app_verj = verj
+    
+    return redirect('/users')
+
 
 @app.route('/like/<int:id>', methods=['GET','POST'])
 def like(id):
@@ -201,15 +228,19 @@ def like(id):
         return redirect('/login')
 
     existing_like = db_session.query(Like).filter_by(user_id=user_id, date_id=id).first()
-    if existing_like:
-        return redirect('/user')
-
-    new_like = Like(user_id=user_id, date_id=id)
-    db.session.add(new_like)
     animal = db_session.query(Date).get(id)
-    if animal:
-        animal.goodpoint += 1
-        db_session.commit()
+    if existing_like:
+        # いいね解除
+        db_session.delete(existing_like)
+        if animal:
+            animal.goodpoint -= 1
+    else:
+        # いいね追加
+        new_like = Like(user_id=user_id, date_id=id)
+        db.session.add(new_like)
+        if animal:
+            animal.goodpoint += 1
+    db_session.commit()
     return redirect('/user')
 
 
@@ -256,6 +287,8 @@ def upload():
         name = request.form['name']
         # place（見つけた場所）をフォームで受け取る
         place = request.form.get('place')
+        ido=float(request.form.get('lat', 0)) if request.form.get('lat') else None
+        keido=float(request.form.get('lng', 0)) if request.form.get('lng') else None
         # `subject` は公式用の「種類」として扱う（存在しない場合はNone）
         subject = None
         explanatorytext = None
@@ -275,6 +308,8 @@ def upload():
                 explanatorytext=explanatorytext,
                 imagepass=file.filename,
                 goodpoint=0,
+                ido=ido,
+                keido=keido
             )
             db.session.add(save_date)
             db.session.commit()

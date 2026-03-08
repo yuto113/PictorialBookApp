@@ -53,7 +53,7 @@
                 <span class="me-3">ようこそ、<strong>{{ user.name }}</strong> さん</span>
                 <a class="btn btn-sm btn-outline-primary me-2" href="/upload">アップロード</a>
                 {%- if user.id%}
-                <a class="btn btn-sm btn-outline-danger me-2" href="/reveal">自己情報表示</a>
+                <a class="btn btn-sm btn-outline-danger me-2" href="/reveal">アカウント設定</a>
                 {%- endif %}
                 {%- if user.id == 2 %}
                 <a class="btn btn-sm btn-outline-success me-2" href="/users">ユーザ一覧</a>
@@ -116,7 +116,7 @@
                                 <span class="badge bg-info text-dark">いいね: {{ date.goodpoint }}</span>
                             </div>
                             <div>
-                                <a href="/like/{{ date.id }}" class="btn btn-sm btn-outline-danger me-1">いいね</a>
+                                <a href="/like/{{ date.id }}" class="btn btn-sm {% if date.is_liked %}btn-danger{% else %}btn-outline-danger{% endif %} me-1">{% if date.is_liked %}いいね解除{% else %}いいね{% endif %}</a>
                                 <a href="/date/{{ date.id }}" class="btn btn-sm btn-outline-primary">詳細</a>
                             </div>
                         </div>
