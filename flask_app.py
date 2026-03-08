@@ -98,6 +98,25 @@ def date_page(id):
     return render_template('date.html', date=date_obj, chats=chats, current_user=current_user)
 
 
+@app.route('/delete_chat/<int:chat_id>', methods=['POST'])
+def delete_chat(chat_id):
+    user_id = session.get('user_id')
+    if not user_id:
+        return redirect('/login')
+
+    chat = db_session.query(Chat).filter_by(id=chat_id).first()
+    if not chat:
+        return redirect('/user')
+
+    # 自分のコメントまたは管理者（ID=2）の場合のみ削除可能
+    if chat.user_id != user_id and user_id != 2:
+        return redirect(f'/date/{chat.date_id}')
+
+    db_session.delete(chat)
+    db_session.commit()
+    return redirect(f'/date/{chat.date_id}')
+
+
 @app.route('/reveal', methods=['GET', 'POST'])
 def reveal():
     """

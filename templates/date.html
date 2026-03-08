@@ -59,7 +59,14 @@
             <div class="border rounded p-2 mb-2">
                 <div class="d-flex justify-content-between">
                     <strong>{{ chat.user.name }}</strong>
-                    <small class="text-muted">{{ chat.created_at }}</small>
+                    <div>
+                        <small class="text-muted">{{ chat.created_at }}</small>
+                        {% if chat.user_id == current_user.id or current_user.id == 2 %}
+                        <form method="post" action="/delete_chat/{{ chat.id }}" class="d-inline ms-2">
+                            <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('このコメントを削除しますか？')">削除</button>
+                        </form>
+                        {% endif %}
+                    </div>
                 </div>
                 <div class="mt-1">{{ chat.message }}</div>
             </div>
