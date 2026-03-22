@@ -9,7 +9,7 @@ app = Flask(__name__)
 app.secret_key='secret_key'
 app.config.from_object('config')
 
-# グローバル変数でバージョン情報を管理
+# グローバル変数でバージョン情報を管理1
 app_verj = None
 
 db.init_app(app)
