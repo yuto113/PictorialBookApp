@@ -9,6 +9,9 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.Text)
     password = db.Column(db.Text)
+
+    icon_image = db.Column(db.Text, default='default.png')
+
     likes = db.relationship('Like',back_populates='user')
     chats = db.relationship('Chat', back_populates='user')
     friends = db.relationship('User', secondary='friends', 
@@ -32,6 +35,8 @@ class Date(db.Model):
     # `subject` は公式の「種類」として利用します（既存DBと互換）。
     explanatorytext = db.Column(db.Text, nullable=True) # 説明文（公式のみ入力）
     
+    is_hidden = db.Column(db.Integer, default=0)
+
     # リレーションシップ設定
     user = db.relationship(
         'User', 
@@ -60,6 +65,8 @@ class Chat(db.Model):
     message = db.Column(db.Text, nullable=False)
     created_at = db.Column(db.DateTime(timezone=True), default=func.now(), nullable=False)
     
+    is_hidden = db.Column(db.Integer, default=0)
+
     user = db.relationship('User', back_populates='chats')
     date = db.relationship('Date', back_populates='chats')
 
