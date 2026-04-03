@@ -321,8 +321,11 @@ def signup():
         print(request.form)
         password_s = request.form['password_s']
         password_s2 = request.form['password_s2']
+
+        icon = request.form.get('icon_image', 'default.png')
+
         if password_s == password_s2:
-            new_user = User(name=name, password=password_s)
+            new_user = User(name=name, password=password_s, icon_image=icon)
             db_session.add(new_user)
             db_session.commit()
             return render_template('signup.html',messege='自分のIDは'+str(new_user.id)+'です')

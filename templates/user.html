@@ -50,6 +50,11 @@
                 <small class="text-muted ms-2">オンライン図鑑</small>
             </a>
             <div class="d-flex align-items-center">
+                <img src="{{ url_for('static', filename='icons/' + (user.icon_image if user.icon_image else 'default.png')) }}" 
+                    width="40" height="40" 
+                    class="rounded-circle me-2 border" 
+                    style="object-fit: cover;"
+                    alt="ユーザーアイコン">
                 <span class="me-3">ようこそ、<strong>{{ user.name }}</strong> さん</span>
                 <a class="btn btn-sm btn-outline-primary me-2" href="/upload">アップロード</a>
                 <a class="btn btn-sm btn-outline-info me-2" href="/friend_search">フレンド検索</a>
