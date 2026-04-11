@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, session
+from flask import Flask, render_template, request, redirect, session, flash
 from models import User, db, Date, Like, Chat, Friend
 from sqlalchemy import or_
 from datetime import datetime
@@ -154,63 +154,63 @@ def delete_date(date_id):
     return redirect('/user')
 
 
-@app.route('/reveal', methods=['GET', 'POST'])
-def reveal():
-    """
-    自分の情報表示・編集ページ: ログイン済みの全ユーザが利用可能。
-    POST で現在のパスワードを受け取り、正しければ自分の id/name/password を表示する。
-    また表示後は現在のパスワードで確認して名前／パスワードの更新が可能。
-    """
-    user_id = session.get('user_id')
-    if not user_id:
-        return redirect('/login')
+# @app.route('/reveal', methods=['GET', 'POST'])
+# def reveal():
+#     """
+#     自分の情報表示・編集ページ: ログイン済みの全ユーザが利用可能。
+#     POST で現在のパスワードを受け取り、正しければ自分の id/name/password を表示する。
+#     また表示後は現在のパスワードで確認して名前／パスワードの更新が可能。
+#     """
+#     user_id = session.get('user_id')
+#     if not user_id:
+#         return redirect('/login')
 
-    # 対象は「ログイン中のユーザ」本人
-    user = db_session.query(User).filter_by(id=user_id).first()
-    if not user:
-        return redirect('/user')
-    # # 管理者（id=2）は自己情報表示／編集対象から除外する
-    # if user.id == 2:
-    #     message = '管理者の自己情報表示はできません。'
-    #     return render_template('reveal.html', user=user, revealed=None, message=message)
-    # （以前は管理者を自己情報確認・編集から除外していましたが、除外しないように変更しました）
+#     # 対象は「ログイン中のユーザ」本人
+#     user = db_session.query(User).filter_by(id=user_id).first()
+#     if not user:
+#         return redirect('/user')
+#     # # 管理者（id=2）は自己情報表示／編集対象から除外する
+#     # if user.id == 2:
+#     #     message = '管理者の自己情報表示はできません。'
+#     #     return render_template('reveal.html', user=user, revealed=None, message=message)
+#     # （以前は管理者を自己情報確認・編集から除外していましたが、除外しないように変更しました）
 
-    message = None
-    revealed = None
-    # Two POST flows:
-    # 1) initial confirmation: form posts 'password' to reveal current info
-    # 2) update submission: form posts with 'update' flag and fields to change
-    if request.method == 'POST':
-        # Update submission
-        if request.form.get('update'):
-            current_pw = request.form.get('current_password')
-            new_name = request.form.get('name')
-            new_pw = request.form.get('new_password')
-            new_pw2 = request.form.get('new_password2')
+#     message = None
+#     revealed = None
+#     # Two POST flows:
+#     # 1) initial confirmation: form posts 'password' to reveal current info
+#     # 2) update submission: form posts with 'update' flag and fields to change
+#     if request.method == 'POST':
+#         # Update submission
+#         if request.form.get('update'):
+#             current_pw = request.form.get('current_password')
+#             new_name = request.form.get('name')
+#             new_pw = request.form.get('new_password')
+#             new_pw2 = request.form.get('new_password2')
 
-            # require current password for security
-            if not current_pw or current_pw != user.password:
-                message = '現在のパスワードが違います。'
-            else:
-                if new_pw:
-                    if new_pw != new_pw2:
-                        message = '新しいパスワードが一致しません。'
-                    else:
-                        user.password = new_pw
-                # update name regardless (if provided)
-                if new_name:
-                    user.name = new_name
-                db_session.commit()
-                revealed = {'id': user.id, 'name': user.name, 'password': user.password}
-                message = '更新しました。'
-        else:
-            # Confirmation flow: check password to reveal info
-            pw = request.form.get('password')
-            if pw and pw == user.password:
-                revealed = {'id': user.id, 'name': user.name, 'password': user.password}
-            else:
-                message = 'パスワードが違います。'
-    return render_template('reveal.html', user=user, revealed=revealed, message=message)
+#             # require current password for security
+#             if not current_pw or current_pw != user.password:
+#                 message = '現在のパスワードが違います。'
+#             else:
+#                 if new_pw:
+#                     if new_pw != new_pw2:
+#                         message = '新しいパスワードが一致しません。'
+#                     else:
+#                         user.password = new_pw
+#                 # update name regardless (if provided)
+#                 if new_name:
+#                     user.name = new_name
+#                 db_session.commit()
+#                 revealed = {'id': user.id, 'name': user.name, 'password': user.password}
+#                 message = '更新しました。'
+#         else:
+#             # Confirmation flow: check password to reveal info
+#             pw = request.form.get('password')
+#             if pw and pw == user.password:
+#                 revealed = {'id': user.id, 'name': user.name, 'password': user.password}
+#             else:
+#                 message = 'パスワードが違います。'
+#     return render_template('reveal.html', user=user, revealed=revealed, message=message)
 
 
 @app.route('/users', methods=['GET', 'POST'])
@@ -311,7 +311,10 @@ def login():
         if user:
             session['user_id'] = user.id
             return redirect('/user')
-
+        
+        else:
+            flash('ログインに失敗しました。名前かパスワードが間違っています。', 'danger')
+            return render_template('login.html')
         
     return render_template('login.html')
 
@@ -537,28 +540,74 @@ def friend_data(friend_id):
     
     return render_template('friend_data.html', friend=friend, dates=dates)
 
-@app.route('/profile/<int:user_id>')
+@app.route('/profile/<int:user_id>', methods=['GET', 'POST'])
 def profile(user_id):
-    login_id = session.get('user_id')  # 今ログインしている「自分」のID
-    target_user = User.query.get(user_id)  # 見ようとしている「相手」のデータ
-    
+    # 1. 表示するユーザーの情報を取得
+    target_user = User.query.get(user_id)
     if not target_user:
-        return redirect('/user')
+        return "ユーザーが見つかりません", 404
 
-    # 1. その人の投稿を取得（YuutoくんのDBに合わせて Date クラスを使います）
-    posts = Date.query.filter_by(user_id=user_id, is_hidden=0).all()
-
-    # 2. 自分と相手がフレンドかどうかをチェック
-    is_friend = Friend.query.filter_by(user_id=login_id, friend_id=user_id).first()
-    
-    # 3. 自分のページかどうかを判定
+    # ログインしている自分のIDを取得
+    login_id = session.get('user_id')
+    # 本人かどうかの判定（これが無いと編集ボタンが出ません！）
     is_me = (login_id == user_id)
 
-    return render_template('profile.html', 
-                            target_user=target_user, 
-                            posts=posts, 
-                            is_friend=is_friend,
-                            is_me=is_me)
+    # 2. 画像の保存ボタンが押された時の処理
+    # 2. 保存ボタン（POST）が押された時の処理
+    # 2. 保存ボタン（POST）が押された時の処理
+    if request.method == 'POST':
+        if is_me: # 本人だけが変更できる
+            
+            # --- ★追加：パスワードのセキュリティチェック ---
+            current_pw = request.form.get('current_password')
+            new_pw = request.form.get('new_password')
+
+            # パスワード欄に何か入力されている場合
+            if current_pw or new_pw:
+                # 現在のパスワードが合っているか確認
+                if target_user.password == current_pw:
+                    if new_pw: # 新しいパスワードがあれば上書き
+                        target_user.password = new_pw
+                        flash('パスワードも新しく更新しました！', 'success')
+                else:
+                    # パスワードが間違っている場合は、名前や画像の保存もキャンセルして弾く！
+                    flash('現在のパスワードが間違っています。変更はキャンセルされました。', 'danger')
+                    return redirect(f'/profile/{user_id}')
+
+            # --- 名前の処理 ---
+            new_name = request.form.get('user_name')
+            if new_name:
+                target_user.name = new_name
+
+            # --- 画像の処理 ---
+            file = request.files.get('icon_file')
+            if file and file.filename != '':
+                filename = secure_filename(f"user_{user_id}_{file.filename}")
+                file_path = os.path.join(app.root_path, 'static', 'icons', filename)
+                file.save(file_path)
+                target_user.icon_image = filename
+                
+            # 問題がなければ全部まとめてデータベースに保存！
+            db.session.commit()
+            
+            # パスワード変更がなかった場合のメッセージ
+            if not (current_pw or new_pw):
+                flash('プロフィールを更新しました！', 'success')
+            
+        return redirect(f'/profile/{user_id}')
+
+    # 3. ユーザーの投稿一覧を取得
+    user_dates = Date.query.filter_by(user_id=user_id, is_hidden=0).order_by(Date.id.desc()).all()
+    
+    # 4. フレンドかどうかの判定（元の機能の復活！）
+    is_friend = False
+    if login_id:
+        friend_check = Friend.query.filter_by(user_id=login_id, friend_id=user_id).first()
+        if friend_check:
+            is_friend = True
+
+    # ★ ここがエラーの原因でした！ target_user=target_user に直しています！
+    return render_template('profile.html', target_user=target_user, dates=user_dates, is_me=is_me, is_friend=is_friend)
 
 @app.route('/toggle_hide/<int:post_id>')
 def toggle_hide(post_id):

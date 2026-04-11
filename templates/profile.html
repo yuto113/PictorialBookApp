@@ -22,7 +22,8 @@
 
             <div class="mt-3">
                 {% if is_me %}
-                <a href="/account" class="btn btn-outline-primary px-4">プロフィールを編集</a>
+                <button type="button" class="btn btn-outline-primary px-4" data-bs-toggle="modal"
+                    data-bs-target="#editProfileModal">プロフィールを編集</button>
                 {% else %}
                 {% if is_friend %}
                 <a href="/delete_friend/{{ target_user.id }}" class="btn btn-danger px-4">フレンド解除</a>
@@ -79,6 +80,67 @@
             </div>
             {% endfor %}
         </div>
+
+        <div class="modal fade" id="editProfileModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form action="/profile/{{ target_user.id }}" method="post" enctype="multipart/form-data">
+                        <div class="modal-header">
+                            <h5 class="modal-title">プロフィールの編集</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+
+                        <div class="modal-body">
+                            <div class="mb-4">
+                                <label for="user_name" class="form-label fw-bold">なまえ</label>
+                                <input type="text" id="user_name" name="user_name" class="form-control"
+                                    value="{{ target_user.name }}" required>
+                            </div>
+
+                            <div class="mb-4">
+                                <label class="form-label fw-bold">新しいアイコン画像を選ぶ</label>
+                                <p class="text-muted small mb-1">変えない場合はそのままでOKです</p>
+                                <input type="file" name="icon_file" id="icon_file" class="form-control"
+                                    accept="image/*">
+                            </div>
+
+                            <hr class="my-4">
+
+                            <h6 class="fw-bold mb-3 text-danger">パスワードの変更（変更する場合のみ）</h6>
+                            <div class="mb-3">
+                                <label for="current_password" class="form-label text-muted small">現在のパスワード</label>
+                                <input type="password" id="current_password" name="current_password"
+                                    class="form-control" placeholder="変更しない場合は空欄でOK">
+                            </div>
+                            <div class="mb-2">
+                                <label for="new_password" class="form-label text-muted small">新しいパスワード</label>
+                                <input type="password" id="new_password" name="new_password" class="form-control"
+                                    placeholder="新しいパスワードを入力" minlength="1" maxlength="10">
+                            </div>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">やめる</button>
+                            <button type="submit" class="btn btn-primary">保存する</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- <div class="mb-3">
+                            <label class="form-label fw-bold">新しいアイコン画像を選ぶ</label>
+                            <p class="text-muted small mb-1">変えない場合はそのままでOKです</p>
+                            <input type="file" name="icon_file" class="form-control" accept="image/*">
+                        </div> -->
+    </div>
+    </form>
+    </div>
+    </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
 </body>
 
 </html>
