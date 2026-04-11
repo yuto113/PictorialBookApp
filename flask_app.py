@@ -4,6 +4,7 @@ from sqlalchemy import or_
 from datetime import datetime
 from zoneinfo import ZoneInfo
 import os
+from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
 app.secret_key='secret_key'
@@ -536,6 +537,92 @@ def friend_data(friend_id):
     
     return render_template('friend_data.html', friend=friend, dates=dates)
 
+@app.route('/profile/<int:user_id>')
+def profile(user_id):
+    login_id = session.get('user_id')  # 今ログインしている「自分」のID
+    target_user = User.query.get(user_id)  # 見ようとしている「相手」のデータ
+    
+    if not target_user:
+        return redirect('/user')
+
+    # 1. その人の投稿を取得（YuutoくんのDBに合わせて Date クラスを使います）
+    posts = Date.query.filter_by(user_id=user_id, is_hidden=0).all()
+
+    # 2. 自分と相手がフレンドかどうかをチェック
+    is_friend = Friend.query.filter_by(user_id=login_id, friend_id=user_id).first()
+    
+    # 3. 自分のページかどうかを判定
+    is_me = (login_id == user_id)
+
+    return render_template('profile.html', 
+                            target_user=target_user, 
+                            posts=posts, 
+                            is_friend=is_friend,
+                            is_me=is_me)
+
+@app.route('/toggle_hide/<int:post_id>')
+def toggle_hide(post_id):
+    login_id = session.get('user_id')
+    if not login_id:
+        return redirect('/login')
+
+    post = Date.query.get(post_id)
+
+    # 【修正ポイント】「自分の投稿」か「IDが2番（管理者）」ならOK
+    if post and (post.user_id == login_id or login_id == 2):
+        if post.is_hidden == 1:
+            post.is_hidden = 0
+        else:
+            post.is_hidden = 1
+        db.session.commit()
+
+    # もし管理者なら、トップページや詳細ページから操作することもあるので
+    # 直前のページに戻るようにすると便利です
+    return redirect(request.referrer or '/user')
+
+@app.route('/toggle_chat_hide/<int:chat_id>')
+def toggle_chat_hide(chat_id):
+    login_id = session.get('user_id')
+    
+    # 管理者（ID 2）だけがコメントを隠せるルールにする場合
+    if login_id != 2:
+        return "管理者権限が必要です", 403
+
+    chat = Chat.query.get(chat_id)
+    if chat:
+        chat.is_hidden = 1 if chat.is_hidden == 0 else 0
+        db.session.commit()
+
+    return redirect(request.referrer or '/user')
+
+@app.route('/account', methods=['GET', 'POST'])
+def account():
+    user_id = session.get('user_id')
+    if not user_id:
+        return redirect('/login')
+
+    user = User.query.get(user_id)
+
+    if request.method == 'POST':
+        # 名前の更新
+        user.name = request.form.get('name')
+        
+        # 🚩 画像アップロードの処理
+        file = request.files.get('icon_file')
+        if file and file.filename != '':
+            # ファイル名を安全なものにして保存
+            filename = secure_filename(f"user_{user.id}_{file.filename}")
+            # 保存先のパス（フォルダがない場合は作っておいてね！）
+            file_path = os.path.join(app.root_path, 'static', 'icons', filename)
+            file.save(file_path)
+            
+            # データベースにファイル名を記録
+            user.icon_image = filename
+
+        db.session.commit()
+        return redirect(f'/profile/{user.id}')
+
+    return render_template('account.html', user=user)
 
 if __name__ == '__main__':
 

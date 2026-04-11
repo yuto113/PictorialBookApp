@@ -50,12 +50,13 @@
                 <small class="text-muted ms-2">オンライン図鑑</small>
             </a>
             <div class="d-flex align-items-center">
-                <img src="{{ url_for('static', filename='icons/' + (user.icon_image if user.icon_image else 'default.png')) }}" 
-                    width="40" height="40" 
-                    class="rounded-circle me-2 border" 
-                    style="object-fit: cover;"
-                    alt="ユーザーアイコン">
-                <span class="me-3">ようこそ、<strong>{{ user.name }}</strong> さん</span>
+                <img src="{{ url_for('static', filename='icons/' + (user.icon_image if user.icon_image else 'default.png')) }}"
+                    width="40" height="40" class="rounded-circle me-2 border" style="object-fit: cover;" alt="ユーザーアイコン">
+                ようこそ、
+                <a href="/profile/{{ user.id }}" class="text-decoration-none text-dark">
+                    <strong>{{ user.name }}</strong>
+                </a>
+                さん
                 <a class="btn btn-sm btn-outline-primary me-2" href="/upload">アップロード</a>
                 <a class="btn btn-sm btn-outline-info me-2" href="/friend_search">フレンド検索</a>
                 <a class="btn btn-sm btn-outline-info me-2" href="/friends">フレンドリスト</a>
@@ -129,14 +130,23 @@
                         {%- if date.subject %}
                         <p class="card-text text-muted small mb-1">種類: {{ date.subject }}</p>
                         {%- endif %}
-                        <p class="card-text text-muted small mb-1" style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">見つけた場所: {{ date.place }}</p>
-                        <p class="card-text text-muted small mb-1" style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">詳しい説明: {{ date.explanatorytext }}</p>
+                        <p class="card-text text-muted small mb-1"
+                            style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
+                            見つけた場所: {{ date.place }}</p>
+                        <p class="card-text text-muted small mb-1"
+                            style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
+                            詳しい説明: {{ date.explanatorytext }}</p>
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
                                 {% if date.user_id == 2 %}
                                 <span class="badge bg-warning text-dark">公式</span>
                                 {% else %}
-                                <span class="badge bg-secondary">投稿者: {{ date.user.name }}</span>
+                                <p class="text-muted mb-2">
+                                    投稿者:
+                                    <a href="/profile/{{ date.user_id }}" class="text-decoration-none fw-bold">
+                                        {{ date.user.name }}
+                                    </a>
+                                </p>
                                 {% endif %}
                                 <span class="badge bg-info text-dark">いいね: {{ date.goodpoint }}</span>
                                 <span class="badge bg-info text-dark">コメント: {{ date.chat_count }}</span>
@@ -146,6 +156,12 @@
                                     class="btn btn-sm {% if date.is_liked %}btn-danger{% else %}btn-outline-danger{% endif %} me-1">{%
                                     if date.is_liked %}いいね解除{% else %}いいね{% endif %}</a>
                                 <a href="/date/{{ date.id }}" class="btn btn-sm btn-outline-primary me-1">詳細</a>
+                                {% if session['user_id'] == 2 %}
+                                <a href="/toggle_hide/{{ date.id }}"
+                                    class="btn btn-sm {{ 'btn-warning' if date.is_hidden == 1 else 'btn-outline-warning' }} me-1">
+                                    {{ '👁️ 表示中' if date.is_hidden == 0 else '🙈 非表示中' }}
+                                </a>
+                                {% endif %}
                                 {% if date.user_id == user.id or user.id == 2 %}
                                 <form method="post" action="/delete_date/{{ date.id }}" class="d-inline">
                                     <button type="submit" class="btn btn-sm btn-outline-danger"

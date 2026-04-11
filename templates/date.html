@@ -10,8 +10,8 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <style>
         /* 地図のスタイル */
-        #map { 
-            width: 100%; 
+        #map {
+            width: 100%;
             height: 200px;
             border-radius: 4px;
         }
@@ -25,11 +25,20 @@
         <div class="card mb-4">
             <div class="row g-0">
                 <div class="col-md-4">
-                    <img src="{{ url_for('static', filename='uploads/' + date.imagepass) }}" class="img-fluid rounded-start" alt="{{ date.name }}">
+                    <img src="{{ url_for('static', filename='uploads/' + date.imagepass) }}"
+                        class="img-fluid rounded-start" alt="{{ date.name }}">
                 </div>
                 <div class="col-md-8">
                     <div class="card-body">
                         <h3 class="card-title">{{ date.name }}</h3>
+                        {% if session['user_id'] == 2 %}
+                        <div class="mb-3 mt-2">
+                            <a href="/toggle_hide/{{ date.id }}"
+                                class="btn btn-sm {{ 'btn-warning' if date.is_hidden == 1 else 'btn-outline-warning' }}">
+                                {{ '👁️ 公開中（クリックで隠す）' if date.is_hidden == 0 else '🙈 非表示中（クリックで出す）' }}
+                            </a>
+                        </div>
+                        {% endif %}
                         <div class="row">
                             <div class="col-sm-7">
                                 {%- if date.subject %}
@@ -63,7 +72,8 @@
                         <small class="text-muted">{{ chat.created_at }}</small>
                         {% if chat.user_id == current_user.id or current_user.id == 2 %}
                         <form method="post" action="/delete_chat/{{ chat.id }}" class="d-inline ms-2">
-                            <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('{{ chat.user.name }}のコメントを本当に消しますか？')">削除</button>
+                            <button type="submit" class="btn btn-sm btn-outline-danger"
+                                onclick="return confirm('{{ chat.user.name }}のコメントを本当に消しますか？')">削除</button>
                         </form>
                         {% endif %}
                     </div>
@@ -102,20 +112,20 @@
                     mapEl.style.backgroundColor = '#f5f5f5';
                     return;
                 }
-                
+
                 // 座標が指定されている場合は地図を表示
                 const centerLat = parseFloat(lat);
                 const centerLng = parseFloat(lng);
-                
+
                 const map = L.map(mapEl).setView([centerLat, centerLng], 15);
-                
+
                 L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png', {
                     attribution: "<a href='https://maps.gsi.go.jp/development/ichiran.html' target='_blank'>地理院タイル</a>"
                 }).addTo(map);
-                
+
                 // マーカーを追加
                 L.marker([centerLat, centerLng]).addTo(map);
-                
+
                 map.invalidateSize();
             }
         });
