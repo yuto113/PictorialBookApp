@@ -72,7 +72,7 @@ def user_page():
         if Illustrated_friend:
             # 特定のフレンドのデータを表示
             date = date.filter(Date.user_id == int(Illustrated_friend))
-        dates = date.all()
+        dates = date.filter(Date.is_hidden != 1).order_by(Date.id.desc()).all()
 
         # 各dateに対して、現在のユーザーがいいね済みかをチェック
         for d in dates:
