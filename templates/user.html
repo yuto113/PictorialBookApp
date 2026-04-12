@@ -60,9 +60,7 @@
                 <a class="btn btn-sm btn-outline-primary me-2" href="/upload">アップロード</a>
                 <a class="btn btn-sm btn-outline-info me-2" href="/friend_search">フレンド検索</a>
                 <a class="btn btn-sm btn-outline-info me-2" href="/friends">フレンドリスト</a>
-                {%- if user.id%}
-                <a class="btn btn-sm btn-outline-danger me-2" href="/reveal">アカウント設定</a>
-                {%- endif %}
+                
                 {%- if session.get('is_admin') == 1 %}
                 <a class="btn btn-sm btn-outline-success me-2" href="/users">ユーザ一覧</a>
                 {%- endif %}

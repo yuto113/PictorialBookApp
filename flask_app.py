@@ -70,9 +70,11 @@ def user_page():
         if Illustrated_ev == 'on':
             date = date.filter(Date.user_id != 2)
         if Illustrated_friend:
-            # 特定のフレンドのデータを表示
             date = date.filter(Date.user_id == int(Illustrated_friend))
-        dates = date.filter(Date.is_hidden != 1).order_by(Date.id.desc()).all()
+        # 管理者（id=2）は非表示も見える、それ以外は非表示を除外
+        if user_id != 2:
+            date = date.filter(Date.is_hidden != 1)
+        dates = date.order_by(Date.id.desc()).all()
 
         # 各dateに対して、現在のユーザーがいいね済みかをチェック
         for d in dates:
@@ -111,7 +113,11 @@ def date_page(id):
             db_session.commit()
             return redirect(f'/date/{id}')
 
-    chats = db_session.query(Chat).filter_by(date_id=id).order_by(Chat.created_at).all()
+    chats_query = db_session.query(Chat).filter_by(date_id=id)
+    # 管理者（id=2）は非表示コメントも見える
+    if user_id != 2:
+        chats_query = chats_query.filter(Chat.is_hidden != 1)
+    chats = chats_query.order_by(Chat.created_at).all()
     current_user = db_session.query(User).filter_by(id=user_id).first()
     return render_template('date.html', date=date_obj, chats=chats, current_user=current_user)
 
