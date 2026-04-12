@@ -1,7 +1,5 @@
-# ↓↓↓ここから↓↓↓
-import os
+﻿import os
 os.makedirs('instance', exist_ok=True)
-# ↑↑↑ここまで↑↑↑
 
 from flask_app import app
 
