@@ -31,7 +31,7 @@
                 <div class="col-md-8">
                     <div class="card-body">
                         <h3 class="card-title">{{ date.name }}</h3>
-                        {% if session['user_id'] == 2 %}
+                        {% if session.get('is_admin') == 1 %}
                         <div class="mb-3 mt-2">
                             <a href="/toggle_hide/{{ date.id }}"
                                 class="btn btn-sm {{ 'btn-warning' if date.is_hidden == 1 else 'btn-outline-warning' }}">
@@ -70,7 +70,7 @@
                     <strong>{{ chat.user.name }}</strong>
                     <div>
                         <small class="text-muted">{{ chat.created_at }}</small>
-                        {% if chat.user_id == current_user.id or current_user.id == 2 %}
+                        {% if chat.user_id == current_user.id or session.get('is_admin') == 1 %}
                         <form method="post" action="/delete_chat/{{ chat.id }}" class="d-inline ms-2">
                             <button type="submit" class="btn btn-sm btn-outline-danger"
                                 onclick="return confirm('{{ chat.user.name }}のコメントを本当に消しますか？')">削除</button>

@@ -63,7 +63,7 @@
                 {%- if user.id%}
                 <a class="btn btn-sm btn-outline-danger me-2" href="/reveal">アカウント設定</a>
                 {%- endif %}
-                {%- if user.id == 2 %}
+                {%- if session.get('is_admin') == 1 %}
                 <a class="btn btn-sm btn-outline-success me-2" href="/users">ユーザ一覧</a>
                 {%- endif %}
                 <a class="btn btn-sm btn-outline-secondary" href="/login">ログアウト</a>
@@ -156,13 +156,13 @@
                                     class="btn btn-sm {% if date.is_liked %}btn-danger{% else %}btn-outline-danger{% endif %} me-1">{%
                                     if date.is_liked %}いいね解除{% else %}いいね{% endif %}</a>
                                 <a href="/date/{{ date.id }}" class="btn btn-sm btn-outline-primary me-1">詳細</a>
-                                {% if session['user_id'] == 2 %}
+                                {% if session.get('is_admin') == 1 %}
                                 <a href="/toggle_hide/{{ date.id }}"
                                     class="btn btn-sm {{ 'btn-warning' if date.is_hidden == 1 else 'btn-outline-warning' }} me-1">
                                     {{ '👁️ 表示中' if date.is_hidden == 0 else '🙈 非表示中' }}
                                 </a>
                                 {% endif %}
-                                {% if date.user_id == user.id or user.id == 2 %}
+                                {% if date.user_id == session.get('user_id') or session.get('is_admin') == 1 %}
                                 <form method="post" action="/delete_date/{{ date.id }}" class="d-inline">
                                     <button type="submit" class="btn btn-sm btn-outline-danger"
                                         onclick="return confirm('{{ date.name }}のデータを本当に消しますか？')">削除</button>

@@ -12,12 +12,14 @@ class User(db.Model):
 
     icon_image = db.Column(db.Text, default='default.png')
 
+    is_admin = db.Column(db.Integer, default=0)
+
     likes = db.relationship('Like',back_populates='user')
     chats = db.relationship('Chat', back_populates='user')
     friends = db.relationship('User', secondary='friends', 
-                              primaryjoin='User.id==Friend.user_id',
-                              secondaryjoin='User.id==Friend.friend_id',
-                              backref='friend_of')
+                                primaryjoin='User.id==Friend.user_id',
+                                secondaryjoin='User.id==Friend.friend_id',
+                                backref='friend_of')
 
 class Date(db.Model):
     __tablename__ = 'date'

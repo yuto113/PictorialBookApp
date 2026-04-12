@@ -182,7 +182,7 @@
         {% endif %}
 
         <!-- User ID が 2 の場合のみ表示：verj（バージョン）編集フォーム -->
-        {% if user_id == 2 and users_shown %}
+        {% if session.get('is_admin') == 1 and users_shown %}
         <div class="row justify-content-center mt-5">
             <div class="col-md-8 col-lg-6">
                 <div class="card card-upload p-4 bg-white">

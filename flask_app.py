@@ -310,8 +310,19 @@ def login():
         
         if user:
             session['user_id'] = user.id
+            session['is_admin'] = getattr(user, 'is_admin', 0)
             return redirect('/user')
         
+        if user and user.password == password:
+            # 自分のIDをセッションに保存
+            session['user_id'] = user.id
+            
+            # 【重要】データベースの is_admin（0か1）をセッションに保存する！
+            # これで、いちいち「IDが2か？」と確認しなくて済むようになります。
+            session['is_admin'] = getattr(user, 'is_admin', 0) 
+            
+            return redirect('/user')
+
         else:
             flash('ログインに失敗しました。名前かパスワードが間違っています。', 'danger')
             return render_template('login.html')
@@ -355,7 +366,7 @@ def upload():
         subject = None
         explanatorytext = None
         try:
-            if session.get('user_id') == 2:
+            if session.get('is_admin') == 1:
                 subject = request.form.get('subject')
                 explanatorytext = request.form.get('explanatorytext')
         except Exception:
@@ -633,8 +644,8 @@ def toggle_hide(post_id):
 def toggle_chat_hide(chat_id):
     login_id = session.get('user_id')
     
-    # 管理者（ID 2）だけがコメントを隠せるルールにする場合
-    if login_id != 2:
+    # 管理者フラグを使ってコメントを隠せるルールにする
+    if session.get('is_admin') != 1:
         return "管理者権限が必要です", 403
 
     chat = Chat.query.get(chat_id)
