@@ -6,6 +6,8 @@ from zoneinfo import ZoneInfo
 import os
 from werkzeug.utils import secure_filename
 
+os.makedirs('instance', exist_ok=True)
+
 app = Flask(__name__)
 app.secret_key='secret_key'
 app.config.from_object('config')
