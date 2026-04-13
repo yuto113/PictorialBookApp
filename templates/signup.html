@@ -8,10 +8,24 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
     <style>
-        body { background: linear-gradient(135deg,#fff7f0 0%, #f0f9ff 100%); color:#333; }
-        .brand-color { color: #ff6b6b; }
-        .card-auth { border-radius: 1rem; box-shadow: 0 10px 30px rgba(16,24,40,0.06); }
-        .footer { color: #666; padding: 1rem 0; }
+        body {
+            background: linear-gradient(135deg, #fff7f0 0%, #f0f9ff 100%);
+            color: #333;
+        }
+
+        .brand-color {
+            color: #ff6b6b;
+        }
+
+        .card-auth {
+            border-radius: 1rem;
+            box-shadow: 0 10px 30px rgba(16, 24, 40, 0.06);
+        }
+
+        .footer {
+            color: #666;
+            padding: 1rem 0;
+        }
     </style>
 </head>
 
@@ -40,24 +54,50 @@
 
                         <div class="mb-3">
                             <label for="password_s" class="form-label">パスワード</label>
-                            <input type="password" id="password_s" name="password_s" class="form-control" required minlength="1" maxlength="10" />
+                            <input type="password" id="password_s" name="password_s" class="form-control" required
+                                minlength="1" maxlength="10" />
                         </div>
 
                         <div class="mb-3">
                             <label for="password_s2" class="form-label">パスワード（確認）</label>
-                            <input type="password" id="password_s2" name="password_s2" class="form-control" required minlength="1" maxlength="10" />
+                            <input type="password" id="password_s2" name="password_s2" class="form-control" required
+                                minlength="1" maxlength="10" />
                         </div>
-                        
+
                         <div class="mb-3">
                             <label class="form-label">アイコンを選択</label>
                             <div class="d-flex gap-3 flex-wrap border p-3 rounded bg-light">
                                 <label class="text-center">
                                     <input type="radio" name="icon_image" value="default.png" checked>
                                     <div class="mt-1">
-                                        <img src="{{ url_for('static', filename='icons/default.png') }}" width="60" height="60" class="rounded-circle border">
+                                        <img src="{{ url_for('static', filename='icons/default.png') }}" width="60"
+                                            height="60" class="rounded-circle border">
                                     </div>
                                 </label>
-                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ↓↓↓ここから↓↓↓ -->
+                        <div class="mb-3">
+                            <div class="border rounded p-3 bg-light"
+                                style="max-height: 150px; overflow-y: scroll; font-size: 0.85rem;">
+                                <h6>利用規約</h6>
+                                <p>本サービス「図鑑」をご利用いただくにあたり、以下の利用規約をお読みください。</p>
+                                <p><strong>1. 著作権について</strong><br>
+                                    投稿する画像・文章の著作権はユーザー本人に帰属します。他者の著作物を無断で投稿することを禁止します。</p>
+                                <p><strong>2. 禁止事項</strong><br>
+                                    他のユーザーへの誹謗中傷、違法コンテンツの投稿、サービスの不正利用を禁止します。</p>
+                                <p><strong>3. 免責事項</strong><br>
+                                    本サービスの利用により生じた損害について、運営者は責任を負いません。</p>
+                                <p><strong>4. 個人情報</strong><br>
+                                    登録された情報はサービス運営の目的以外には使用しません。</p>
+                            </div>
+                            <div class="form-check mt-2">
+                                <input class="form-check-input" type="checkbox" id="agree" name="agree" required>
+                                <label class="form-check-label" for="agree">
+                                    利用規約に同意します
+                                </label>
+                            </div>
                         </div>
 
                         <div class="d-flex justify-content-between align-items-center">
