@@ -29,7 +29,9 @@
                 {% if is_friend %}
                 <a href="/delete_friend/{{ target_user.id }}" class="btn btn-danger px-4">フレンド解除</a>
                 {% else %}
-                <a href="/add_friend/{{ target_user.id }}" class="btn btn-success px-4">フレンド追加</a>
+                <form method="POST" action="/request_friend/{{ target_user.id }}" class="d-inline">
+                    <button type="submit" class="btn btn-success px-4">フレンド追加</button>
+                </form>
                 {% endif %}
                 {% endif %}
 
