@@ -36,8 +36,13 @@
                     <form method="post" enctype="multipart/form-data">
                         <div class="mb-4 text-center">
                             <label class="form-label d-block">現在のアイコン</label>
-                            <img src="{{ url_for('static', filename='icons/' + user.icon_image) }}" width="120"
-                                height="120" class="rounded-circle border mb-3 shadow-sm" style="object-fit: cover;">
+                            {% if user.icon_image and user.icon_image.startswith('http') %}
+                            <img src="{{ user.icon_image }}" width="120" height="120"
+                                class="rounded-circle border mb-3 shadow-sm" style="object-fit: cover;">
+                            {% else %}
+                            <img src="{{ url_for('static', filename='icons/default.png') }}" width="120" height="120"
+                                class="rounded-circle border mb-3 shadow-sm" style="object-fit: cover;">
+                            {% endif %}
                         </div>
 
                         <div class="mb-3">

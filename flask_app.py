@@ -5,6 +5,14 @@ from datetime import datetime
 from zoneinfo import ZoneInfo
 import os
 from werkzeug.utils import secure_filename
+import cloudinary
+import cloudinary.uploader
+
+cloudinary.config(
+    cloud_name=os.environ.get('CLOUDINARY_CLOUD_NAME'),
+    api_key=os.environ.get('CLOUDINARY_API_KEY'),
+    api_secret=os.environ.get('CLOUDINARY_API_SECRET')
+)
 
 os.makedirs('instance', exist_ok=True)
 
@@ -381,22 +389,21 @@ def upload():
             subject = None
             explanatorytext = None
         if file:
+            result = cloudinary.uploader.upload(file)
+            image_url = result['secure_url']
             save_date = Date(
-                user_id=session.get('user_id'),
-                name=name,
-                place=place,
-                subject=subject,
-                explanatorytext=explanatorytext,
-                imagepass=file.filename,
-                goodpoint=0,
-                ido=ido,
-                keido=keido
-            )
+                    user_id=session.get('user_id'),
+                    name=name,
+                    place=place,
+                    subject=subject,
+                    explanatorytext=explanatorytext,
+                    imagepass=image_url,
+                    goodpoint=0,
+                    ido=ido,
+                    keido=keido
+                )
             db_session.add(save_date)
             db_session.commit()
-            upload_dir = os.path.join('static', 'uploads')
-            os.makedirs(upload_dir, exist_ok=True)
-            file.save(os.path.join(upload_dir, file.filename))
             return render_template('upload.html', upload=file.filename)
     
     # fileを受け取る
@@ -677,6 +684,9 @@ def account():
         
         # 🚩 画像アップロードの処理
         file = request.files.get('icon_file')
+        if file and file.filename != '':
+            result = cloudinary.uploader.upload(file)
+            user.icon_image = result['secure_url']
         if file and file.filename != '':
             # ファイル名を安全なものにして保存
             filename = secure_filename(f"user_{user.id}_{file.filename}")

@@ -54,8 +54,13 @@
             </button>
             <div class="collapse navbar-collapse" id="navMenu">
                 <div class="d-flex flex-wrap align-items-center gap-2 mt-2 mt-lg-0 ms-auto">
-                    <img src="{{ url_for('static', filename='icons/' + (user.icon_image if user.icon_image else 'default.png')) }}"
-                        width="40" height="40" class="rounded-circle border" style="object-fit: cover;">
+                    {% if user.icon_image and user.icon_image.startswith('http') %}
+                    <img src="{{ user.icon_image }}" width="40" height="40" class="rounded-circle me-2 border"
+                        style="object-fit: cover;">
+                    {% else %}
+                    <img src="{{ url_for('static', filename='icons/default.png') }}" width="40" height="40"
+                        class="rounded-circle me-2 border" style="object-fit: cover;">
+                    {% endif %}
                     <span>ようこそ、<a href="/profile/{{ user.id }}" class="text-decoration-none text-dark"><strong>{{
                                 user.name }}</strong></a>さん</span>
                     <a class="btn btn-sm btn-outline-primary" href="/upload">アップロード</a>
@@ -115,11 +120,10 @@
             <div class="col">
                 <div class="card h-100 card-tilt shadow-sm border-0" style="border-radius: 1rem;">
                     {% if date.imagepass %}
-                    <a href="{{ url_for('static', filename='uploads/' + date.imagepass) }}" data-lightbox="group"
-                        class="d-block overflow-hidden"
+                    <a href="{{ date.imagepass }}" data-lightbox="group" class="d-block overflow-hidden"
                         style="border-top-left-radius:1rem; border-top-right-radius:1rem;">
-                        <img src="{{ url_for('static', filename='uploads/' + date.imagepass) }}" class="card-img-top"
-                            alt="{{ date.name }}" style="height:220px; object-fit:cover;">
+                        <img src="{{ date.imagepass }}" class="card-img-top" alt="{{ date.name }}"
+                            style="height:220px; object-fit:cover;">
                     </a>
                     {% else %}
                     <div class="text-center py-5 bg-light"

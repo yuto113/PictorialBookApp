@@ -12,9 +12,10 @@
         <div class="card shadow-sm p-4 text-center">
 
             <div class="mb-3">
-                <img src="{{ url_for('static', filename='icons/' + (target_user.icon_image if target_user.icon_image else 'default.png')) }}"
-                    width="150" height="150" class="rounded-circle border border-4 border-white shadow"
-                    style="object-fit: cover;">
+                {% if target_user.icon_image and target_user.icon_image.startswith('http') %}
+                <img src="{{ target_user.icon_image }}" {% else %} <img
+                    src="{{ url_for('static', filename='icons/default.png') }}" {% endif %} width="150" height="150"
+                    class="rounded-circle border border-4 border-white shadow" style="object-fit: cover;">
             </div>
 
             <h1 class="display-5 fw-bold">{{ target_user.name }}</h1>
