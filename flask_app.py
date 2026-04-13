@@ -608,10 +608,8 @@ def profile(user_id):
             # --- 画像の処理 ---
             file = request.files.get('icon_file')
             if file and file.filename != '':
-                filename = secure_filename(f"user_{user_id}_{file.filename}")
-                file_path = os.path.join(app.root_path, 'static', 'icons', filename)
-                file.save(file_path)
-                target_user.icon_image = filename
+                result = cloudinary.uploader.upload(file)
+                target_user.icon_image = result['secure_url']
                 
             # 問題がなければ全部まとめてデータベースに保存！
             db.session.commit()
@@ -627,13 +625,24 @@ def profile(user_id):
     
     # 4. フレンドかどうかの判定（元の機能の復活！）
     is_friend = False
+    is_pending = False
+    is_requester = False
     if login_id:
-        friend_check = Friend.query.filter_by(user_id=login_id, friend_id=user_id).first()
-        if friend_check:
-            is_friend = True
+        friend_relation = db_session.query(Friend).filter(
+            ((Friend.user_id == login_id) & (Friend.friend_id == user_id)) |
+            ((Friend.user_id == user_id) & (Friend.friend_id == login_id))
+        ).first()
+        if friend_relation:
+            if friend_relation.status == 'accepted':
+                is_friend = True
+            elif friend_relation.status == 'pending':
+                is_pending = True
+                is_requester = (friend_relation.user_id == login_id)
 
-    # ★ ここがエラーの原因でした！ target_user=target_user に直しています！
-    return render_template('profile.html', target_user=target_user, dates=user_dates, is_me=is_me, is_friend=is_friend)
+    return render_template('profile.html', target_user=target_user, dates=user_dates, is_me=is_me, is_friend=is_friend, is_pending=is_pending, is_requester=is_requester)
+
+    # # ★ ここがエラーの原因でした！ target_user=target_user に直しています！
+    # return render_template('profile.html', target_user=target_user, dates=user_dates, is_me=is_me, is_friend=is_friend)
 
 @app.route('/toggle_hide/<int:post_id>')
 def toggle_hide(post_id):
