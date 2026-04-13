@@ -711,6 +711,12 @@ def account():
 
     return render_template('account.html', user=user)
 
+@app.route('/')
+def index():
+    if session.get('user_id'):
+        return redirect('/user')
+    return redirect('/login')
+
 if __name__ == '__main__':
 
     app.run(debug=True)
