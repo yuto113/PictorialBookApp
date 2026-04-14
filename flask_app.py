@@ -353,7 +353,13 @@ def signup():
         password_s = request.form['password_s']
         password_s2 = request.form['password_s2']
 
-        icon = request.form.get('icon_image', 'default.png')
+        icon_type = request.form.get('icon_type', 'default')
+        icon = 'default.png'
+        if icon_type == 'upload':
+            file = request.files.get('icon_file')
+            if file and file.filename != '':
+                result = cloudinary.uploader.upload(file)
+                icon = result['secure_url']
 
         if password_s == password_s2:
             new_user = User(name=name, password=password_s, icon_image=icon)
