@@ -96,7 +96,7 @@
 
                         <!-- ↓↓↓ここから↓↓↓ -->
                         <div class="mb-3">
-                            <div class="border rounded p-3 bg-light"
+                            <div class="border rounded p-3 bg-light" id="terms_box"
                                 style="max-height: 150px; overflow-y: scroll; font-size: 0.85rem;">
                                 <h6 class="fw-bold">図鑑 利用規約</h6>
                                 <p>本サービス「図鑑」（以下「本サービス」）をご利用いただくにあたり、以下の利用規約（以下「本規約」）を必ずお読みください。本規約に同意いただけない場合は、本サービスをご利用いただけません。
@@ -190,6 +190,26 @@
         crossorigin="anonymous"></script>
 
     <script>
+        // 利用規約を最後まで読んだらチェックボックスを有効にする
+        const termsBox = document.getElementById('terms_box');
+        const agreeCheckbox = document.getElementById('agree');
+        const agreeLabel = document.getElementById('agree_label');
+
+        function checkScroll() {
+            const scrolled = termsBox.scrollTop + termsBox.clientHeight;
+            const total = termsBox.scrollHeight;
+            console.log(scrolled, total); // デバッグ用
+            if (scrolled >= total - 20) {
+                agreeCheckbox.disabled = false;
+                agreeLabel.textContent = '利用規約に同意します';
+                agreeLabel.classList.remove('text-muted');
+            }
+        }
+
+        termsBox.addEventListener('scroll', checkScroll);
+        // ページ読み込み時にも確認（内容が短い場合）
+        window.addEventListener('load', checkScroll);
+
         function toggleIconUpload() {
             const isUpload = document.getElementById('icon_upload').checked;
             document.getElementById('default_preview').style.display = isUpload ? 'none' : 'block';
