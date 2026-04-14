@@ -12,6 +12,8 @@ class User(db.Model):
 
     icon_image = db.Column(db.Text, default='default.png')
 
+    role = db.Column(db.Text, default='normal')
+
     is_admin = db.Column(db.Integer, default=0)
 
     likes = db.relationship('Like',back_populates='user')

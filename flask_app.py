@@ -330,13 +330,11 @@ def login():
             return redirect('/user')
         
         if user and user.password == password:
-            # 自分のIDをセッションに保存
+            if user.role == 'suspended':
+                flash('このアカウントは停止されています。管理者にお問い合わせください。', 'danger')
+                return render_template('login.html')
             session['user_id'] = user.id
-            
-            # 【重要】データベースの is_admin（0か1）をセッションに保存する！
-            # これで、いちいち「IDが2か？」と確認しなくて済むようになります。
-            session['is_admin'] = getattr(user, 'is_admin', 0) 
-            
+            session['is_admin'] = getattr(user, 'is_admin', 0)
             return redirect('/user')
 
         else:
@@ -372,6 +370,22 @@ def signup():
 
     return render_template('signup.html')
 
+@app.route('/update_role/<int:target_id>', methods=['POST'])
+def update_role(target_id):
+    user_id = session.get('user_id')
+    if not user_id or user_id != 2:
+        return redirect('/login')
+    
+    new_role = request.form.get('role')
+    if new_role not in ['normal', 'admin', 'limited', 'suspended']:
+        return redirect('/users')
+    
+    target_user = db_session.query(User).filter_by(id=target_id).first()
+    if target_user and target_id != 2:  # 管理者自身は変更不可
+        target_user.role = new_role
+        db_session.commit()
+    
+    return redirect('/users')
 
 #アップロードの機能を追加する。(エンドポイント)
 @app.route('/upload', methods=['GET', 'POST'])
