@@ -380,10 +380,10 @@ def update_role(target_id):
     if new_role not in ['normal', 'admin', 'limited', 'suspended']:
         return redirect('/users')
     
-    target_user = db_session.query(User).filter_by(id=target_id).first()
-    if target_user and target_id != 2:  # 管理者自身は変更不可
+    target_user = User.query.get(target_id)
+    if target_user and target_id != 2:
         target_user.role = new_role
-        db_session.commit()
+        db.session.commit()
     
     return redirect('/users')
 
