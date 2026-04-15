@@ -737,6 +737,16 @@ def index():
         return redirect('/user')
     return redirect('/login')
 
+# ↓↓↓ここから↓↓↓
+@app.route('/check_role')
+def check_role():
+    user_id = session.get('user_id')
+    if not user_id:
+        return 'ログインしていません'
+    user = db_session.query(User).filter_by(id=user_id).first()
+    return f'user_id={user.id}, name={user.name}, role={user.role}'
+# ↑↑↑ここまで↑↑↑
+
 if __name__ == '__main__':
 
     app.run(debug=True)
