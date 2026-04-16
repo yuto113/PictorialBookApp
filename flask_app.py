@@ -441,18 +441,19 @@ def signup():
 def update_role(target_id):
     user_id = session.get('user_id')
     if not user_id or user_id != 2:
-        return redirect('/login')
+        return {'error': 'unauthorized'}, 401
     
-    new_role = request.form.get('role')
+    data = request.get_json()
+    new_role = data.get('role') if data else request.form.get('role')
     if new_role not in ['normal', 'admin', 'limited', 'suspended']:
-        return redirect('/users')
+        return {'error': 'invalid role'}, 400
     
     target_user = User.query.get(target_id)
     if target_user and target_id != 2:
         target_user.role = new_role
         db.session.commit()
-    
-    return redirect('/users')@app.route('/update_role/<int:target_id>', methods=['POST'])
+        return {'success': True, 'role': new_role}
+    return {'error': 'not found'}, 404
 
 #アップロードの機能を追加する。(エンドポイント)
 @app.route('/upload', methods=['GET', 'POST'])
