@@ -390,6 +390,16 @@ def update_role(target_id):
 #アップロードの機能を追加する。(エンドポイント)
 @app.route('/upload', methods=['GET', 'POST'])
 def upload():
+
+    upload_user_id = session.get('user_id')
+    if not upload_user_id:
+        return redirect('/login')
+    upload_user = User.query.get(upload_user_id)
+    if upload_user and upload_user.role == 'limited':
+        flash('アップロード権限がありません。', 'danger')
+        return redirect('/user')
+    if upload_user and upload_user.role == 'suspended':
+        return redirect('/user')
     #リクエストがpostですか
     if request.method == 'POST':
         file = request.files['file']
