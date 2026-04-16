@@ -60,6 +60,11 @@ def user_page():
     # show user page only when logged in
     user_id = session.get('user_id')
     if user_id:
+        check_user = User.query.get(user_id)
+        if check_user and check_user.role == 'suspended':
+            session.clear()
+            flash('このアカウントは停止されています。管理者にお問い合わせください。', 'danger')
+            return redirect('/login')
         search = request.args.get("search",None)
         Illustrated_ev = request.args.get("ev",None)
         Illustrated_ki = request.args.get("ki",None)
