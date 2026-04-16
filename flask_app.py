@@ -535,6 +535,81 @@ def friend_search():
     
     return render_template('friend_search.html')
 
+@app.route('/api/friend/request/<int:friend_id>', methods=['POST'])
+def api_request_friend(friend_id):
+    user_id = session.get('user_id')
+    if not user_id:
+        return {'error': 'unauthorized'}, 401
+    if user_id == friend_id:
+        return {'error': 'cannot add yourself'}, 400
+    existing = db_session.query(Friend).filter(
+        ((Friend.user_id == user_id) & (Friend.friend_id == friend_id)) |
+        ((Friend.user_id == friend_id) & (Friend.friend_id == user_id))
+    ).first()
+    if not existing:
+        new_request = Friend(user_id=user_id, friend_id=friend_id, status='pending')
+        db_session.add(new_request)
+        db_session.commit()
+    return {'success': True, 'status': 'pending'}
+
+@app.route('/api/friend/cancel/<int:friend_id>', methods=['POST'])
+def api_cancel_friend(friend_id):
+    user_id = session.get('user_id')
+    if not user_id:
+        return {'error': 'unauthorized'}, 401
+    request_record = db_session.query(Friend).filter(
+        Friend.user_id == user_id,
+        Friend.friend_id == friend_id,
+        Friend.status == 'pending'
+    ).first()
+    if request_record:
+        db_session.delete(request_record)
+        db_session.commit()
+    return {'success': True, 'status': 'none'}
+
+@app.route('/api/friend/accept/<int:requester_id>', methods=['POST'])
+def api_accept_friend(requester_id):
+    user_id = session.get('user_id')
+    if not user_id:
+        return {'error': 'unauthorized'}, 401
+    request_record = db_session.query(Friend).filter(
+        Friend.user_id == requester_id,
+        Friend.friend_id == user_id,
+        Friend.status == 'pending'
+    ).first()
+    if request_record:
+        request_record.status = 'accepted'
+        db_session.commit()
+    return {'success': True, 'status': 'accepted'}
+
+@app.route('/api/friend/reject/<int:requester_id>', methods=['POST'])
+def api_reject_friend(requester_id):
+    user_id = session.get('user_id')
+    if not user_id:
+        return {'error': 'unauthorized'}, 401
+    request_record = db_session.query(Friend).filter(
+        Friend.user_id == requester_id,
+        Friend.friend_id == user_id,
+        Friend.status == 'pending'
+    ).first()
+    if request_record:
+        db_session.delete(request_record)
+        db_session.commit()
+    return {'success': True}
+
+@app.route('/api/friend/remove/<int:friend_id>', methods=['POST'])
+def api_remove_friend(friend_id):
+    user_id = session.get('user_id')
+    if not user_id:
+        return {'error': 'unauthorized'}, 401
+    existing = db_session.query(Friend).filter(
+        ((Friend.user_id == user_id) & (Friend.friend_id == friend_id)) |
+        ((Friend.user_id == friend_id) & (Friend.friend_id == user_id))
+    ).first()
+    if existing:
+        db_session.delete(existing)
+        db_session.commit()
+    return {'success': True}
 
 @app.route('/request_friend/<int:friend_id>', methods=['POST'])
 def request_friend(friend_id):

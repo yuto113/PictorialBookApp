@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -36,6 +37,7 @@
         }
     </style>
 </head>
+
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
         <div class="container">
@@ -58,7 +60,8 @@
                         <form method="POST">
                             <div class="mb-3">
                                 <label for="nickname" class="form-label">ユーザー名で検索</label>
-                                <input type="text" class="form-control search-input" id="nickname" name="nickname" required placeholder="ユーザー名を入力">
+                                <input type="text" class="form-control search-input" id="nickname" name="nickname"
+                                    required placeholder="ユーザー名を入力">
                             </div>
                             <button type="submit" class="btn btn-danger w-100">検索</button>
                         </form>
@@ -66,39 +69,43 @@
                 </div>
             </div>
         </div>
-        
+
         {% if users %}
-            <h3 class="mt-5 mb-3">検索結果</h3>
-            <div class="row row-cols-1 row-cols-md-2 g-4">
-                {% for user in users %}
-                <div class="col">
-                    <div class="card card-tilt shadow-sm border-0" style="border-radius: 1rem;">
-                        <div class="card-body">
-                            <h5 class="card-title">{{ user.name }}</h5>
-                            {% set relation = user_relations[user.id] %}
+        <h3 class="mt-5 mb-3">検索結果</h3>
+        <div class="row row-cols-1 row-cols-md-2 g-4">
+            {% for user in users %}
+            <div class="col">
+                <div class="card card-tilt shadow-sm border-0" style="border-radius: 1rem;">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ user.name }}</h5>
+                        {% set relation = user_relations[user.id] %}
+                        <div id="friend_status_{{ user.id }}">
                             {% if relation.status == 'accepted' %}
-                                <span class="badge bg-success">フレンド</span>
+                            <span class="badge bg-success">フレンド</span>
                             {% elif relation.status == 'pending' %}
-                                {% if relation.is_requester %}
-                                    <div class="d-flex gap-2 align-items-center">
-                                        <span class="badge bg-warning">申請中</span>
-                                        <form method="POST" action="/cancel_friend_request/{{ user.id }}" class="d-inline">
-                                            <button type="submit" class="btn btn-outline-secondary btn-sm">申請解除</button>
-                                        </form>
-                                    </div>
-                                {% else %}
-                                    <span class="badge bg-info">承認待ち</span>
-                                {% endif %}
+                            {% if relation.is_requester %}
+                            <div class="d-flex gap-2 align-items-center">
+                                <span class="badge bg-warning">申請中</span>
+                                <button class="btn btn-outline-secondary btn-sm"
+                                    onclick="cancelFriend({{ user_id }})">申請解除</button>
+                            </div>
                             {% else %}
-                                <form method="POST" action="/request_friend/{{ user.id }}" class="d-inline">
-                                    <button type="submit" class="btn btn-primary">フレンド申請</button>
-                                </form>
+                            <span class="badge bg-info">承認待ち</span>
+                            {% endif %}
+                            {% else %}
+                            <button class="btn btn-primary" onclick="requestFriend({{ user.id }})">フレンド申請</button>
                             {% endif %}
                         </div>
+                        {% else %}
+                        <form method="POST" action="/request_friend/{{ user.id }}" class="d-inline">
+                            <button type="submit" class="btn btn-primary">フレンド申請</button>
+                        </form>
+                        {% endif %}
                     </div>
                 </div>
-                {% endfor %}
             </div>
+            {% endfor %}
+        </div>
         {% endif %}
     </div>
 
@@ -111,5 +118,32 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
         crossorigin="anonymous"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+        crossorigin="anonymous"></script>
+    <script>
+        async function requestFriend(userId) {
+            const res = await fetch(`/api/friend/request/${userId}`, { method: 'POST' });
+            const data = await res.json();
+            if (data.success) {
+                document.getElementById(`friend_status_${userId}`).innerHTML = `
+                    <div class="d-flex gap-2 align-items-center">
+                        <span class="badge bg-warning">申請中</span>
+                        <button class="btn btn-outline-secondary btn-sm" onclick="cancelFriend(${userId})">申請解除</button>
+                    </div>`;
+            }
+        }
+
+        async function cancelFriend(userId) {
+            const res = await fetch(`/api/friend/cancel/${userId}`, { method: 'POST' });
+            const data = await res.json();
+            if (data.success) {
+                document.getElementById(`friend_status_${userId}`).innerHTML = `
+                    <button class="btn btn-primary" onclick="requestFriend(${userId})">フレンド申請</button>`;
+            }
+        }
+    </script>
 </body>
+
 </html>

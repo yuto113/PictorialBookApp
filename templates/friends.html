@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -36,6 +37,7 @@
         }
     </style>
 </head>
+
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
         <div class="container">
@@ -51,23 +53,19 @@
 
     <div class="container py-4">
         <h2 class="mb-4 brand-color">フレンドリスト</h2>
-        
+
         {% if pending_requests %}
         <h3 class="mt-5 mb-3">フレンド申請</h3>
         <div class="row row-cols-1 row-cols-md-3 g-4">
             {% for request in pending_requests %}
-            <div class="col">
+            <div class="col" id="request_{{ request.id }}">
                 <div class="card card-tilt shadow-sm border-0" style="border-radius: 1rem;">
                     <div class="card-body text-center">
                         <h5 class="card-title">{{ request.name }}</h5>
                         <p class="text-muted small">フレンド申請が来ています</p>
                         <div class="d-flex justify-content-center gap-2 mt-3">
-                            <form method="POST" action="/accept_friend/{{ request.id }}" class="d-inline">
-                                <button type="submit" class="btn btn-success btn-sm">承認</button>
-                            </form>
-                            <form method="POST" action="/reject_friend/{{ request.id }}" class="d-inline">
-                                <button type="submit" class="btn btn-danger btn-sm">拒否</button>
-                            </form>
+                            <button class="btn btn-success btn-sm" onclick="acceptFriend({{ request.id }})">承認</button>
+                            <button class="btn btn-danger btn-sm" onclick="rejectFriend({{ request.id }})">拒否</button>
                         </div>
                     </div>
                 </div>
@@ -75,31 +73,31 @@
             {% endfor %}
         </div>
         {% endif %}
-        
+
         <h3 class="mt-5 mb-3">フレンド</h3>
         {% if friends %}
-            <div class="row row-cols-1 row-cols-md-3 g-4">
-                {% for friend in friends %}
-                <div class="col">
-                    <div class="card card-tilt shadow-sm border-0" style="border-radius: 1rem;">
-                        <div class="card-body text-center">
-                            <h5 class="card-title">{{ friend.name }}</h5>
-                            <div class="d-flex justify-content-center gap-2 mt-3">
-                                <a href="/friend_data/{{ friend.id }}" class="btn btn-outline-primary btn-sm">アップしたデータを確認</a>
-                                <form method="POST" action="/remove_friend/{{ friend.id }}" class="d-inline" onsubmit="return confirm('フレンドを削除しますか？')">
-                                    <button type="submit" class="btn btn-outline-danger btn-sm">フレンド消去</button>
-                                </form>
-                            </div>
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            {% for friend in friends %}
+            <div class="col" id="friend_{{ friend.id }}">
+                <div class="card card-tilt shadow-sm border-0" style="border-radius: 1rem;">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">{{ friend.name }}</h5>
+                        <div class="d-flex justify-content-center gap-2 mt-3">
+                            <a href="/friend_data/{{ friend.id }}"
+                                class="btn btn-outline-primary btn-sm">アップしたデータを確認</a>
+                            <button class="btn btn-outline-danger btn-sm"
+                                onclick="removeFriend({{ friend.id }})">フレンド消去</button>
                         </div>
                     </div>
                 </div>
-                {% endfor %}
             </div>
+            {% endfor %}
+        </div>
         {% else %}
-            <div class="text-center">
-                <p class="text-muted">フレンドがいません。</p>
-                <a href="/friend_search" class="btn btn-primary">フレンドを探す</a>
-            </div>
+        <div class="text-center">
+            <p class="text-muted">フレンドがいません。</p>
+            <a href="/friend_search" class="btn btn-primary">フレンドを探す</a>
+        </div>
         {% endif %}
     </div>
 
@@ -112,5 +110,34 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
         crossorigin="anonymous"></script>
+
+    <script>
+        async function acceptFriend(requesterId) {
+            const res = await fetch(`/api/friend/accept/${requesterId}`, { method: 'POST' });
+            const data = await res.json();
+            if (data.success) {
+                document.getElementById(`request_${requesterId}`).remove();
+                location.reload(); // フレンドリストを更新
+            }
+        }
+
+        async function rejectFriend(requesterId) {
+            const res = await fetch(`/api/friend/reject/${requesterId}`, { method: 'POST' });
+            const data = await res.json();
+            if (data.success) {
+                document.getElementById(`request_${requesterId}`).remove();
+            }
+        }
+
+        async function removeFriend(friendId) {
+            if (!confirm('フレンドを削除しますか？')) return;
+            const res = await fetch(`/api/friend/remove/${friendId}`, { method: 'POST' });
+            const data = await res.json();
+            if (data.success) {
+                document.getElementById(`friend_${friendId}`).remove();
+            }
+        }
+    </script>
 </body>
+
 </html>
