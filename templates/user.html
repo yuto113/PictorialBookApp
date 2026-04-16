@@ -66,6 +66,14 @@
                     <a class="btn btn-sm btn-outline-primary" href="/upload">アップロード</a>
                     <a class="btn btn-sm btn-outline-info" href="/friend_search">フレンド検索</a>
                     <a class="btn btn-sm btn-outline-info" href="/friends">フレンドリスト</a>
+
+                    <a class="btn btn-sm btn-outline-warning" href="/feedback">フィードバック</a>
+                    {%- if user.id == 2 %}
+                    <a class="btn btn-sm btn-outline-danger" href="/feedback/admin">
+                        📬 管理
+                        {% set unread = namespace(count=0) %}
+                    </a>
+                    {%- endif %}
                     {%- if user.id == 2 %}
                     <a class="btn btn-sm btn-outline-success" href="/users">ユーザ一覧</a>
                     {%- endif %}

@@ -74,6 +74,19 @@ class Chat(db.Model):
     user = db.relationship('User', back_populates='chats')
     date = db.relationship('Date', back_populates='chats')
 
+class Feedback(db.Model):
+    __tablename__ = 'feedback'
+    
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id', ondelete='CASCADE'), nullable=False)
+    message = db.Column(db.Text, nullable=False)
+    is_read = db.Column(db.Integer, default=0)  # 0:未読 1:既読
+    reply = db.Column(db.Text, nullable=True)  # 管理者の返信
+    created_at = db.Column(db.DateTime(timezone=True), default=func.now())
+    replied_at = db.Column(db.DateTime(timezone=True), nullable=True)
+    
+    user = db.relationship('User', backref='feedbacks')
+
 class Friend(db.Model):
     __tablename__ = 'friends'
     

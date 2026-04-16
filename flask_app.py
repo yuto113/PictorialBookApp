@@ -1,7 +1,7 @@
 import os
 os.makedirs('/app/instance', exist_ok=True)
 from flask import Flask, render_template, request, redirect, session, flash
-from models import User, db, Date, Like, Chat, Friend
+from models import User, db, Date, Like, Chat, Friend, Feedback
 from sqlalchemy import or_
 from datetime import datetime
 from zoneinfo import ZoneInfo
@@ -836,6 +836,65 @@ def toggle_hide(post_id):
     # もし管理者なら、トップページや詳細ページから操作することもあるので
     # 直前のページに戻るようにすると便利です
     return redirect(request.referrer or '/user')
+
+@app.route('/feedback', methods=['GET', 'POST'])
+def feedback():
+    user_id = session.get('user_id')
+    if not user_id:
+        return redirect('/login')
+    
+    if request.method == 'POST':
+        message = request.form.get('message')
+        if message:
+            new_feedback = Feedback(
+                user_id=user_id,
+                message=message,
+                created_at=datetime.now(tz=ZoneInfo("Asia/Tokyo")).replace(microsecond=0)
+            )
+            db.session.add(new_feedback)
+            db.session.commit()
+            flash('フィードバックを送信しました！', 'success')
+            return redirect('/feedback')
+    
+    # 自分のフィードバック一覧
+    my_feedbacks = Feedback.query.filter_by(user_id=user_id).order_by(Feedback.created_at.desc()).all()
+    return render_template('feedback.html', feedbacks=my_feedbacks)
+
+
+@app.route('/feedback/admin', methods=['GET', 'POST'])
+def feedback_admin():
+    user_id = session.get('user_id')
+    if not user_id or user_id != 2:
+        return redirect('/user')
+    
+    if request.method == 'POST':
+        feedback_id = request.form.get('feedback_id')
+        reply = request.form.get('reply')
+        fb = Feedback.query.get(feedback_id)
+        if fb and reply:
+            fb.reply = reply
+            fb.is_read = 1
+            fb.replied_at = datetime.now(tz=ZoneInfo("Asia/Tokyo")).replace(microsecond=0)
+            db.session.commit()
+        return redirect('/feedback/admin')
+    
+    # 未読を先に表示
+    feedbacks = Feedback.query.order_by(Feedback.is_read.asc(), Feedback.created_at.desc()).all()
+    # 未読数を取得
+    unread_count = Feedback.query.filter_by(is_read=0).count()
+    return render_template('feedback_admin.html', feedbacks=feedbacks, unread_count=unread_count)
+
+
+@app.route('/feedback/read/<int:feedback_id>', methods=['POST'])
+def feedback_read(feedback_id):
+    user_id = session.get('user_id')
+    if not user_id or user_id != 2:
+        return {'error': 'unauthorized'}, 401
+    fb = Feedback.query.get(feedback_id)
+    if fb:
+        fb.is_read = 1
+        db.session.commit()
+    return {'success': True}
 
 @app.route('/toggle_chat_hide/<int:chat_id>')
 def toggle_chat_hide(chat_id):
