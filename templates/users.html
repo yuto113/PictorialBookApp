@@ -146,21 +146,23 @@
                                     <td>{{ u.password }}</td>
                                     {% endif %}
                                     <td>
-                                        {% if u.role == 'admin' %}
-                                        <span class="badge bg-danger">管理人</span>
-                                        {% elif u.role == 'limited' %}
-                                        <span class="badge bg-warning text-dark">一部制限</span>
-                                        {% elif u.role == 'suspended' %}
-                                        <span class="badge bg-dark">停止中</span>
-                                        {% else %}
-                                        <span class="badge bg-success">通常</span>
-                                        {% endif %}
+                                        <span id="role_main_badge_{{ u.id }}">
+                                            {% if u.role == 'admin' %}
+                                            <span class="badge bg-danger">管理人</span>
+                                            {% elif u.role == 'limited' %}
+                                            <span class="badge bg-warning text-dark">一部制限</span>
+                                            {% elif u.role == 'suspended' %}
+                                            <span class="badge bg-dark">停止中</span>
+                                            {% else %}
+                                            <span class="badge bg-success">通常</span>
+                                            {% endif %}
+                                        </span>
                                     </td>
                                     <td>
                                         {% if u.id != 2 %}
-                                        <div class="d-flex gap-1 align-items-center">
+                                        <div class="d-flex gap-1 align-items-center flex-wrap">
                                             <select id="role_select_{{ u.id }}" class="form-select form-select-sm"
-                                                style="width:120px;">
+                                                style="width:110px;">
                                                 <option value="normal" {% if u.role=='normal' %}selected{% endif %}>通常
                                                 </option>
                                                 <option value="admin" {% if u.role=='admin' %}selected{% endif %}>管理人
@@ -172,17 +174,7 @@
                                             </select>
                                             <button class="btn btn-sm btn-primary"
                                                 onclick="updateRole({{ u.id }})">変更</button>
-                                            <span id="role_badge_{{ u.id }}">
-                                                {% if u.role == 'admin' %}
-                                                <span class="badge bg-danger">管理人</span>
-                                                {% elif u.role == 'limited' %}
-                                                <span class="badge bg-warning text-dark">一部制限</span>
-                                                {% elif u.role == 'suspended' %}
-                                                <span class="badge bg-dark">停止中</span>
-                                                {% else %}
-                                                <span class="badge bg-success">通常</span>
-                                                {% endif %}
-                                            </span>
+                                            <span id="role_badge_{{ u.id }}"></span>
                                         </div>
                                         {% else %}
                                         <span class="text-muted small">変更不可</span>
@@ -290,7 +282,8 @@
             });
             const data = await res.json();
             if (data.success) {
-                document.getElementById(`role_badge_${userId}`).innerHTML = roleBadges[newRole];
+                // 権限列のバッジを更新
+                document.getElementById(`role_main_badge_${userId}`).innerHTML = roleBadges[newRole];
                 alert('変更しました！');
             } else {
                 alert('変更に失敗しました。');
