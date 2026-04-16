@@ -83,8 +83,7 @@
                     <div class="card-body text-center">
                         <h5 class="card-title">{{ friend.name }}</h5>
                         <div class="d-flex justify-content-center gap-2 mt-3">
-                            <a href="/friend_data/{{ friend.id }}"
-                                class="btn btn-outline-primary btn-sm">アップしたデータを確認</a>
+                            <a href="/profile/{{ friend.id }}" class="btn btn-outline-primary btn-sm">アップしたデータを確認</a>
                             <button class="btn btn-outline-danger btn-sm"
                                 onclick="removeFriend({{ friend.id }})">フレンド消去</button>
                         </div>
