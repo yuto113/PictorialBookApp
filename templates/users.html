@@ -187,6 +187,8 @@
                                         {% else %}
                                         <span class="text-muted small">変更不可</span>
                                         {% endif %}
+                                </tr>
+                                {% endfor %}
                             </tbody>
                         </table>
                     </div>
@@ -283,8 +285,8 @@
 
             const res = await fetch(`/update_role/${userId}`, {
                 method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({role: newRole})
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ role: newRole })
             });
             const data = await res.json();
             if (data.success) {
@@ -295,7 +297,7 @@
             }
         }
     </script>
-    
+
 </body>
 
 </html>
