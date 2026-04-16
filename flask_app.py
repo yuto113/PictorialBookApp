@@ -1,4 +1,5 @@
-from flask import Flask, render_template, request, redirect, session, flash
+import os
+os.makedirs('/app/instance', exist_ok=True)
 from flask import Flask, render_template, request, redirect, session, flash
 from models import User, db, Date, Like, Chat, Friend
 from sqlalchemy import or_
