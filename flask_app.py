@@ -105,6 +105,65 @@ def user_page():
         return render_template('user.html', user=user,dates=dates, filter_ev=Illustrated_ev, filter_ki=Illustrated_ki, filter_friend=Illustrated_friend, friends=friends)
     return redirect('/login')
 
+@app.route('/api/chats/<int:date_id>', methods=['GET'])
+def get_chats(date_id):
+    user_id = session.get('user_id')
+    if not user_id:
+        return {'error': 'unauthorized'}, 401
+    chats = db_session.query(Chat).filter_by(date_id=date_id).order_by(Chat.created_at).all()
+    current_user = User.query.get(user_id)
+    result = []
+    for chat in chats:
+        result.append({
+            'id': chat.id,
+            'user_id': chat.user_id,
+            'user_name': chat.user.name,
+            'message': chat.message,
+            'created_at': str(chat.created_at),
+            'can_delete': (chat.user_id == user_id or user_id == 2)
+        })
+    return {'chats': result}
+
+@app.route('/api/chats/<int:date_id>', methods=['POST'])
+def post_chat(date_id):
+    user_id = session.get('user_id')
+    if not user_id:
+        return {'error': 'unauthorized'}, 401
+    data = request.get_json()
+    message = data.get('message')
+    if not message:
+        return {'error': 'no message'}, 400
+    new_chat = Chat(
+        user_id=user_id,
+        date_id=date_id,
+        message=message,
+        created_at=datetime.now(tz=ZoneInfo("Asia/Tokyo")).replace(microsecond=0)
+    )
+    db_session.add(new_chat)
+    db_session.commit()
+    return {'success': True, 'chat': {
+        'id': new_chat.id,
+        'user_id': new_chat.user_id,
+        'user_name': new_chat.user.name,
+        'message': new_chat.message,
+        'created_at': str(new_chat.created_at),
+        'can_delete': True
+    }}
+
+@app.route('/api/chats/delete/<int:chat_id>', methods=['DELETE'])
+def delete_chat_api(chat_id):
+    user_id = session.get('user_id')
+    if not user_id:
+        return {'error': 'unauthorized'}, 401
+    chat = db_session.query(Chat).filter_by(id=chat_id).first()
+    if not chat:
+        return {'error': 'not found'}, 404
+    if chat.user_id != user_id and user_id != 2:
+        return {'error': 'forbidden'}, 403
+    date_id = chat.date_id
+    db_session.delete(chat)
+    db_session.commit()
+    return {'success': True}
 
 @app.route('/date/<int:id>', methods=['GET', 'POST'])
 def date_page(id):

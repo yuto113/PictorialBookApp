@@ -62,44 +62,90 @@
         </div>
 
         <h4>チャット</h4>
-        <div class="mb-3">
-            {% for chat in chats %}
-            <div class="border rounded p-2 mb-2 {{ 'opacity-50 bg-light' if chat.is_hidden == 1 else '' }}">
-                <div class="d-flex justify-content-between">
-                    <strong>{{ chat.user.name }}</strong>
-                    <div class="d-flex align-items-center gap-2">
-                        <small class="text-muted">{{ chat.created_at }}</small>
-                        {% if current_user.id == 2 %}
-                        <a href="/toggle_chat_hide/{{ chat.id }}"
-                            class="btn btn-sm {{ 'btn-warning' if chat.is_hidden == 1 else 'btn-outline-warning' }}">
-                            {{ '🙈 非表示中' if chat.is_hidden == 1 else '👁️ 表示中' }}
-                        </a>
-                        {% endif %}
-                        {% if chat.user_id == current_user.id or current_user.id == 2 %}
-                        <form method="post" action="/delete_chat/{{ chat.id }}" class="d-inline">
-                            <button type="submit" class="btn btn-sm btn-outline-danger"
-                                onclick="return confirm('{{ chat.user.name }}のコメントを本当に消しますか？')">削除</button>
-                        </form>
-                        {% endif %}
-                    </div>
-                </div>
-                <div class="mt-1">{{ chat.message }}</div>
-                {% if chat.is_hidden == 1 %}
-                <small class="text-danger">（非表示中 — 管理者のみ閲覧できます）</small>
-                {% endif %}
-            </div>
-            {% else %}
-            <div class="text-muted">まだコメントがありません。投稿してみましょう。</div>
-            {% endfor %}
+        <div id="chat_list" class="mb-3">
+            <div class="text-muted">読み込み中...</div>
         </div>
 
-        <form method="post">
-            <div class="mb-3">
-                <label for="message" class="form-label">メッセージ</label>
-                <textarea class="form-control" id="message" name="message" rows="3" required></textarea>
-            </div>
-            <button type="submit" class="btn btn-primary">送信</button>
-        </form>
+        <div class="mb-3">
+            <label for="message" class="form-label">メッセージ</label>
+            <textarea class="form-control" id="message" rows="3"></textarea>
+        </div>
+        <button class="btn btn-primary" onclick="sendChat()">送信</button>
+
+        <script>
+            const DATE_ID = {{ date.id }};
+            const CURRENT_USER_ID = {{ current_user.id }};
+
+            // チャット一覧を取得して表示
+            async function loadChats() {
+                const res = await fetch(`/api/chats/${DATE_ID}`);
+                const data = await res.json();
+                const list = document.getElementById('chat_list');
+
+                if (data.chats.length === 0) {
+                    list.innerHTML = '<div class="text-muted">まだコメントがありません。投稿してみましょう。</div>';
+                    return;
+                }
+
+                list.innerHTML = data.chats.map(chat => `
+                    <div class="border rounded p-2 mb-2" id="chat_${chat.id}">
+                        <div class="d-flex justify-content-between">
+                            <strong>${chat.user_name}</strong>
+                            <div>
+                                <small class="text-muted">${chat.created_at}</small>
+                                ${chat.can_delete ? `
+                                <button class="btn btn-sm btn-outline-danger ms-2"
+                                    onclick="deleteChat(${chat.id}, '${chat.user_name}')">削除</button>
+                                ` : ''}
+                            </div>
+                        </div>
+                        <div class="mt-1">${chat.message}</div>
+                    </div>
+                `).join('');
+            }
+
+            // チャット送信
+            async function sendChat() {
+                const message = document.getElementById('message').value.trim();
+                if (!message) return;
+
+                const res = await fetch(`/api/chats/${DATE_ID}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    document.getElementById('message').value = '';
+                    loadChats();
+                }
+            }
+
+            // チャット削除
+            async function deleteChat(chatId, userName) {
+                if (!confirm(`${userName}のコメントを本当に消しますか？`)) return;
+
+                const res = await fetch(`/api/chats/delete/${chatId}`, {
+                    method: 'DELETE'
+                });
+                const data = await res.json();
+                if (data.success) {
+                    loadChats();
+                }
+            }
+
+            // Enterキーで送信（Shift+Enterで改行）
+            document.getElementById('message').addEventListener('keydown', function (e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    sendChat();
+                }
+            });
+
+            // 初回読み込みと5秒ごとに自動更新
+            loadChats();
+            setInterval(loadChats, 5000);
+        </script>
 
     </div>
 
