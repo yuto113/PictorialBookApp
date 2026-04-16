@@ -158,8 +158,9 @@
                                     </td>
                                     <td>
                                         {% if u.id != 2 %}
-                                        <form method="POST" action="/update_role/{{ u.id }}" class="d-flex gap-1">
-                                            <select name="role" class="form-select form-select-sm" style="width:120px;">
+                                        <div class="d-flex gap-1 align-items-center">
+                                            <select id="role_select_{{ u.id }}" class="form-select form-select-sm"
+                                                style="width:120px;">
                                                 <option value="normal" {% if u.role=='normal' %}selected{% endif %}>通常
                                                 </option>
                                                 <option value="admin" {% if u.role=='admin' %}selected{% endif %}>管理人
@@ -169,18 +170,23 @@
                                                 <option value="suspended" {% if u.role=='suspended' %}selected{% endif
                                                     %}>停止</option>
                                             </select>
-                                            <button type="submit" class="btn btn-sm btn-primary">変更</button>
-                                        </form>
+                                            <button class="btn btn-sm btn-primary"
+                                                onclick="updateRole({{ u.id }})">変更</button>
+                                            <span id="role_badge_{{ u.id }}">
+                                                {% if u.role == 'admin' %}
+                                                <span class="badge bg-danger">管理人</span>
+                                                {% elif u.role == 'limited' %}
+                                                <span class="badge bg-warning text-dark">一部制限</span>
+                                                {% elif u.role == 'suspended' %}
+                                                <span class="badge bg-dark">停止中</span>
+                                                {% else %}
+                                                <span class="badge bg-success">通常</span>
+                                                {% endif %}
+                                            </span>
+                                        </div>
                                         {% else %}
                                         <span class="text-muted small">変更不可</span>
                                         {% endif %}
-                                    </td>
-                                </tr>
-                                {% else %}
-                                <tr>
-                                    <td colspan="5" class="text-muted">ユーザが見つかりませんでした。</td>
-                                </tr>
-                                {% endfor %}
                             </tbody>
                         </table>
                     </div>
