@@ -1,4 +1,2 @@
-﻿@"
-[start]
-cmd = "mkdir -p /app/instance && gunicorn flask_app:app --bind 0.0.0.0:`$PORT"
-"@ | Set-Content -Encoding UTF8 nixpacks.toml
+﻿[start]
+cmd = "mkdir -p /app/instance && gunicorn flask_app:app --bind 0.0.0.0:$PORT"
