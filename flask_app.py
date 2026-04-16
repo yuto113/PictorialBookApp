@@ -14,7 +14,8 @@ cloudinary.config(
     api_secret=os.environ.get('CLOUDINARY_API_SECRET')
 )
 
-os.makedirs('instance', exist_ok=True)
+basedir = os.path.abspath(os.path.dirname(__file__))
+os.makedirs(os.path.join(basedir, 'instance'), exist_ok=True)
 
 app = Flask(__name__)
 app.secret_key='secret_key'
@@ -449,7 +450,7 @@ def update_role(target_id):
         target_user.role = new_role
         db.session.commit()
     
-    return redirect('/users')
+    return redirect('/users')@app.route('/update_role/<int:target_id>', methods=['POST'])
 
 #アップロードの機能を追加する。(エンドポイント)
 @app.route('/upload', methods=['GET', 'POST'])
