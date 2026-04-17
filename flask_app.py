@@ -105,7 +105,7 @@ def user_page():
             ((Friend.friend_id == user_id) & (Friend.user_id == User.id) & (Friend.status == 'accepted'))
         ).all()
 
-        return render_template('user.html', user=user,dates=dates, filter_ev=Illustrated_ev, filter_ki=Illustrated_ki, filter_friend=Illustrated_friend, friends=friends)
+        
     return redirect('/login')
 
 @app.route('/api/chats/<int:date_id>', methods=['GET'])
@@ -342,6 +342,47 @@ def users_page():
             message = 'パスワードが違います。'
 
     return render_template('users.html', users=users, search=search, message=message, revealed=revealed, users_shown=users_shown, user_id=user_id)
+
+@app.route('/school/join', methods=['GET', 'POST'])
+def school_join():
+    user_id = session.get('user_id')
+    if not user_id:
+        return redirect('/login')
+    
+    user = User.query.get(user_id)
+    
+    # teacher/school_adminのみアクセス可能
+    if user.role not in ['teacher', 'school_admin']:
+        return redirect('/user')
+    
+    # すでに学校に参加しているか確認
+    existing = SchoolMember.query.filter_by(user_id=user_id).first()
+    if existing:
+        return redirect('/school/dashboard')
+    
+    message = None
+    if request.method == 'POST':
+        code = request.form.get('code')
+        school = School.query.filter_by(code=code).first()
+        
+        if not school:
+            message = '学校コードが正しくありません。'
+        else:
+            # 学校内に最初の参加者かどうか確認
+            existing_members = SchoolMember.query.filter_by(school_id=school.id).first()
+            
+            # 最初の参加者はschool_adminに
+            if not existing_members:
+                user.role = 'school_admin'
+                db.session.commit()
+            
+            new_member = SchoolMember(school_id=school.id, user_id=user_id)
+            db.session.add(new_member)
+            db.session.commit()
+            flash('学校グループに参加しました！', 'success')
+            return redirect('/school/dashboard')
+    
+    return render_template('school_join.html', message=message)
 
 @app.route('/admin/schools', methods=['GET', 'POST'])
 def admin_schools():
