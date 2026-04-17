@@ -716,6 +716,23 @@ def update_role(target_id):
     if target_user and target_id != 2:
         target_user.role = new_role
         db.session.commit()
+        
+        # 学校関連のroleの場合、学校に追加
+        if new_role in ['teacher', 'school_admin', 'student']:
+            school_id = data.get('school_id') if data else None
+            if school_id:
+                school = School.query.get(int(school_id))
+                if not school:
+                    return {'error': '学校が見つかりません。'}, 404
+                # すでに参加しているか確認
+                existing = SchoolMember.query.filter_by(
+                    school_id=int(school_id), user_id=target_id).first()
+                if not existing:
+                    new_member = SchoolMember(
+                        school_id=int(school_id), user_id=target_id)
+                    db.session.add(new_member)
+                    db.session.commit()
+        
         return {'success': True, 'role': new_role}
     return {'error': 'not found'}, 404
 
