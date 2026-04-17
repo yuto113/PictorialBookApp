@@ -105,8 +105,183 @@ def user_page():
             ((Friend.friend_id == user_id) & (Friend.user_id == User.id) & (Friend.status == 'accepted'))
         ).all()
 
+        my_school_member = SchoolMember.query.filter_by(user_id=user_id).first()
+        my_school = School.query.get(my_school_member.school_id) if my_school_member else None
         
+        return render_template('user.html', user=user, dates=dates, filter_ev=Illustrated_ev, filter_ki=Illustrated_ki, filter_friend=Illustrated_friend, friends=friends, my_school=my_school)
     return redirect('/login')
+
+# ↓↓↓ここから↓↓↓
+@app.route('/school/dashboard')
+def school_dashboard():
+    user_id = session.get('user_id')
+    if not user_id:
+        return redirect('/login')
+    
+    user = User.query.get(user_id)
+    if user.role not in ['teacher', 'school_admin']:
+        return redirect('/user')
+    
+    # 学校情報を取得
+    my_member = SchoolMember.query.filter_by(user_id=user_id).first()
+    if not my_member:
+        return redirect('/school/join')
+    
+    school = School.query.get(my_member.school_id)
+    
+    # 学校内のクラス一覧
+    classes = SchoolClass.query.filter_by(school_id=school.id).all()
+    
+    # 学校内のメンバー一覧
+    members = db.session.query(User).join(SchoolMember, 
+        SchoolMember.user_id == User.id
+    ).filter(SchoolMember.school_id == school.id).all()
+    
+    # 学校内の生徒一覧
+    students = [m for m in members if m.role == 'student']
+    
+    # 学校内の教師一覧
+    teachers = [m for m in members if m.role in ['teacher', 'school_admin']]
+    
+    return render_template('school_dashboard.html', 
+                           user=user,
+                           school=school,
+                           classes=classes,
+                           students=students,
+                           teachers=teachers)
+
+
+@app.route('/school/create_class', methods=['POST'])
+def create_class():
+    user_id = session.get('user_id')
+    if not user_id:
+        return redirect('/login')
+    
+    user = User.query.get(user_id)
+    if user.role not in ['teacher', 'school_admin']:
+        return redirect('/user')
+    
+    my_member = SchoolMember.query.filter_by(user_id=user_id).first()
+    if not my_member:
+        return redirect('/school/join')
+    
+    class_name = request.form.get('class_name')
+    if class_name:
+        from models import generate_code
+        code = generate_code(6)
+        while SchoolClass.query.filter_by(code=code).first():
+            code = generate_code(6)
+        
+        new_class = SchoolClass(
+            school_id=my_member.school_id,
+            name=class_name,
+            code=code
+        )
+        db.session.add(new_class)
+        db.session.commit()
+        flash(f'クラス「{class_name}」を作成しました！コード: {code}', 'success')
+    
+    return redirect('/school/dashboard')
+
+
+@app.route('/school/create_student', methods=['POST'])
+def create_student():
+    user_id = session.get('user_id')
+    if not user_id:
+        return redirect('/login')
+    
+    user = User.query.get(user_id)
+    if user.role not in ['teacher', 'school_admin']:
+        return redirect('/user')
+    
+    my_member = SchoolMember.query.filter_by(user_id=user_id).first()
+    if not my_member:
+        return redirect('/school/join')
+    
+    name = request.form.get('name')
+    password = request.form.get('password')
+    
+    if name and password:
+        new_student = User(name=name, password=password, role='student')
+        db.session.add(new_student)
+        db.session.commit()
+        
+        # 学校に追加
+        new_member = SchoolMember(school_id=my_member.school_id, user_id=new_student.id)
+        db.session.add(new_member)
+        db.session.commit()
+        flash(f'生徒「{name}」を登録しました！ID: {new_student.id}', 'success')
+    
+    return redirect('/school/dashboard')
+
+
+@app.route('/school/create_teacher', methods=['POST'])
+def create_teacher():
+    user_id = session.get('user_id')
+    if not user_id:
+        return redirect('/login')
+    
+    user = User.query.get(user_id)
+    if user.role != 'school_admin':
+        return redirect('/user')
+    
+    my_member = SchoolMember.query.filter_by(user_id=user_id).first()
+    if not my_member:
+        return redirect('/school/join')
+    
+    name = request.form.get('name')
+    password = request.form.get('password')
+    
+    if name and password:
+        new_teacher = User(name=name, password=password, role='teacher')
+        db.session.add(new_teacher)
+        db.session.commit()
+        
+        # 学校に追加
+        new_member = SchoolMember(school_id=my_member.school_id, user_id=new_teacher.id)
+        db.session.add(new_member)
+        db.session.commit()
+        flash(f'教師「{name}」を登録しました！ID: {new_teacher.id}', 'success')
+    
+    return redirect('/school/dashboard')
+
+
+@app.route('/school/register_student', methods=['POST'])
+def register_student_to_class():
+    user_id = session.get('user_id')
+    if not user_id:
+        return redirect('/login')
+    
+    user = User.query.get(user_id)
+    if user.role not in ['teacher', 'school_admin']:
+        return redirect('/user')
+    
+    student_id = request.form.get('student_id')
+    class_id = request.form.get('class_id')
+    
+    if student_id and class_id:
+        student = User.query.get(student_id)
+        cls = SchoolClass.query.get(class_id)
+        
+        if student and cls:
+            # 最大3クラスチェック
+            current_classes = ClassMember.query.filter_by(user_id=student_id).count()
+            if current_classes >= 3:
+                flash('生徒は最大3クラスまでしか登録できません。', 'danger')
+                return redirect('/school/dashboard')
+            
+            # 重複チェック
+            existing = ClassMember.query.filter_by(
+                class_id=class_id, user_id=student_id).first()
+            if not existing:
+                new_cm = ClassMember(class_id=class_id, user_id=student_id)
+                db.session.add(new_cm)
+                db.session.commit()
+                flash(f'「{student.name}」を「{cls.name}」に登録しました！', 'success')
+            else:
+                flash('すでに登録されています。', 'warning')
+    
+    return redirect('/school/dashboard')
 
 @app.route('/api/chats/<int:date_id>', methods=['GET'])
 def get_chats(date_id):

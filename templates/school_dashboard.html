@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>学校ダッシュボード</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background: linear-gradient(135deg, #f0fff4 0%, #f0f9ff 100%); color: #333; }
+        .brand-color { color: #28a745; }
+        .footer { color: #666; padding: 1rem 0; }
+        .card { border-radius: 1rem; }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="/user">
+                <span class="fs-4 brand-color">図鑑</span>
+                <small class="text-muted ms-2">{{ school.name }}</small>
+            </a>
+            <a class="btn btn-sm btn-outline-secondary" href="/user">ホームへ</a>
+        </div>
+    </nav>
+
+    <div class="container py-4">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        {% for category, message in messages %}
+        <div class="alert alert-{{ category }}">{{ message }}</div>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
+
+        <h2 class="mb-4 brand-color">{{ school.name }} ダッシュボード</h2>
+        <p class="text-muted">学校コード: <code class="fw-bold">{{ school.code }}</code></p>
+
+        <div class="row g-4">
+
+            <!-- クラス一覧・作成 -->
+            <div class="col-md-6">
+                <div class="card shadow-sm border-0 p-4 h-100">
+                    <h5 class="fw-bold mb-3">📚 クラス一覧</h5>
+                    {% for cls in classes %}
+                    <div class="border rounded p-2 mb-2">
+                        <strong>{{ cls.name }}</strong>
+                        <span class="text-muted small ms-2">コード: <code>{{ cls.code }}</code></span>
+                        <span class="badge bg-info text-dark ms-2">{{ cls.members|length }}人</span>
+                    </div>
+                    {% else %}
+                    <p class="text-muted small">まだクラスがありません。</p>
+                    {% endfor %}
+
+                    <hr>
+                    <h6 class="fw-bold">新しいクラスを作成</h6>
+                    <form method="POST" action="/school/create_class" class="d-flex gap-2">
+                        <input type="text" name="class_name" class="form-control form-control-sm" placeholder="クラス名（例：1年A組）" required>
+                        <button type="submit" class="btn btn-sm btn-success">作成</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- 生徒一覧・登録 -->
+            <div class="col-md-6">
+                <div class="card shadow-sm border-0 p-4 h-100">
+                    <h5 class="fw-bold mb-3">👨‍🎓 生徒一覧</h5>
+                    <div style="max-height:200px; overflow-y:auto;">
+                        {% for student in students %}
+                        <div class="border rounded p-2 mb-2">
+                            <strong>{{ student.name }}</strong>
+                            <span class="text-muted small ms-2">ID: {{ student.id }}</span>
+                            <div class="text-muted small">
+                                所属クラス:
+                                {% for cm in student.dates %}{% endfor %}
+                                {% set class_count = namespace(count=0) %}
+                                {% for cls in classes %}
+                                    {% for cm in cls.members %}
+                                        {% if cm.user_id == student.id %}
+                                            <span class="badge bg-success">{{ cls.name }}</span>
+                                            {% set class_count.count = class_count.count + 1 %}
+                                        {% endif %}
+                                    {% endfor %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                        {% else %}
+                        <p class="text-muted small">まだ生徒がいません。</p>
+                        {% endfor %}
+                    </div>
+
+                    <hr>
+                    <h6 class="fw-bold">生徒を新規登録</h6>
+                    <form method="POST" action="/school/create_student">
+                        <div class="d-flex gap-2 mb-2">
+                            <input type="text" name="name" class="form-control form-control-sm" placeholder="名前" required>
+                            <input type="text" name="password" class="form-control form-control-sm" placeholder="初期パスワード" required>
+                        </div>
+                        <button type="submit" class="btn btn-sm btn-success w-100">登録</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- クラスに生徒を登録 -->
+            <div class="col-md-6">
+                <div class="card shadow-sm border-0 p-4">
+                    <h5 class="fw-bold mb-3">📋 生徒をクラスに登録</h5>
+                    <form method="POST" action="/school/register_student">
+                        <div class="mb-2">
+                            <label class="form-label small fw-bold">生徒を選択</label>
+                            <select name="student_id" class="form-select form-select-sm" required>
+                                <option value="">選択してください</option>
+                                {% for student in students %}
+                                <option value="{{ student.id }}">{{ student.name }}（ID: {{ student.id }}）</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label small fw-bold">クラスを選択</label>
+                            <select name="class_id" class="form-select form-select-sm" required>
+                                <option value="">選択してください</option>
+                                {% for cls in classes %}
+                                <option value="{{ cls.id }}">{{ cls.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-sm btn-success w-100">登録</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- 教師一覧・登録（school_adminのみ） -->
+            {% if user.role == 'school_admin' %}
+            <div class="col-md-6">
+                <div class="card shadow-sm border-0 p-4">
+                    <h5 class="fw-bold mb-3">👨‍🏫 教師一覧</h5>
+                    {% for teacher in teachers %}
+                    <div class="border rounded p-2 mb-2">
+                        <strong>{{ teacher.name }}</strong>
+                        <span class="badge bg-primary ms-2">{{ teacher.role }}</span>
+                    </div>
+                    {% endfor %}
+
+                    <hr>
+                    <h6 class="fw-bold">教師を新規登録</h6>
+                    <form method="POST" action="/school/create_teacher">
+                        <div class="d-flex gap-2 mb-2">
+                            <input type="text" name="name" class="form-control form-control-sm" placeholder="名前" required>
+                            <input type="text" name="password" class="form-control form-control-sm" placeholder="初期パスワード" required>
+                        </div>
+                        <button type="submit" class="btn btn-sm btn-primary w-100">登録</button>
+                    </form>
+                </div>
+            </div>
+            {% endif %}
+
+        </div>
+    </div>
+
+    <footer class="footer text-center mt-4">
+        <div class="container">
+            <small>© {{ now().year }} 図鑑 — {{ verj }}</small>
+        </div>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
