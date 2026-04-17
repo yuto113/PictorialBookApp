@@ -118,7 +118,7 @@ def user_page():
         my_school_member = SchoolMember.query.filter_by(user_id=user_id).first()
         my_school = School.query.get(my_school_member.school_id) if my_school_member else None
         
-        return render_template('user.html', user=user, dates=dates, filter_ev=Illustrated_ev, filter_ki=Illustrated_ki, filter_friend=Illustrated_friend, friends=friends, my_school=my_school)
+        return render_template('user.html', user=user, dates=dates, filter_ev=Illustrated_ev, filter_ki=Illustrated_ki, filter_friend=Illustrated_friend, friends=friends, my_school=my_school, user_role=user.role)
     return redirect('/login')
 
 # ↓↓↓ここから↓↓↓
