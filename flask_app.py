@@ -709,7 +709,7 @@ def update_role(target_id):
     
     data = request.get_json()
     new_role = data.get('role') if data else request.form.get('role')
-    if new_role not in ['normal', 'admin', 'limited', 'suspended']:
+    if new_role not in ['normal', 'admin', 'limited', 'suspended', 'teacher', 'school_admin', 'student']:
         return {'error': 'invalid role'}, 400
     
     target_user = User.query.get(target_id)
