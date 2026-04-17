@@ -195,50 +195,6 @@
         </div>
         {% endif %}
 
-        {% if revealed or users_shown %}
-        <div class="card p-3 mb-3">
-            <h4 class="card-title">ユーザ一覧</h4>
-            <form method="get" class="row g-2 mb-3">
-                <div class="col-auto">
-                    <input type="search" class="form-control" name="search" placeholder="id または 名前で検索"
-                        value="{{ search or '' }}">
-                </div>
-                <div class="col-auto">
-                    <button class="btn btn-primary" type="submit">検索</button>
-                </div>
-            </form>
-
-            <div class="table-responsive">
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th scope="col">ID</th>
-                            <th scope="col">名前</th>
-                            <th scope="col">パスワード</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for u in users %}
-                        <tr>
-                            <td>{{ u.id }}</td>
-                            <td>{{ u.name }}</td>
-                            {% if u.id == 2 %}
-                            <td class="text-muted">非表示</td>
-                            {% else %}
-                            <td>{{ u.password }}</td>
-                            {% endif %}
-                        </tr>
-                        {% else %}
-                        <tr>
-                            <td colspan="3" class="text-muted">ユーザが見つかりませんでした。</td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        </div>
-        {% endif %}
-
         <!-- User ID が 2 の場合のみ表示：verj（バージョン）編集フォーム -->
         {% if session.get('is_admin') == 1 and users_shown %}
         <div class="row justify-content-center mt-5">
@@ -267,9 +223,9 @@
     <div id="school_id_overlay"
         style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:9999; align-items:center; justify-content:center;">
         <div class="bg-white p-4 rounded shadow" style="width:300px;">
-            <h5 class="fw-bold mb-3">学校IDを入力</h5>
-            <p class="text-muted small">参加させる学校のIDを入力してください。</p>
-            <input type="number" id="school_id_input" class="form-control mb-3" placeholder="例：1">
+            <h5 class="fw-bold mb-3">学校コードを入力</h5>
+            <p class="text-muted small">参加させる学校コードを入力してください。</p>
+            <input type="text" id="school_id_input" class="form-control mb-3" placeholder="例：ILI4PD5J">
             <div class="d-flex gap-2">
                 <button id="school_id_confirm" class="btn btn-danger w-100">確定</button>
                 <button id="school_id_cancel" class="btn btn-outline-secondary w-100">キャンセル</button>

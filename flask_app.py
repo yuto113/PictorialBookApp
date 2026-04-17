@@ -721,12 +721,14 @@ def update_role(target_id):
         if new_role in ['teacher', 'school_admin', 'student']:
             school_id = data.get('school_id') if data else None
             if school_id:
-                school = School.query.get(int(school_id))
+                school = School.query.filter_by(code=school_id).first()
                 if not school:
-                    return {'error': '学校が見つかりません。'}, 404
-                # すでに参加しているか確認
+                    return {'error': '学校コードが見つかりません。'}, 404
                 existing = SchoolMember.query.filter_by(
-                    school_id=int(school_id), user_id=target_id).first()
+                    school_id=school.id, user_id=target_id).first()
+                if not existing:
+                    new_member = SchoolMember(
+                        school_id=school.id, user_id=target_id)
                 if not existing:
                     new_member = SchoolMember(
                         school_id=int(school_id), user_id=target_id)
@@ -761,11 +763,11 @@ def admin_school_detail(school_id):
     ).order_by(Date.id.desc()).all()
     
     return render_template('admin_school_detail.html',
-                           school=school,
-                           classes=classes,
-                           students=students,
-                           teachers=teachers,
-                           dates=dates)
+                            school=school,
+                            classes=classes,
+                            students=students,
+                            teachers=teachers,
+                            dates=dates)
 
 
 @app.route('/admin/create_school_user', methods=['POST'])
