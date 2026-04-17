@@ -732,11 +732,6 @@ def update_role(target_id):
                 if not existing:
                     new_member = SchoolMember(
                         school_id=school.id, user_id=target_id)
-                if not existing:
-                    new_member = SchoolMember(
-                        school_id=int(school_id), user_id=target_id)
-                    db.session.add(new_member)
-                    db.session.commit()
         
         return {'success': True, 'role': new_role}
     return {'error': 'not found'}, 404
