@@ -724,6 +724,9 @@ def update_role(target_id):
                 school = School.query.filter_by(code=school_id).first()
                 if not school:
                     return {'error': '学校コードが見つかりません。'}, 404
+                school = School.query.filter_by(code=school_id).first()
+                if not school:
+                    return {'error': '学校コードが見つかりません。'}, 404
                 existing = SchoolMember.query.filter_by(
                     school_id=school.id, user_id=target_id).first()
                 if not existing:
