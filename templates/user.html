@@ -49,6 +49,13 @@
                 <span class="fs-4 brand-color">図鑑</span>
                 <small class="text-muted ms-2">オンライン図鑑</small>
             </a>
+            {% if user.role in ['teacher', 'school_admin'] %}
+            {% if my_school %}
+            <a class="btn btn-sm btn-success me-2" href="/school/dashboard">{{ my_school.name }}</a>
+            {% else %}
+            <a class="btn btn-sm btn-outline-success me-2" href="/school/join">学校に参加</a>
+            {% endif %}
+            {% endif %}
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
                 <span class="navbar-toggler-icon"></span>
             </button>
