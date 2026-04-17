@@ -41,6 +41,8 @@ class Date(db.Model):
     
     is_hidden = db.Column(db.Integer, default=0)
 
+    school_id = db.Column(db.Integer, db.ForeignKey('school.id'), nullable=True)
+
     # リレーションシップ設定
     user = db.relationship(
         'User', 

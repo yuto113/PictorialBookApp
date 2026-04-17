@@ -92,7 +92,17 @@ def user_page():
         # 管理者（id=2）は非表示も見える、それ以外は非表示を除外
         if user_id != 2:
             date = date.filter(Date.is_hidden != 1)
-        dates = date.order_by(Date.id.desc()).all()
+        if user.role in ['teacher', 'student', 'school_admin']:
+            my_member = SchoolMember.query.filter_by(user_id=user_id).first()
+            if my_member:
+                # 学校内のメンバーIDを取得
+                school_member_ids = [m.user_id for m in SchoolMember.query.filter_by(school_id=my_member.school_id).all()]
+                date = date.filter(Date.user_id.in_(school_member_ids))
+            else:
+                # 学校未参加の場合は何も表示しない
+                date = date.filter(Date.id == -1)
+        
+        dates = date.filter(Date.is_hidden != 1).order_by(Date.id.desc()).all()
 
         # 各dateに対して、現在のユーザーがいいね済みかをチェック
         for d in dates:
@@ -756,6 +766,17 @@ def upload():
                 )
             db_session.add(save_date)
             db_session.commit()
+            upload_user = User.query.get(session.get('user_id'))
+            if upload_user and upload_user.role in ['teacher', 'student', 'school_admin']:
+                my_member = SchoolMember.query.filter_by(user_id=upload_user.id).first()
+                if my_member:
+                    # 学校に紐付け（school_idをdateに保存）
+                    save_date.school_id = my_member.school_id
+                    # クラスに紐付け（最大3クラス）
+                    my_classes = ClassMember.query.filter_by(user_id=upload_user.id).all()
+                    for cm in my_classes:
+                        save_date.class_ids = str(cm.class_id)
+                    db_session.commit()
             return render_template('upload.html', upload=file.filename)
     
     # fileを受け取る
