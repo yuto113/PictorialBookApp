@@ -8,15 +8,15 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
     <style>
-        body { background: linear-gradient(135deg,#fff7f0 0%, #f0f9ff 100%); color:#333; }
-        .brand-color { color: #ff6b6b; }
+        body { background: {{ 'linear-gradient(135deg, #f0fff4 0%, #e8f5e9 100%)' if is_school_user else 'linear-gradient(135deg, #fff7f0 0%, #f0f9ff 100%)' }}; color:#333; }
+        .brand-color { color: {{ '#28a745' if is_school_user else '#ff6b6b' }}; }
         .card-upload { border-radius: 1rem; box-shadow: 0 10px 30px rgba(16,24,40,0.06); }
         .footer { color: #666; padding: 1rem 0; }
         .form-control:focus { box-shadow: 0 0 0 0.2rem rgba(255,107,107,0.12); }
     </style>
 </head>
 
-<body>
+<body class="{{ 'theme-green' if is_school_user else 'theme-pink' }}">
     <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
         <div class="container">
             <a class="navbar-brand d-flex align-items-center" href="/user">

@@ -39,8 +39,17 @@ with app.app_context():
 
     if not os.path.exists(db_path):
         db.create_all()
-
 @app.context_processor
+def inject_user_role():
+    user_id = session.get('user_id')
+    if user_id:
+        user = User.query.get(user_id)
+        if user:
+            return dict(
+                user_role=user.role,
+                is_school_user=user.role in ['teacher', 'school_admin', 'student']
+            )
+    return dict(user_role='normal', is_school_user=False)
 def utility_now():
     # Provide a `now()` function to Jinja templates (e.g. now().year)
     # Return current time in Japan Standard Time (UTC+9)

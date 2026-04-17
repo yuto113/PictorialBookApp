@@ -1,0 +1,14 @@
+/* static/css/theme.css */
+/* ピンクテーマ（デフォルト） */
+.theme-pink {
+    background: linear-gradient(135deg, #fff7f0 0%, #f0f9ff 100%);
+}
+.theme-pink .brand-color { color: #ff6b6b; }
+.theme-pink .btn-theme { background-color: #ff6b6b; border-color: #ff6b6b; }
+
+/* 緑テーマ（学校用） */
+.theme-green {
+    background: linear-gradient(135deg, #f0fff4 0%, #e8f5e9 100%);
+}
+.theme-green .brand-color { color: #28a745; }
+.theme-green .btn-theme { background-color: #28a745; border-color: #28a745; }

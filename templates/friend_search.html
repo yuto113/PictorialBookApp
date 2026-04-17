@@ -10,12 +10,24 @@
     <style>
         /* ポップな配色 */
         body {
-            background: linear-gradient(135deg, #fff7f0 0%, #f0f9ff 100%);
+            background: {
+                    {
+                    'linear-gradient(135deg, #f0fff4 0%, #e8f5e9 100%)' if is_school_user else 'linear-gradient(135deg, #fff7f0 0%, #f0f9ff 100%)'
+                }
+            }
+
+            ;
             color: #333;
         }
 
         .brand-color {
-            color: #ff6b6b;
+            color: {
+                    {
+                    '#28a745' if is_school_user else '#ff6b6b'
+                }
+            }
+
+            ;
         }
 
         .card-tilt {
@@ -38,7 +50,7 @@
     </style>
 </head>
 
-<body>
+<body class="{{ 'theme-green' if is_school_user else 'theme-pink' }}">
     <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
         <div class="container">
             <a class="navbar-brand d-flex align-items-center" href="/user">
@@ -70,7 +82,7 @@
             </div>
         </div>
 
-{% if users %}
+        {% if users %}
         <h3 class="mt-5 mb-3">検索結果</h3>
         <div class="row row-cols-1 row-cols-md-2 g-4">
             {% for user in users %}
@@ -83,14 +95,15 @@
                             {% if relation.status == 'accepted' %}
                             <span class="badge bg-success">フレンド</span>
                             {% elif relation.status == 'pending' %}
-                                {% if relation.is_requester %}
-                                <div class="d-flex gap-2 align-items-center">
-                                    <span class="badge bg-warning">申請中</span>
-                                    <button class="btn btn-outline-secondary btn-sm" onclick="cancelFriend({{ user.id }})">申請解除</button>
-                                </div>
-                                {% else %}
-                                <span class="badge bg-info">承認待ち</span>
-                                {% endif %}
+                            {% if relation.is_requester %}
+                            <div class="d-flex gap-2 align-items-center">
+                                <span class="badge bg-warning">申請中</span>
+                                <button class="btn btn-outline-secondary btn-sm"
+                                    onclick="cancelFriend({{ user.id }})">申請解除</button>
+                            </div>
+                            {% else %}
+                            <span class="badge bg-info">承認待ち</span>
+                            {% endif %}
                             {% else %}
                             <button class="btn btn-primary" onclick="requestFriend({{ user.id }})">フレンド申請</button>
                             {% endif %}

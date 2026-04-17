@@ -11,7 +11,7 @@
         .footer { color: #666; padding: 1rem 0; }
     </style>
 </head>
-<body>
+<body class="{{ 'theme-green' if is_school_user else 'theme-pink' }}">
     <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
         <div class="container">
             <a class="navbar-brand d-flex align-items-center" href="/admin/schools">

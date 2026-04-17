@@ -9,7 +9,27 @@
         integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <style>
-        /* 地図のスタイル */
+        body {
+            background: {
+                    {
+                    'linear-gradient(135deg, #f0fff4 0%, #e8f5e9 100%)' if is_school_user else 'linear-gradient(135deg, #fff7f0 0%, #f0f9ff 100%)'
+                }
+            }
+
+            ;
+            color: #333;
+        }
+
+        .brand-color {
+            color: {
+                    {
+                    '#28a745' if is_school_user else '#ff6b6b'
+                }
+            }
+
+            ;
+        }
+
         #map {
             width: 100%;
             height: 200px;
@@ -18,7 +38,7 @@
     </style>
 </head>
 
-<body>
+<body class="{{ 'theme-green' if is_school_user else 'theme-pink' }}">
     <div class="container py-4">
         <a href="/user" class="btn btn-sm btn-outline-secondary mb-3">← 戻る</a>
 

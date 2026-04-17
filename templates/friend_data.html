@@ -14,12 +14,24 @@
     <style>
         /* ポップな配色 */
         body {
-            background: linear-gradient(135deg, #fff7f0 0%, #f0f9ff 100%);
+            background: {
+                    {
+                    'linear-gradient(135deg, #f0fff4 0%, #e8f5e9 100%)' if is_school_user else 'linear-gradient(135deg, #fff7f0 0%, #f0f9ff 100%)'
+                }
+            }
+
+            ;
             color: #333;
         }
 
         .brand-color {
-            color: #ff6b6b;
+            color: {
+                    {
+                    '#28a745' if is_school_user else '#ff6b6b'
+                }
+            }
+
+            ;
         }
 
         .card-tilt {
@@ -42,7 +54,7 @@
     </style>
 </head>
 
-<body>
+<body class="{{ 'theme-green' if is_school_user else 'theme-pink' }}">
     <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
         <div class="container">
             <a class="navbar-brand d-flex align-items-center" href="/user">
@@ -63,7 +75,8 @@
             <div class="col">
                 <div class="card h-100 card-tilt shadow-sm border-0" style="border-radius: 1rem;">
                     <a href="{{ url_for('static', filename='uploads/' + date.imagepass) }}" data-lightbox="group"
-                        class="d-block overflow-hidden" style="border-top-left-radius:1rem; border-top-right-radius:1rem;">
+                        class="d-block overflow-hidden"
+                        style="border-top-left-radius:1rem; border-top-right-radius:1rem;">
                         <img src="{{ url_for('static', filename='uploads/' + date.imagepass) }}" class="card-img-top"
                             alt="{{ date.name }}" style="height:220px; object-fit:cover;">
                     </a>
@@ -95,4 +108,5 @@
         crossorigin="anonymous"></script>
     <script src="/static/js/index.js"></script>
 </body>
+
 </html>
