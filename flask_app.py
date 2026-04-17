@@ -719,6 +719,94 @@ def update_role(target_id):
         return {'success': True, 'role': new_role}
     return {'error': 'not found'}, 404
 
+@app.route('/admin/schools/<int:school_id>')
+def admin_school_detail(school_id):
+    user_id = session.get('user_id')
+    if not user_id or user_id != 2:
+        return redirect('/user')
+    
+    school = School.query.get(school_id)
+    if not school:
+        return redirect('/admin/schools')
+    
+    classes = SchoolClass.query.filter_by(school_id=school_id).all()
+    members = db.session.query(User).join(SchoolMember,
+        SchoolMember.user_id == User.id
+    ).filter(SchoolMember.school_id == school_id).all()
+    
+    students = [m for m in members if m.role == 'student']
+    teachers = [m for m in members if m.role in ['teacher', 'school_admin']]
+    
+    # 学校内の投稿一覧
+    school_member_ids = [m.id for m in members]
+    dates = Date.query.filter(
+        Date.user_id.in_(school_member_ids)
+    ).order_by(Date.id.desc()).all()
+    
+    return render_template('admin_school_detail.html',
+                           school=school,
+                           classes=classes,
+                           students=students,
+                           teachers=teachers,
+                           dates=dates)
+
+
+@app.route('/admin/create_school_user', methods=['POST'])
+def admin_create_school_user():
+    user_id = session.get('user_id')
+    if not user_id or user_id != 2:
+        return redirect('/user')
+    
+    name = request.form.get('name')
+    password = request.form.get('password')
+    role = request.form.get('role')
+    school_id = request.form.get('school_id')
+    
+    if name and password and role in ['teacher', 'school_admin', 'student']:
+        new_user = User(name=name, password=password, role=role)
+        db.session.add(new_user)
+        db.session.commit()
+        
+        if school_id:
+            new_member = SchoolMember(school_id=int(school_id), user_id=new_user.id)
+            db.session.add(new_member)
+            db.session.commit()
+        
+        flash(f'「{name}」を登録しました！ID: {new_user.id}', 'success')
+    
+    return redirect(f'/admin/schools/{school_id}')
+
+
+@app.route('/admin/delete_school_date/<int:date_id>', methods=['POST'])
+def admin_delete_school_date(date_id):
+    user_id = session.get('user_id')
+    if not user_id or user_id != 2:
+        return redirect('/user')
+    
+    date_obj = Date.query.get(date_id)
+    school_id = request.form.get('school_id')
+    if date_obj:
+        db.session.delete(date_obj)
+        db.session.commit()
+        flash('データを削除しました。', 'success')
+    
+    return redirect(f'/admin/schools/{school_id}')
+
+
+@app.route('/admin/toggle_school_date/<int:date_id>', methods=['POST'])
+def admin_toggle_school_date(date_id):
+    user_id = session.get('user_id')
+    if not user_id or user_id != 2:
+        return redirect('/user')
+    
+    date_obj = Date.query.get(date_id)
+    school_id = request.form.get('school_id')
+    if date_obj:
+        date_obj.is_hidden = 0 if date_obj.is_hidden == 1 else 1
+        db.session.commit()
+    
+    return redirect(f'/admin/schools/{school_id}')
+
 @app.route('/school/mypage', methods=['GET', 'POST'])
 def school_mypage():
     user_id = session.get('user_id')

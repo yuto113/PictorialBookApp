@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ school.name }} 管理</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background: linear-gradient(135deg, #fff7f0 0%, #f0f9ff 100%); color: #333; }
+        .brand-color { color: #ff6b6b; }
+        .footer { color: #666; padding: 1rem 0; }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="/admin/schools">
+                <span class="fs-4 brand-color">図鑑</span>
+                <small class="text-muted ms-2">学校管理</small>
+            </a>
+            <a class="btn btn-sm btn-outline-secondary" href="/admin/schools">戻る</a>
+        </div>
+    </nav>
+
+    <div class="container py-4">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        {% for category, message in messages %}
+        <div class="alert alert-{{ category }}">{{ message }}</div>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
+
+        <h2 class="mb-2 brand-color">{{ school.name }}</h2>
+        <p class="text-muted">学校コード: <code>{{ school.code }}</code></p>
+
+        <div class="row g-4">
+
+            <!-- ユーザー登録 -->
+            <div class="col-md-6">
+                <div class="card shadow-sm border-0 p-4">
+                    <h5 class="fw-bold mb-3">👤 ユーザー登録</h5>
+                    <form method="POST" action="/admin/create_school_user">
+                        <input type="hidden" name="school_id" value="{{ school.id }}">
+                        <div class="mb-2">
+                            <label class="form-label small fw-bold">名前</label>
+                            <input type="text" name="name" class="form-control form-control-sm" required>
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label small fw-bold">初期パスワード</label>
+                            <input type="text" name="password" class="form-control form-control-sm" required>
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label small fw-bold">役割</label>
+                            <select name="role" class="form-select form-select-sm">
+                                <option value="student">学生</option>
+                                <option value="teacher">教師</option>
+                                <option value="school_admin">学校管理者</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-sm btn-danger w-100">登録</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- クラス一覧 -->
+            <div class="col-md-6">
+                <div class="card shadow-sm border-0 p-4">
+                    <h5 class="fw-bold mb-3">📚 クラス一覧</h5>
+                    {% for cls in classes %}
+                    <div class="border rounded p-2 mb-2">
+                        <strong>{{ cls.name }}</strong>
+                        <span class="text-muted small ms-2">コード: <code>{{ cls.code }}</code></span>
+                        <span class="badge bg-info text-dark ms-1">{{ cls.members|length }}人</span>
+                    </div>
+                    {% else %}
+                    <p class="text-muted small">クラスがありません。</p>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- 教師一覧 -->
+            <div class="col-md-6">
+                <div class="card shadow-sm border-0 p-4">
+                    <h5 class="fw-bold mb-3">👨‍🏫 教師一覧</h5>
+                    {% for teacher in teachers %}
+                    <div class="border rounded p-2 mb-2">
+                        <strong>{{ teacher.name }}</strong>
+                        <span class="badge bg-primary ms-2">{{ teacher.role }}</span>
+                        <small class="text-muted ms-2">ID: {{ teacher.id }}</small>
+                    </div>
+                    {% else %}
+                    <p class="text-muted small">教師がいません。</p>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- 生徒一覧 -->
+            <div class="col-md-6">
+                <div class="card shadow-sm border-0 p-4">
+                    <h5 class="fw-bold mb-3">👨‍🎓 生徒一覧</h5>
+                    <div style="max-height:200px; overflow-y:auto;">
+                        {% for student in students %}
+                        <div class="border rounded p-2 mb-2">
+                            <strong>{{ student.name }}</strong>
+                            <small class="text-muted ms-2">ID: {{ student.id }}</small>
+                        </div>
+                        {% else %}
+                        <p class="text-muted small">生徒がいません。</p>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- 投稿一覧 -->
+            <div class="col-12">
+                <div class="card shadow-sm border-0 p-4">
+                    <h5 class="fw-bold mb-3">📷 投稿一覧</h5>
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>名前</th>
+                                    <th>投稿者</th>
+                                    <th>状態</th>
+                                    <th>操作</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for date in dates %}
+                                <tr>
+                                    <td>{{ date.id }}</td>
+                                    <td>{{ date.name }}</td>
+                                    <td>{{ date.user.name }}</td>
+                                    <td>
+                                        {% if date.is_hidden == 1 %}
+                                        <span class="badge bg-warning text-dark">非表示</span>
+                                        {% else %}
+                                        <span class="badge bg-success">表示中</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <form method="POST" action="/admin/toggle_school_date/{{ date.id }}" class="d-inline">
+                                            <input type="hidden" name="school_id" value="{{ school.id }}">
+                                            <button type="submit" class="btn btn-sm btn-outline-warning">
+                                                {{ '表示' if date.is_hidden == 1 else '非表示' }}
+                                            </button>
+                                        </form>
+                                        <form method="POST" action="/admin/delete_school_date/{{ date.id }}" class="d-inline" onsubmit="return confirm('本当に削除しますか？')">
+                                            <input type="hidden" name="school_id" value="{{ school.id }}">
+                                            <button type="submit" class="btn btn-sm btn-outline-danger">削除</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                                {% else %}
+                                <tr>
+                                    <td colspan="5" class="text-muted">投稿がありません。</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <footer class="footer text-center mt-4">
+        <div class="container">
+            <small>© {{ now().year }} 図鑑 — {{ verj }}</small>
+        </div>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

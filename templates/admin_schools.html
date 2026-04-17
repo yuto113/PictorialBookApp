@@ -55,9 +55,12 @@
                         </div>
                         <small class="text-muted">メンバー数: {{ school.members|length }}人</small>
                     </div>
-                    <form method="POST" action="/admin/schools/delete/{{ school.id }}" onsubmit="return confirm('本当に削除しますか？')">
-                        <button type="submit" class="btn btn-sm btn-outline-danger">削除</button>
-                    </form>
+                    <div class="d-flex gap-2">
+                        <a href="/admin/schools/{{ school.id }}" class="btn btn-sm btn-outline-primary">詳細</a>
+                        <form method="POST" action="/admin/schools/delete/{{ school.id }}" onsubmit="return confirm('本当に削除しますか？')">
+                            <button type="submit" class="btn btn-sm btn-outline-danger">削除</button>
+                        </form>
+                    </div>
                 </div>
 
                 {% if school.classes %}
