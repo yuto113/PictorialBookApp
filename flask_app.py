@@ -1,7 +1,7 @@
 import os
 os.makedirs('/app/instance', exist_ok=True)
 from flask import Flask, render_template, request, redirect, session, flash
-from models import User, db, Date, Like, Chat, Friend, Feedback
+from models import User, db, Date, Like, Chat, Friend, Feedback, School, SchoolMember, SchoolClass, ClassMember
 from sqlalchemy import or_
 from datetime import datetime
 from zoneinfo import ZoneInfo

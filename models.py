@@ -87,6 +87,55 @@ class Feedback(db.Model):
     
     user = db.relationship('User', backref='feedbacks')
 
+import random
+import string
+
+def generate_code(length=8):
+    return ''.join(random.choices(string.ascii_uppercase + string.digits, k=length))
+
+class School(db.Model):
+    __tablename__ = 'school'
+    
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    name = db.Column(db.Text, nullable=False)
+    code = db.Column(db.Text, unique=True, nullable=False)
+    created_at = db.Column(db.DateTime(timezone=True), default=func.now())
+    
+    members = db.relationship('SchoolMember', backref='school', cascade='all, delete-orphan')
+    classes = db.relationship('SchoolClass', backref='school', cascade='all, delete-orphan')
+
+
+class SchoolMember(db.Model):
+    __tablename__ = 'school_member'
+    
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    school_id = db.Column(db.Integer, db.ForeignKey('school.id', ondelete='CASCADE'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id', ondelete='CASCADE'), nullable=False)
+    
+    __table_args__ = (db.UniqueConstraint('school_id', 'user_id', name='_school_user_uc'),)
+
+
+class SchoolClass(db.Model):
+    __tablename__ = 'school_class'
+    
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    school_id = db.Column(db.Integer, db.ForeignKey('school.id', ondelete='CASCADE'), nullable=False)
+    name = db.Column(db.Text, nullable=False)
+    code = db.Column(db.Text, unique=True, nullable=False)
+    created_at = db.Column(db.DateTime(timezone=True), default=func.now())
+    
+    members = db.relationship('ClassMember', backref='school_class', cascade='all, delete-orphan')
+
+
+class ClassMember(db.Model):
+    __tablename__ = 'class_member'
+    
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    class_id = db.Column(db.Integer, db.ForeignKey('school_class.id', ondelete='CASCADE'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id', ondelete='CASCADE'), nullable=False)
+    
+    __table_args__ = (db.UniqueConstraint('class_id', 'user_id', name='_class_user_uc'),)
+
 class Friend(db.Model):
     __tablename__ = 'friends'
     
