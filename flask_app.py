@@ -719,6 +719,48 @@ def update_role(target_id):
         return {'success': True, 'role': new_role}
     return {'error': 'not found'}, 404
 
+@app.route('/school/mypage', methods=['GET', 'POST'])
+def school_mypage():
+    user_id = session.get('user_id')
+    if not user_id:
+        return redirect('/login')
+    
+    user = User.query.get(user_id)
+    if user.role not in ['student', 'teacher', 'school_admin']:
+        return redirect('/user')
+    
+    # 学校情報
+    my_member = SchoolMember.query.filter_by(user_id=user_id).first()
+    my_school = School.query.get(my_member.school_id) if my_member else None
+    
+    # 所属クラス
+    my_class_members = ClassMember.query.filter_by(user_id=user_id).all()
+    my_classes = [SchoolClass.query.get(cm.class_id) for cm in my_class_members]
+    
+    message = None
+    if request.method == 'POST':
+        current_pw = request.form.get('current_password')
+        new_pw = request.form.get('new_password')
+        new_pw2 = request.form.get('new_password2')
+        
+        if current_pw != user.password:
+            message = '現在のパスワードが違います。'
+        elif new_pw != new_pw2:
+            message = '新しいパスワードが一致しません。'
+        elif not new_pw:
+            message = '新しいパスワードを入力してください。'
+        else:
+            user.password = new_pw
+            db.session.commit()
+            flash('パスワードを変更しました！', 'success')
+            return redirect('/school/mypage')
+    
+    return render_template('school_mypage.html',
+                            user=user,
+                            my_school=my_school,
+                            my_classes=my_classes,
+                            message=message)
+
 #アップロードの機能を追加する。(エンドポイント)
 @app.route('/upload', methods=['GET', 'POST'])
 def upload():
