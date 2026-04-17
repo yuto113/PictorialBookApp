@@ -39,33 +39,24 @@ with app.app_context():
 
     if not os.path.exists(db_path):
         db.create_all()
+
 @app.context_processor
-def inject_user_role():
+def inject_globals():
+    global app_verj
     user_id = session.get('user_id')
+    user_role = 'normal'
+    is_school_user = False
     if user_id:
         user = User.query.get(user_id)
         if user:
-            return dict(
-                user_role=user.role,
-                is_school_user=user.role in ['teacher', 'school_admin', 'student']
-            )
-    return dict(user_role='normal', is_school_user=False)
-def utility_now():
-    # Provide a `now()` function to Jinja templates (e.g. now().year)
-    # Return current time in Japan Standard Time (UTC+9)
-    # Return a datetime in JST with microseconds cleared so templates
-    # display times like "2025-10-26 11:44:39" (no microseconds)
-    return dict(now=lambda: datetime.now(tz=ZoneInfo("Asia/Tokyo")).replace(microsecond=0))
-
-
-@app.context_processor
-def inject_verj():
-    # Provide a global `verj` variable to all templates.
-    # If app_verj is set, use that; otherwise use config.py's VERJ setting
-    global app_verj
-    if app_verj:
-        return dict(verj=app_verj)
-    return dict(verj=app.config.get('VERJ', 'ver.1.0'))
+            user_role = user.role
+            is_school_user = user.role in ['teacher', 'school_admin', 'student']
+    return dict(
+        now=lambda: datetime.now(tz=ZoneInfo("Asia/Tokyo")).replace(microsecond=0),
+        verj=app_verj if app_verj else app.config.get('VERJ', 'ver.1.0'),
+        user_role=user_role,
+        is_school_user=is_school_user
+    )
 
 @app.route('/school/messages', methods=['GET', 'POST'])
 def school_messages():
