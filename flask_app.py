@@ -343,6 +343,44 @@ def users_page():
 
     return render_template('users.html', users=users, search=search, message=message, revealed=revealed, users_shown=users_shown, user_id=user_id)
 
+@app.route('/admin/schools', methods=['GET', 'POST'])
+def admin_schools():
+    user_id = session.get('user_id')
+    if not user_id or user_id != 2:
+        return redirect('/user')
+    
+    if request.method == 'POST':
+        school_name = request.form.get('school_name')
+        if school_name:
+            # コードを自動生成
+            from models import generate_code
+            code = generate_code(8)
+            # 重複チェック
+            while School.query.filter_by(code=code).first():
+                code = generate_code(8)
+            new_school = School(name=school_name, code=code)
+            db.session.add(new_school)
+            db.session.commit()
+            flash(f'学校「{school_name}」を作成しました！コード: {code}', 'success')
+            return redirect('/admin/schools')
+    
+    schools = School.query.order_by(School.created_at.desc()).all()
+    return render_template('admin_schools.html', schools=schools)
+
+
+@app.route('/admin/schools/delete/<int:school_id>', methods=['POST'])
+def admin_delete_school(school_id):
+    user_id = session.get('user_id')
+    if not user_id or user_id != 2:
+        return redirect('/user')
+    
+    school = School.query.get(school_id)
+    if school:
+        db.session.delete(school)
+        db.session.commit()
+        flash('学校を削除しました。', 'success')
+    return redirect('/admin/schools')
+
 @app.route('/update_verj', methods=['POST'])
 def update_verj():
     """
