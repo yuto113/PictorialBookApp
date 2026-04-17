@@ -51,6 +51,57 @@ class Date(db.Model):
     likes = db.relationship('Like', back_populates='date')
     chats = db.relationship('Chat', back_populates='date', cascade='all, delete-orphan', passive_deletes=True)
 
+class SchoolMessage(db.Model):
+    __tablename__ = 'school_message'
+    
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    school_id = db.Column(db.Integer, db.ForeignKey('school.id', ondelete='CASCADE'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id', ondelete='CASCADE'), nullable=False)
+    message = db.Column(db.Text, nullable=False)
+    created_at = db.Column(db.DateTime(timezone=True), default=func.now())
+    
+    user = db.relationship('User', backref='school_messages')
+    school = db.relationship('School', backref='messages')
+    replies = db.relationship('SchoolMessageReply', backref='message', cascade='all, delete-orphan')
+
+
+class SchoolMessageReply(db.Model):
+    __tablename__ = 'school_message_reply'
+    
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    message_id = db.Column(db.Integer, db.ForeignKey('school_message.id', ondelete='CASCADE'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id', ondelete='CASCADE'), nullable=False)
+    reply = db.Column(db.Text, nullable=False)
+    created_at = db.Column(db.DateTime(timezone=True), default=func.now())
+    
+    user = db.relationship('User', backref='school_message_replies')
+
+
+class ClassChat(db.Model):
+    __tablename__ = 'class_chat'
+    
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    class_id = db.Column(db.Integer, db.ForeignKey('school_class.id', ondelete='CASCADE'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id', ondelete='CASCADE'), nullable=False)
+    message = db.Column(db.Text, nullable=False)
+    created_at = db.Column(db.DateTime(timezone=True), default=func.now())
+    
+    user = db.relationship('User', backref='class_chats')
+    school_class = db.relationship('SchoolClass', backref='chats')
+    replies = db.relationship('ClassChatReply', backref='chat', cascade='all, delete-orphan')
+
+
+class ClassChatReply(db.Model):
+    __tablename__ = 'class_chat_reply'
+    
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    chat_id = db.Column(db.Integer, db.ForeignKey('class_chat.id', ondelete='CASCADE'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id', ondelete='CASCADE'), nullable=False)
+    reply = db.Column(db.Text, nullable=False)
+    created_at = db.Column(db.DateTime(timezone=True), default=func.now())
+    
+    user = db.relationship('User', backref='class_chat_replies')
+
 class Like(db.Model):
     __tablename__ = 'like'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)

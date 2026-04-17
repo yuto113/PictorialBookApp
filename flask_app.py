@@ -1,7 +1,7 @@
 import os
 os.makedirs('/app/instance', exist_ok=True)
 from flask import Flask, render_template, request, redirect, session, flash
-from models import User, db, Date, Like, Chat, Friend, Feedback, School, SchoolMember, SchoolClass, ClassMember
+from models import User, db, Date, Like, Chat, Friend, Feedback, School, SchoolMember, SchoolClass, ClassMember, SchoolMessage, SchoolMessageReply, ClassChat, ClassChatReply
 from sqlalchemy import or_
 from datetime import datetime
 from zoneinfo import ZoneInfo
@@ -67,6 +67,161 @@ def inject_verj():
         return dict(verj=app_verj)
     return dict(verj=app.config.get('VERJ', 'ver.1.0'))
 
+@app.route('/school/messages', methods=['GET', 'POST'])
+def school_messages():
+    user_id = session.get('user_id')
+    if not user_id:
+        return redirect('/login')
+    
+    user = User.query.get(user_id)
+    if user.role not in ['teacher', 'student', 'school_admin']:
+        return redirect('/user')
+    
+    my_member = SchoolMember.query.filter_by(user_id=user_id).first()
+    if not my_member:
+        return redirect('/school/join')
+    
+    school = School.query.get(my_member.school_id)
+    
+    if request.method == 'POST':
+        message = request.form.get('message')
+        if message:
+            new_msg = SchoolMessage(
+                school_id=my_member.school_id,
+                user_id=user_id,
+                message=message,
+                created_at=datetime.now(tz=ZoneInfo("Asia/Tokyo")).replace(microsecond=0)
+            )
+            db.session.add(new_msg)
+            db.session.commit()
+            return redirect('/school/messages')
+    
+    messages = SchoolMessage.query.filter_by(
+        school_id=my_member.school_id
+    ).order_by(SchoolMessage.created_at.desc()).all()
+    
+    return render_template('school_messages.html',
+                           user=user,
+                           school=school,
+                           messages=messages)
+
+
+@app.route('/school/messages/reply/<int:message_id>', methods=['POST'])
+def school_message_reply(message_id):
+    user_id = session.get('user_id')
+    if not user_id:
+        return redirect('/login')
+    
+    reply_text = request.form.get('reply')
+    if reply_text:
+        new_reply = SchoolMessageReply(
+            message_id=message_id,
+            user_id=user_id,
+            reply=reply_text,
+            created_at=datetime.now(tz=ZoneInfo("Asia/Tokyo")).replace(microsecond=0)
+        )
+        db.session.add(new_reply)
+        db.session.commit()
+    
+    return redirect('/school/messages')
+
+
+@app.route('/school/messages/delete/<int:message_id>', methods=['POST'])
+def delete_school_message(message_id):
+    user_id = session.get('user_id')
+    if not user_id:
+        return redirect('/login')
+    
+    msg = SchoolMessage.query.get(message_id)
+    if msg and (msg.user_id == user_id or User.query.get(user_id).role in ['school_admin'] or user_id == 2):
+        db.session.delete(msg)
+        db.session.commit()
+    
+    return redirect('/school/messages')
+
+
+@app.route('/school/class_chat/<int:class_id>', methods=['GET', 'POST'])
+def class_chat(class_id):
+    user_id = session.get('user_id')
+    if not user_id:
+        return redirect('/login')
+    
+    user = User.query.get(user_id)
+    if user.role not in ['teacher', 'student', 'school_admin']:
+        return redirect('/user')
+    
+    # クラスメンバーか教師かチェック
+    my_member = SchoolMember.query.filter_by(user_id=user_id).first()
+    cls = SchoolClass.query.get(class_id)
+    if not cls or not my_member:
+        return redirect('/user')
+    
+    # 同じ学校かチェック
+    if cls.school_id != my_member.school_id:
+        return redirect('/user')
+    
+    school = School.query.get(my_member.school_id)
+    
+    if request.method == 'POST':
+        message = request.form.get('message')
+        if message:
+            new_chat = ClassChat(
+                class_id=class_id,
+                user_id=user_id,
+                message=message,
+                created_at=datetime.now(tz=ZoneInfo("Asia/Tokyo")).replace(microsecond=0)
+            )
+            db.session.add(new_chat)
+            db.session.commit()
+            return redirect(f'/school/class_chat/{class_id}')
+    
+    chats = ClassChat.query.filter_by(
+        class_id=class_id
+    ).order_by(ClassChat.created_at.desc()).all()
+    
+    return render_template('class_chat.html',
+                           user=user,
+                           school=school,
+                           cls=cls,
+                           chats=chats)
+
+
+@app.route('/school/class_chat/reply/<int:chat_id>', methods=['POST'])
+def class_chat_reply(chat_id):
+    user_id = session.get('user_id')
+    if not user_id:
+        return redirect('/login')
+    
+    chat = ClassChat.query.get(chat_id)
+    reply_text = request.form.get('reply')
+    if reply_text and chat:
+        new_reply = ClassChatReply(
+            chat_id=chat_id,
+            user_id=user_id,
+            reply=reply_text,
+            created_at=datetime.now(tz=ZoneInfo("Asia/Tokyo")).replace(microsecond=0)
+        )
+        db.session.add(new_reply)
+        db.session.commit()
+    
+    return redirect(f'/school/class_chat/{chat.class_id}')
+
+
+@app.route('/school/class_chat/delete/<int:chat_id>', methods=['POST'])
+def delete_class_chat(chat_id):
+    user_id = session.get('user_id')
+    if not user_id:
+        return redirect('/login')
+    
+    chat = ClassChat.query.get(chat_id)
+    if chat and (chat.user_id == user_id or User.query.get(user_id).role in ['school_admin', 'teacher'] or user_id == 2):
+        class_id = chat.class_id
+        db.session.delete(chat)
+        db.session.commit()
+        return redirect(f'/school/class_chat/{class_id}')
+    
+    return redirect('/user')
+
 @app.route('/user')
 def user_page():
     # show user page only when logged in
@@ -130,7 +285,14 @@ def user_page():
         my_school_member = SchoolMember.query.filter_by(user_id=user_id).first()
         my_school = School.query.get(my_school_member.school_id) if my_school_member else None
         
-        return render_template('user.html', user=user, dates=dates, filter_ev=Illustrated_ev, filter_ki=Illustrated_ki, filter_friend=Illustrated_friend, friends=friends, my_school=my_school, user_role=user.role)
+        # 所属クラス一覧を取得
+        my_class_members = ClassMember.query.filter_by(user_id=user_id).all()
+        my_classes = [SchoolClass.query.get(cm.class_id) for cm in my_class_members]
+        # 教師・school_adminは学校内の全クラスを表示
+        if user.role in ['teacher', 'school_admin'] and my_school_member:
+            my_classes = SchoolClass.query.filter_by(school_id=my_school_member.school_id).all()
+        
+        return render_template('user.html', user=user, dates=dates, filter_ev=Illustrated_ev, filter_ki=Illustrated_ki, filter_friend=Illustrated_friend, friends=friends, my_school=my_school, user_role=user.role, my_classes=my_classes)
     return redirect('/login')
 
 # ↓↓↓ここから↓↓↓

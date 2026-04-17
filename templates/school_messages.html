@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>学校メッセージ</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background: linear-gradient(135deg, #f0fff4 0%, #e8f5e9 100%); color: #333; }
+        .brand-color { color: #28a745; }
+        .footer { color: #666; padding: 1rem 0; }
+        .reply-box { background: #f8f9fa; border-left: 3px solid #28a745; }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="/user">
+                <span class="fs-4 brand-color">図鑑</span>
+                <small class="text-muted ms-2">{{ school.name }}</small>
+            </a>
+            <a class="btn btn-sm btn-outline-secondary" href="/user">ホームへ</a>
+        </div>
+    </nav>
+
+    <div class="container py-4">
+        <h2 class="mb-2 brand-color">📢 学校全体メッセージ</h2>
+        <p class="text-muted small">{{ school.name }}の全メンバーへのメッセージ</p>
+
+        <!-- メッセージ送信フォーム -->
+        <div class="card shadow-sm border-0 p-4 mb-4" style="border-radius:1rem;">
+            <form method="POST">
+                <div class="mb-2">
+                    <textarea class="form-control" name="message" rows="3" placeholder="メッセージを入力..." required></textarea>
+                </div>
+                <button type="submit" class="btn btn-success">送信</button>
+            </form>
+        </div>
+
+        <!-- メッセージ一覧 -->
+        {% for msg in messages %}
+        <div class="card shadow-sm border-0 mb-3" style="border-radius:1rem;">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <strong>{{ msg.user.name }}</strong>
+                    <div class="d-flex gap-2 align-items-center">
+                        <small class="text-muted">{{ msg.created_at }}</small>
+                        {% if msg.user_id == user.id or user.role in ['school_admin'] or user.id == 2 %}
+                        <form method="POST" action="/school/messages/delete/{{ msg.id }}" class="d-inline" onsubmit="return confirm('削除しますか？')">
+                            <button type="submit" class="btn btn-sm btn-outline-danger">削除</button>
+                        </form>
+                        {% endif %}
+                    </div>
+                </div>
+                <p class="mt-2 mb-2">{{ msg.message }}</p>
+
+                <!-- 返信一覧 -->
+                {% if msg.replies %}
+                <div class="ms-3 mt-2">
+                    {% for reply in msg.replies %}
+                    <div class="reply-box rounded p-2 mb-2">
+                        <div class="d-flex justify-content-between">
+                            <strong class="small">{{ reply.user.name }}</strong>
+                            <small class="text-muted">{{ reply.created_at }}</small>
+                        </div>
+                        <p class="mb-0 small">{{ reply.reply }}</p>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                <!-- 返信フォーム -->
+                <div class="ms-3 mt-2">
+                    <form method="POST" action="/school/messages/reply/{{ msg.id }}" class="d-flex gap-2">
+                        <input type="text" name="reply" class="form-control form-control-sm" placeholder="返信を入力..." required>
+                        <button type="submit" class="btn btn-sm btn-outline-success">返信</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <p class="text-muted">まだメッセージがありません。</p>
+        {% endfor %}
+    </div>
+
+    <footer class="footer text-center mt-4">
+        <div class="container">
+            <small>© {{ now().year }} 図鑑 — {{ verj }}</small>
+        </div>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

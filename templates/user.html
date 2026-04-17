@@ -211,6 +211,21 @@
             </div>
         </div>
 
+        {% if is_school_user and my_school %}
+        <div class="d-flex align-items-center gap-3 mb-3 p-3 bg-white rounded shadow-sm">
+            <label class="fw-bold text-success mb-0">📋 表示切替：</label>
+            <select id="class_selector" class="form-select w-auto" onchange="switchClass(this.value)">
+                <option value="school">🏫 学校全体</option>
+                {% for cls in my_classes %}
+                <option value="{{ cls.id }}">📚 {{ cls.name }}</option>
+                {% endfor %}
+            </select>
+            <div id="message_btn">
+                <a href="/school/messages" class="btn btn-success btn-sm">📢 メッセージ</a>
+            </div>
+        </div>
+        {% endif %}
+
         <h2 class="mb-4">みんなのコレクション</h2>
 
         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
@@ -290,6 +305,17 @@
             <small>© {{ now().year }} 図鑑 — {{ verj }}</small>
         </div>
     </footer>
+
+    <script>
+        function switchClass(value) {
+            const msgBtn = document.getElementById('message_btn');
+            if (value === 'school') {
+                msgBtn.innerHTML = '<a href="/school/messages" class="btn btn-success btn-sm">📢 メッセージ</a>';
+            } else {
+                msgBtn.innerHTML = `<a href="/school/class_chat/${value}" class="btn btn-success btn-sm">💬 クラスチャット</a>`;
+            }
+        }
+    </script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"

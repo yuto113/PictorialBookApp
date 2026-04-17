@@ -11,4 +11,4 @@ db.init_app(app)
 
 with app.app_context():
     db.create_all()
-    print("School tables created!")
+    print("Message tables created!")
