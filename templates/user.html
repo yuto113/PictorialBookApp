@@ -144,8 +144,10 @@
                     <span>ようこそ、<a href="/profile/{{ user.id }}" class="text-decoration-none text-dark"><strong>{{
                                 user.name }}</strong></a>さん</span>
                     <a class="btn btn-sm btn-outline-primary" href="/upload">アップロード</a>
+                    {% if not is_school_user %}
                     <a class="btn btn-sm btn-outline-info" href="/friend_search">フレンド検索</a>
                     <a class="btn btn-sm btn-outline-info" href="/friends">フレンドリスト</a>
+                    {% endif %}
 
                     <a class="btn btn-sm btn-outline-warning" href="/feedback">フィードバック</a>
                     {%- if user.id == 2 %}

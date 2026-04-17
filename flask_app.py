@@ -102,14 +102,17 @@ def user_page():
         if user_id != 2:
             date = date.filter(Date.is_hidden != 1)
         if user.role in ['teacher', 'student', 'school_admin']:
+            # 学校ユーザーは学校グループ内のデータのみ
             my_member = SchoolMember.query.filter_by(user_id=user_id).first()
             if my_member:
-                # 学校内のメンバーIDを取得
                 school_member_ids = [m.user_id for m in SchoolMember.query.filter_by(school_id=my_member.school_id).all()]
                 date = date.filter(Date.user_id.in_(school_member_ids))
             else:
-                # 学校未参加の場合は何も表示しない
                 date = date.filter(Date.id == -1)
+        else:
+            # 通常ユーザーは学校グループのデータを除外
+            school_user_ids = [m.user_id for m in SchoolMember.query.all()]
+            date = date.filter(Date.user_id.notin_(school_user_ids))
         
         dates = date.filter(Date.is_hidden != 1).order_by(Date.id.desc()).all()
 
@@ -948,7 +951,23 @@ def friend_search():
     if request.method == 'POST':
         nickname = request.form.get('nickname')
         if nickname:
-            users = db_session.query(User).filter(User.name.like(f'%{nickname}%')).all()
+            if current_user.role in ['teacher', 'student', 'school_admin']:
+                my_member = SchoolMember.query.filter_by(user_id=user_id).first()
+                if my_member:
+                    school_member_ids = [m.user_id for m in SchoolMember.query.filter_by(school_id=my_member.school_id).all()]
+                    users = db_session.query(User).filter(
+                        User.name.like(f'%{nickname}%'),
+                        User.id.in_(school_member_ids)
+                    ).all()
+                else:
+                    users = []
+            else:
+                # 通常ユーザーは学校ユーザーを除外
+                school_user_ids = [m.user_id for m in SchoolMember.query.all()]
+                users = db_session.query(User).filter(
+                    User.name.like(f'%{nickname}%'),
+                    User.id.notin_(school_user_ids)
+                ).all()
             # 各ユーザーとの関係を取得
             friendships = db_session.query(Friend).filter(
                 (Friend.user_id == user_id) | (Friend.friend_id == user_id)
@@ -977,6 +996,17 @@ def api_request_friend(friend_id):
         return {'error': 'unauthorized'}, 401
     if user_id == friend_id:
         return {'error': 'cannot add yourself'}, 400
+    current_user = User.query.get(user_id)
+    target_user = User.query.get(friend_id)
+    current_is_school = current_user.role in ['teacher', 'student', 'school_admin']
+    target_is_school = target_user.role in ['teacher', 'student', 'school_admin']
+    if current_is_school != target_is_school:
+        return {'error': '学校アカウントと通常アカウントはフレンドになれません。'}, 400
+    if current_is_school and target_is_school:
+        current_school = SchoolMember.query.filter_by(user_id=user_id).first()
+        target_school = SchoolMember.query.filter_by(user_id=friend_id).first()
+        if not current_school or not target_school or current_school.school_id != target_school.school_id:
+            return {'error': '同じ学校内のユーザーとのみフレンドになれます。'}, 400
     existing = db_session.query(Friend).filter(
         ((Friend.user_id == user_id) & (Friend.friend_id == friend_id)) |
         ((Friend.user_id == friend_id) & (Friend.friend_id == user_id))
@@ -1051,6 +1081,24 @@ def request_friend(friend_id):
     user_id = session.get('user_id')
     if not user_id:
         return redirect('/login')
+    current_user = User.query.get(user_id)
+    target_user = User.query.get(friend_id)
+    
+    # 学校ユーザーと通常ユーザーはフレンドになれない
+    current_is_school = current_user.role in ['teacher', 'student', 'school_admin']
+    target_is_school = target_user.role in ['teacher', 'student', 'school_admin']
+    
+    if current_is_school != target_is_school:
+        flash('学校アカウントと通常アカウントはフレンドになれません。', 'danger')
+        return redirect('/friend_search')
+    
+    # 学校ユーザーは同じ学校内のみ
+    if current_is_school and target_is_school:
+        current_school = SchoolMember.query.filter_by(user_id=user_id).first()
+        target_school = SchoolMember.query.filter_by(user_id=friend_id).first()
+        if not current_school or not target_school or current_school.school_id != target_school.school_id:
+            flash('同じ学校内のユーザーとのみフレンドになれます。', 'danger')
+            return redirect('/friend_search')
     
     # 自分自身をフレンドに申請しない
     if user_id == friend_id:
