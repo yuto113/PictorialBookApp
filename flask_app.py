@@ -1271,7 +1271,7 @@ def friend_search():
     if request.method == 'POST':
         nickname = request.form.get('nickname')
         if nickname:
-            if current_user.role in ['teacher', 'student', 'school_admin']:
+            if search_user.role in ['teacher', 'student', 'school_admin']:
                 my_member = SchoolMember.query.filter_by(user_id=user_id).first()
                 if my_member:
                     school_member_ids = [m.user_id for m in SchoolMember.query.filter_by(school_id=my_member.school_id).all()]
@@ -1316,9 +1316,11 @@ def api_request_friend(friend_id):
         return {'error': 'unauthorized'}, 401
     if user_id == friend_id:
         return {'error': 'cannot add yourself'}, 400
-    current_user = User.query.get(user_id)
+    api_user = User.query.get(user_id)
     target_user = User.query.get(friend_id)
-    current_is_school = current_user.role in ['teacher', 'student', 'school_admin']
+    if not api_user or not target_user:
+        return {'error': 'user not found'}, 404
+    current_is_school = api_user.role in ['teacher', 'student', 'school_admin']
     target_is_school = target_user.role in ['teacher', 'student', 'school_admin']
     if current_is_school != target_is_school:
         return {'error': '学校アカウントと通常アカウントはフレンドになれません。'}, 400
@@ -1401,11 +1403,12 @@ def request_friend(friend_id):
     user_id = session.get('user_id')
     if not user_id:
         return redirect('/login')
-    current_user = User.query.get(user_id)
+    req_user = User.query.get(user_id)
     target_user = User.query.get(friend_id)
+    if not req_user or not target_user:
+        return redirect('/friend_search')
     
-    # 学校ユーザーと通常ユーザーはフレンドになれない
-    current_is_school = current_user.role in ['teacher', 'student', 'school_admin']
+    current_is_school = req_user.role in ['teacher', 'student', 'school_admin']
     target_is_school = target_user.role in ['teacher', 'student', 'school_admin']
     
     if current_is_school != target_is_school:
