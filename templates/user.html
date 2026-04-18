@@ -12,48 +12,37 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/js/lightbox.min.js" defer
         type="text/javascript"></script>
     <style>
-        body {
-            background: {
-                    {
-                    'linear-gradient(135deg, #f0fff4 0%, #e8f5e9 100%)' if is_school_user else 'linear-gradient(135deg, #fff7f0 0%, #f0f9ff 100%)'
-                }
-            }
-
-            ;
+        body.pink-theme {
+            background: linear-gradient(135deg, #fff7f0 0%, #f0f9ff 100%);
             color: #333;
         }
 
-        .brand-color {
-            color: {
-                    {
-                    '#28a745' if is_school_user else '#ff6b6b'
-                }
-            }
-
-            ;
+        body.green-theme {
+            background: linear-gradient(135deg, #f0fff4 0%, #e8f5e9 100%);
+            color: #333;
         }
 
-            {
-            % if is_school_user %
+        .pink-theme .brand-color {
+            color: #ff6b6b;
         }
 
-        .btn-danger {
+        .green-theme .brand-color {
+            color: #28a745;
+        }
+
+        .green-theme .btn-danger {
             background-color: #28a745 !important;
             border-color: #28a745 !important;
         }
 
-        .btn-outline-danger {
+        .green-theme .btn-outline-danger {
             color: #28a745 !important;
             border-color: #28a745 !important;
         }
 
-        .btn-outline-danger:hover {
+        .green-theme .btn-outline-danger:hover {
             background-color: #28a745 !important;
             color: white !important;
-        }
-
-            {
-            % endif %
         }
 
         .card-tilt {
@@ -76,7 +65,7 @@
     </style>
 </head>
 
-<body>
+<body class="{{ 'green-theme' if is_school_user else 'pink-theme' }}">
     <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
         <div class="container">
             <a class="navbar-brand d-flex align-items-center" href="#">
@@ -208,8 +197,7 @@
             {% set is_passed = deadline_naive < now_dt %} {% set is_closed=assignment.is_closed==1 %} {% set
                 days_left=(deadline_naive - now_dt).days %} <div class="col">
                 <div class="card shadow-sm border-0 h-100"
-                    style="border-radius:1rem;
-                    border-left: 4px solid {% if is_closed or is_passed %}#6c757d{% elif days_left <= 1 %}#dc3545{% else %}#28a745{% endif %} !important;">
+                    style="border-radius:1rem; border-left: 4px solid {% if is_closed or is_passed %}#6c757d{% elif days_left <= 1 %}#dc3545{% else %}#28a745{% endif %} !important;">
                     <div class="card-body p-3">
                         <div class="d-flex justify-content-between align-items-start">
                             <h6 class="fw-bold mb-1">📝 {{ assignment.title }}</h6>
