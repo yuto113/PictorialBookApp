@@ -15,4 +15,4 @@ if database_url:
 else:
     SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(instance_dir, 'db.sqlite')
 
-SQLALCHEMY_TRACK_MODIFICATIONS = False
+SQLALCHEMY_TRACK_MODIFICATIONS = False 
