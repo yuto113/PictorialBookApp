@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>オンライン図鑑</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/css/lightbox.css" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/js/lightbox.min.js" defer></script>
+    <style>
+        body {
+            background: linear-gradient(135deg, #fff7f0 0%, #f0f9ff 100%);
+            color: #333;
+        }
+
+        .brand-color {
+            color: #ff6b6b;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, #ffb199 0%, #ff6b6b 100%);
+            color: white;
+            padding: 4rem 0;
+            text-align: center;
+            border-radius: 0 0 2rem 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .card-tilt {
+            transform: rotate(-0.5deg);
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .footer {
+            color: #666;
+            padding: 1.25rem 0;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="/">
+                <span class="fs-4 brand-color">図鑑</span>
+                <small class="text-muted ms-2">オンライン図鑑</small>
+            </a>
+            <div class="d-flex gap-2">
+                <a class="btn btn-outline-danger" href="/login">ログイン</a>
+                <a class="btn btn-danger" href="/signup">新規登録</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="hero">
+        <div class="container">
+            <h1 class="display-4 fw-bold mb-3">📚 あなたのコレクションを記録しよう</h1>
+            <p class="fs-5 mb-4">植物・動物の写真と情報をみんなで共有！</p>
+            <a href="/signup" class="btn btn-light btn-lg px-5 shadow">無料で始める</a>
+        </div>
+    </div>
+
+    <div class="container py-4">
+        <div class="row text-center mb-5">
+            <div class="col-md-4">
+                <div class="feature-icon">📷</div>
+                <h5 class="fw-bold">写真をアップロード</h5>
+                <p class="text-muted">見つけた生き物の写真を投稿して記録しよう！</p>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-icon">🗺️</div>
+                <h5 class="fw-bold">地図で場所を記録</h5>
+                <p class="text-muted">どこで見つけたか地図で記録できます。</p>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-icon">💬</div>
+                <h5 class="fw-bold">みんなで交流</h5>
+                <p class="text-muted">コメントやいいねで他のユーザーと交流！</p>
+            </div>
+        </div>
+
+        <h2 class="mb-4 brand-color text-center">🌸 みんなのコレクション</h2>
+        <p class="text-center text-muted mb-4">
+            {% if dates %}
+            ログインなしで閲覧中。投稿するには<a href="/signup">新規登録</a>してください。
+            {% else %}
+            まだ投稿がありません。最初の投稿者になりませんか？
+            {% endif %}
+        </p>
+
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
+            {% for date in dates %}
+            <div class="col">
+                <div class="card h-100 card-tilt shadow-sm border-0" style="border-radius:1rem;">
+                    {% if date.imagepass %}
+                    <a href="{{ date.imagepass }}" data-lightbox="group" class="d-block overflow-hidden"
+                        style="border-top-left-radius:1rem; border-top-right-radius:1rem;">
+                        <img src="{{ date.imagepass }}" class="card-img-top" alt="{{ date.name }}"
+                            style="height:220px; object-fit:cover;">
+                    </a>
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title mb-1">{{ date.name }}</h5>
+                        {% if date.subject %}
+                        <p class="card-text text-muted small mb-1">種類: {{ date.subject }}</p>
+                        {% endif %}
+                        <p class="card-text text-muted small">{{ date.place }}</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                {% if date.user_id == 2 %}
+                                <span class="badge bg-warning text-dark">公式</span>
+                                {% else %}
+                                <small class="text-muted">投稿者: {{ date.user.name }}</small>
+                                {% endif %}
+                            </div>
+                            <span class="badge bg-info text-dark">❤️ {{ date.goodpoint }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="text-center mt-5 mb-4">
+            <a href="/signup" class="btn btn-danger btn-lg px-5 me-2">無料で登録</a>
+            <a href="/login" class="btn btn-outline-danger btn-lg px-5">ログイン</a>
+        </div>
+    </div>
+
+    <footer class="footer text-center">
+        <div class="container">
+            <small>© {{ now().year }} 図鑑 — {{ verj }}</small>
+        </div>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

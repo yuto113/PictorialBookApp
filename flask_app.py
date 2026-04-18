@@ -1749,7 +1749,15 @@ def account():
 def index():
     if session.get('user_id'):
         return redirect('/user')
-    return redirect('/login')
+    
+    # 公開データを取得（通常ユーザーのデータのみ・非表示除外）
+    school_user_ids = [m.user_id for m in SchoolMember.query.all()]
+    public_dates = Date.query.filter(
+        Date.user_id.notin_(school_user_ids),
+        Date.is_hidden != 1
+    ).order_by(Date.id.desc()).limit(12).all()
+    
+    return render_template('landing.html', dates=public_dates)
 
 # ↓↓↓ここから↓↓↓
 @app.route('/check_role')
