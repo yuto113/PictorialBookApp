@@ -76,6 +76,54 @@
                             <textarea id="knowledge" name="knowledge" class="form-control" rows="3"
                                 placeholder="この生き物について知っていることを書いてみよう！"></textarea>
                         </div>
+
+                        {% if school_use_map %}
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">📍 場所を地図で選ぶ</label>
+                            <div id="map"></div>
+                        </div>
+                        {% endif %}
+
+                        <!-- 送信先選択 -->
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">📤 送信先</label>
+                            <div class="border rounded p-3 bg-light">
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox" name="send_school" id="send_school"
+                                        checked>
+                                    <label class="form-check-label" for="send_school">
+                                        🏫 学校全体
+                                    </label>
+                                </div>
+                                {% if my_classes %}
+                                <hr class="my-2">
+                                <p class="small text-muted mb-2">クラスを選択：</p>
+                                {% for cls in my_classes %}
+                                <div class="form-check mb-1">
+                                    <input class="form-check-input" type="checkbox" name="send_class_{{ cls.id }}"
+                                        id="send_class_{{ cls.id }}" {% if current_user_role=='student' %}checked
+                                        disabled{% endif %}>
+                                    <label class="form-check-label" for="send_class_{{ cls.id }}">
+                                        📚 {{ cls.name }}
+                                    </label>
+                                </div>
+                                {% endfor %}
+                                {% endif %}
+
+                                {% if available_assignments %}
+                                <hr class="my-2">
+                                <p class="small text-muted mb-2">課題に提出：</p>
+                                <select name="assignment_id" class="form-select form-select-sm">
+                                    <option value="">課題を選択しない</option>
+                                    {% for assignment in available_assignments %}
+                                    <option value="{{ assignment.id }}">📝 {{ assignment.title }}（{{
+                                        assignment.school_class.name }}）締切: {{ assignment.deadline }}</option>
+                                    {% endfor %}
+                                </select>
+                                {% endif %}
+                            </div>
+                        </div>
+
                         {% else %}
                         <div id="map"></div>
                         {% endif %}

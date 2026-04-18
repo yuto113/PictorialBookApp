@@ -1113,6 +1113,34 @@ def upload():
         return redirect('/user')
     if upload_user and upload_user.role == 'suspended':
         return redirect('/user')
+    my_school = None
+    my_classes = []
+    available_assignments = []
+    school_use_map = True
+    
+    if upload_user and upload_user.role in ['teacher', 'school_admin', 'student']:
+        my_member = SchoolMember.query.filter_by(user_id=upload_user_id).first()
+        if my_member:
+            my_school = School.query.get(my_member.school_id)
+            school_use_map = my_school.use_map == 1 if my_school else True
+            
+            if upload_user.role == 'student':
+                # 生徒は所属クラスのみ
+                class_members = ClassMember.query.filter_by(user_id=upload_user_id).all()
+                my_classes = [SchoolClass.query.get(cm.class_id) for cm in class_members]
+            else:
+                # 教師・school_adminは学校内の全クラス
+                my_classes = SchoolClass.query.filter_by(school_id=my_member.school_id).all()
+            
+            # 利用可能な課題を取得（締め切り前のみ）
+            from datetime import datetime as dt
+            now = dt.now(tz=ZoneInfo("Asia/Tokyo"))
+            for cls in my_classes:
+                assignments = Assignment.query.filter_by(
+                    class_id=cls.id,
+                    is_closed=0
+                ).filter(Assignment.deadline > now).all()
+                available_assignments.extend(assignments)
     #リクエストがpostですか
     if request.method == 'POST':
         file = request.files['file']
@@ -1149,18 +1177,45 @@ def upload():
             )
             db_session.add(save_date)
             db_session.commit()
-            upload_user = User.query.get(session.get('user_id'))
+            
             if upload_user and upload_user.role in ['teacher', 'student', 'school_admin']:
                 my_member = SchoolMember.query.filter_by(user_id=upload_user.id).first()
                 if my_member:
-                    # 学校に紐付け（school_idをdateに保存）
                     save_date.school_id = my_member.school_id
-                    # クラスに紐付け（最大3クラス）
-                    my_classes = ClassMember.query.filter_by(user_id=upload_user.id).all()
-                    for cm in my_classes:
-                        save_date.class_ids = str(cm.class_id)
                     db_session.commit()
-            return render_template('upload.html', upload=file.filename)
+                    
+                    if upload_user.role == 'student':
+                        # 生徒は自動的に所属クラス全部に送信
+                        pass
+                    else:
+                        # 教師・school_adminは送信先を選択
+                        pass
+                    
+                    # 課題への送信
+                    assignment_id = request.form.get('assignment_id')
+                    if assignment_id:
+                        new_submission = AssignmentSubmission(
+                            assignment_id=int(assignment_id),
+                            date_id=save_date.id,
+                            user_id=upload_user.id,
+                            submitted_at=datetime.now(tz=ZoneInfo("Asia/Tokyo")).replace(microsecond=0)
+                        )
+                        db_session.add(new_submission)
+                        db_session.commit()
+            
+            return render_template('upload.html', 
+                                    upload=file.filename,
+                                    my_school=my_school,
+                                    my_classes=my_classes,
+                                    available_assignments=available_assignments,
+                                    school_use_map=school_use_map)
+        # ↑↑↑ここまで↑↑↑
+    
+    return render_template('upload.html',
+                            my_school=my_school,
+                            my_classes=my_classes,
+                            available_assignments=available_assignments,
+                            school_use_map=school_use_map)
     
     # fileを受け取る
     return render_template('upload.html')
