@@ -197,6 +197,17 @@
         crossorigin="anonymous"></script>
 
     <script>
+        // フォーム送信時に同意チェックを確認
+        document.querySelector('form').addEventListener('submit', function(e) {
+            const agree = document.getElementById('agree');
+            if (!agree.checked) {
+                e.preventDefault();
+                agree.setCustomValidity('利用規約に同意してください');
+                agree.reportValidity();
+            } else {
+                agree.setCustomValidity('');
+            }
+        });
         // 利用規約を最後まで読んだらチェックボックスを有効にする
         const termsBox = document.getElementById('terms_box');
         const agreeCheckbox = document.getElementById('agree');
