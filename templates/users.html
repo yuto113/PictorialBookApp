@@ -162,7 +162,7 @@
                                         {% if u.id != 2 %}
                                         <form method="POST" action="/admin/reset_password/{{ u.id }}"
                                             class="d-inline mb-2"
-                                            onsubmit="return confirm('{{ u.name }}さんのパスワードをリセットしますか？')">
+                                            onsubmit="return confirm('パスワードをリセットしますか？')">
                                             <button type="submit" class="btn btn-sm btn-warning">🔑 PWリセット</button>
                                         </form>
                                         <div class="d-flex gap-1 align-items-center flex-wrap">
