@@ -1759,6 +1759,12 @@ def index():
     
     return render_template('landing.html', dates=public_dates)
 
+@app.route('/logout')
+def logout():
+    session.clear()
+    flash('ログアウトしました。', 'success')
+    return redirect('/login')
+
 # ↓↓↓ここから↓↓↓
 @app.route('/check_role')
 def check_role():
