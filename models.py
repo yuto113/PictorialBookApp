@@ -154,6 +154,8 @@ class School(db.Model):
     name = db.Column(db.Text, nullable=False)
     code = db.Column(db.Text, unique=True, nullable=False)
     created_at = db.Column(db.DateTime(timezone=True), default=func.now())
+    # ↓↓↓ここから↓↓↓
+    use_map = db.Column(db.Integer, default=1)  # 0:OFF 1:ON
     
     members = db.relationship('SchoolMember', backref='school', cascade='all, delete-orphan')
     classes = db.relationship('SchoolClass', backref='school', cascade='all, delete-orphan')
@@ -189,6 +191,79 @@ class ClassMember(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id', ondelete='CASCADE'), nullable=False)
     
     __table_args__ = (db.UniqueConstraint('class_id', 'user_id', name='_class_user_uc'),)
+
+class ClassTeacher(db.Model):
+    """クラスの担任設定"""
+    __tablename__ = 'class_teacher'
+    
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    class_id = db.Column(db.Integer, db.ForeignKey('school_class.id', ondelete='CASCADE'), nullable=False)
+    teacher_id = db.Column(db.Integer, db.ForeignKey('user.id', ondelete='CASCADE'), nullable=False)
+    
+    __table_args__ = (db.UniqueConstraint('class_id', name='_class_teacher_uc'),)
+    
+    teacher = db.relationship('User', backref='teaching_classes')
+    school_class = db.relationship('SchoolClass', backref='teacher_assignment')
+
+
+class Assignment(db.Model):
+    """課題"""
+    __tablename__ = 'assignment'
+    
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    title = db.Column(db.Text, nullable=False)
+    description = db.Column(db.Text, nullable=True)
+    class_id = db.Column(db.Integer, db.ForeignKey('school_class.id', ondelete='CASCADE'), nullable=False)
+    created_by = db.Column(db.Integer, db.ForeignKey('user.id', ondelete='CASCADE'), nullable=False)
+    deadline = db.Column(db.DateTime(timezone=True), nullable=False)
+    is_closed = db.Column(db.Integer, default=0)  # 0:open 1:closed
+    created_at = db.Column(db.DateTime(timezone=True), default=func.now())
+    
+    school_class = db.relationship('SchoolClass', backref='assignments')
+    creator = db.relationship('User', backref='created_assignments')
+    submissions = db.relationship('AssignmentSubmission', backref='assignment', cascade='all, delete-orphan')
+    chats = db.relationship('AssignmentChat', backref='assignment', cascade='all, delete-orphan')
+
+
+class AssignmentSubmission(db.Model):
+    """課題への投稿"""
+    __tablename__ = 'assignment_submission'
+    
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    assignment_id = db.Column(db.Integer, db.ForeignKey('assignment.id', ondelete='CASCADE'), nullable=False)
+    date_id = db.Column(db.Integer, db.ForeignKey('date.id', ondelete='CASCADE'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id', ondelete='CASCADE'), nullable=False)
+    submitted_at = db.Column(db.DateTime(timezone=True), default=func.now())
+    
+    user = db.relationship('User', backref='submissions')
+    date = db.relationship('Date', backref='assignment_submissions')
+
+
+class AssignmentChat(db.Model):
+    """課題チャット"""
+    __tablename__ = 'assignment_chat'
+    
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    assignment_id = db.Column(db.Integer, db.ForeignKey('assignment.id', ondelete='CASCADE'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id', ondelete='CASCADE'), nullable=False)
+    message = db.Column(db.Text, nullable=False)
+    created_at = db.Column(db.DateTime(timezone=True), default=func.now())
+    
+    user = db.relationship('User', backref='assignment_chats')
+    replies = db.relationship('AssignmentChatReply', backref='chat', cascade='all, delete-orphan')
+
+
+class AssignmentChatReply(db.Model):
+    """課題チャットへの返信"""
+    __tablename__ = 'assignment_chat_reply'
+    
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    chat_id = db.Column(db.Integer, db.ForeignKey('assignment_chat.id', ondelete='CASCADE'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id', ondelete='CASCADE'), nullable=False)
+    reply = db.Column(db.Text, nullable=False)
+    created_at = db.Column(db.DateTime(timezone=True), default=func.now())
+    
+    user = db.relationship('User', backref='assignment_chat_replies')
 
 class Friend(db.Model):
     __tablename__ = 'friends'
