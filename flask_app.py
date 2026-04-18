@@ -287,6 +287,16 @@ def user_page():
             my_classes = SchoolClass.query.filter_by(school_id=my_school_member.school_id).all()
         
         return render_template('user.html', user=user, dates=dates, filter_ev=Illustrated_ev, filter_ki=Illustrated_ki, filter_friend=Illustrated_friend, friends=friends, my_school=my_school, user_role=user.role, my_classes=my_classes)
+    
+    from datetime import datetime as dt
+    now_dt = dt.now(tz=ZoneInfo("Asia/Tokyo"))
+    my_assignments = []
+    if user.role in ['teacher', 'school_admin', 'student'] and my_school_member:
+        class_ids = [cls.id for cls in my_classes]
+        my_assignments = Assignment.query.filter(
+                Assignment.class_id.in_(class_ids)
+            ).order_by(Assignment.deadline.asc()).all()
+
     return redirect('/login')
 
 @app.route('/school/toggle_map', methods=['POST'])
