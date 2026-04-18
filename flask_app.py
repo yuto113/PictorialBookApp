@@ -1,7 +1,7 @@
 import os
 os.makedirs('/app/instance', exist_ok=True)
 from flask import Flask, render_template, request, redirect, session, flash
-from models import User, db, Date, Like, Chat, Friend, Feedback, School, SchoolMember, SchoolClass, ClassMember, SchoolMessage, SchoolMessageReply, ClassChat, ClassChatReply, ClassTeacher, Assignment, AssignmentSubmission, AssignmentChat, AssignmentChatReply
+from models import User, db, Date, Like, Chat, Friend, Feedback, School, SchoolMember, SchoolClass, ClassMember, SchoolMessage, SchoolMessageReply, ClassChat, ClassChatReply, ClassTeacher, Assignment, AssignmentSubmission, AssignmentChat, AssignmentChatReply, AppSetting
 from sqlalchemy import or_
 from datetime import datetime
 from zoneinfo import ZoneInfo
@@ -42,7 +42,6 @@ with app.app_context():
 
 @app.context_processor
 def inject_globals():
-    global app_verj
     user_id = session.get('user_id')
     user_role = 'normal'
     is_school_user = False
@@ -51,9 +50,14 @@ def inject_globals():
         if user:
             user_role = user.role
             is_school_user = user.role in ['teacher', 'school_admin', 'student']
+    
+    # DBからバージョン情報を取得
+    setting = AppSetting.query.filter_by(key='verj').first()
+    verj_value = setting.value if setting else 'ver.1.0'
+    
     return dict(
         now=lambda: datetime.now(tz=ZoneInfo("Asia/Tokyo")).replace(microsecond=0),
-        verj=app_verj if app_verj else app.config.get('VERJ', 'ver.1.0'),
+        verj=verj_value,
         user_role=user_role,
         is_school_user=is_school_user
     )
@@ -853,17 +857,20 @@ def admin_delete_school(school_id):
 
 @app.route('/update_verj', methods=['POST'])
 def update_verj():
-    """
-    User ID が 2（管理者）の場合のみバージョン情報を更新可能
-    """
-    global app_verj
     user_id = session.get('user_id')
     if not user_id or user_id != 2:
         return redirect('/login')
     
     verj = request.form.get('verj')
     if verj:
-        app_verj = verj
+        setting = AppSetting.query.filter_by(key='verj').first()
+        if setting:
+            setting.value = verj
+        else:
+            new_setting = AppSetting(key='verj', value=verj)
+            db.session.add(new_setting)
+        db.session.commit()
+        flash('バージョン情報を更新しました！', 'success')
     
     return redirect('/users')
 

@@ -265,6 +265,14 @@ class AssignmentChatReply(db.Model):
     
     user = db.relationship('User', backref='assignment_chat_replies')
 
+class AppSetting(db.Model):
+    """アプリ全体の設定"""
+    __tablename__ = 'app_setting'
+    
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    key = db.Column(db.String(50), unique=True, nullable=False)
+    value = db.Column(db.Text, nullable=True)
+
 class Friend(db.Model):
     __tablename__ = 'friends'
     
