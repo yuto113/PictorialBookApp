@@ -658,6 +658,53 @@ def delete_chat(chat_id):
     db_session.commit()
     return redirect(f'/date/{chat.date_id}')
 
+@app.route('/admin/reset_password/<int:target_user_id>', methods=['GET','POST'])
+def admin_reset_password(target_user_id):
+    user_id = session.get('user_id')
+    if not user_id or user_id != 2:
+        return redirect('/login')
+    
+    target = User.query.get(target_user_id)
+    if target:
+        # パスワードを「reset」にリセット、変更必須フラグを立てる
+        target.password = 'reset'
+        target.must_change_password = 1
+        db.session.commit()
+        flash(f'{target.name}さんのパスワードを「reset」にリセットしました。', 'success')
+    
+    return redirect('/users')
+
+
+@app.route('/force_change_password', methods=['GET', 'POST'])
+def force_change_password():
+    user_id = session.get('user_id')
+    if not user_id:
+        return redirect('/login')
+    
+    user = User.query.get(user_id)
+    if not user or user.must_change_password != 1:
+        return redirect('/user')
+    
+    if request.method == 'POST':
+        new_password = request.form.get('new_password')
+        new_password2 = request.form.get('new_password2')
+        
+        if not new_password or not new_password2:
+            return render_template('force_change_password.html', message='パスワードを入力してください')
+        
+        if new_password != new_password2:
+            return render_template('force_change_password.html', message='パスワードが一致しません')
+        
+        if new_password == 'reset':
+            return render_template('force_change_password.html', message='「reset」は使用できません')
+        
+        user.password = new_password
+        user.must_change_password = 0
+        db.session.commit()
+        flash('パスワードを変更しました！', 'success')
+        return redirect('/user')
+    
+    return render_template('force_change_password.html')
 
 @app.route('/delete_date/<int:date_id>', methods=['POST'])
 def delete_date(date_id):
@@ -919,6 +966,8 @@ def login():
         if user:
             session['user_id'] = user.id
             session['is_admin'] = getattr(user, 'is_admin', 0)
+            if user.must_change_password == 1:
+                return redirect('/force_change_password')
             return redirect('/user')
         
         if user and user.password == password:

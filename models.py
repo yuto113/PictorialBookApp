@@ -5,12 +5,13 @@ db = SQLAlchemy()
 
 class User(db.Model):
     __tablename__ = 'user'
-
+    
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    name = db.Column(db.Text)
-    password = db.Column(db.Text)
-
+    name = db.Column(db.Text, nullable=False)
+    password = db.Column(db.Text, nullable=False)
+    role = db.Column(db.Text, default='normal')
     icon_image = db.Column(db.Text, default='default.png')
+    must_change_password = db.Column(db.Integer, default=0)
 
     role = db.Column(db.Text, default='normal')
 

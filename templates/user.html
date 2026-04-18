@@ -116,6 +116,11 @@
                     {%- if user.id == 2 %}
                     <a class="btn btn-sm btn-outline-danger" href="/admin">⚙️ 管理</a>
                     {%- endif %}
+                    {% if u.id != 2 %}
+                                <form method="POST" action="/admin/reset_password/{{ u.id }}" class="d-inline" onsubmit="return confirm('{{ u.name }}さんのパスワードをリセットしますか？')">
+                                    <button type="submit" class="btn btn-sm btn-warning">🔑 PWリセット</button>
+                                </form>
+                                {% endif %}
                     <a class="btn btn-sm btn-outline-secondary" href="/logout">ログアウト</a>
                 </div>
             </div>
