@@ -202,10 +202,9 @@
             const agree = document.getElementById('agree');
             if (!agree.checked) {
                 e.preventDefault();
-                agree.setCustomValidity('利用規約に同意してください');
-                agree.reportValidity();
-            } else {
-                agree.setCustomValidity('');
+                alert('利用規約を最後まで読んで、同意してください');
+                // 規約ボックスまでスクロール
+                document.getElementById('terms_box').scrollIntoView({ behavior: 'smooth', block: 'center' });
             }
         });
         // 利用規約を最後まで読んだらチェックボックスを有効にする
