@@ -1768,6 +1768,15 @@ def account():
 def help_page():
     return render_template('help.html')
 
+@app.route('/terms')
+def terms_page(): 
+    return render_template('terms.html')
+
+
+@app.route('/privacy')
+def privacy_page(): 
+    return render_template('privacy.html')
+
 @app.route('/')
 def index():
     if session.get('user_id'):
