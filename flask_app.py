@@ -792,6 +792,8 @@ def users_page():
     user_id = session.get('user_id')
     if not user_id:
         return redirect('/login')
+    if user_id != 2:
+        return redirect('/user')
 
     # 管理者アカウント（id=2）を取得（パスワード認証は管理者のパスワードを使用）
     admin = db_session.query(User).filter_by(id=2).first()
