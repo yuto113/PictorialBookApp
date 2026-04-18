@@ -11,140 +11,73 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js" defer></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/js/lightbox.min.js" defer
         type="text/javascript"></script>
-    {% if user_role in ['teacher', 'student', 'school_admin'] %}
     <style>
         body {
-            background: linear-gradient(135deg, #f0fff4 0%, #e8f5e9 100%);
+            background: {{ 'linear-gradient(135deg, #f0fff4 0%, #e8f5e9 100%)' if is_school_user else 'linear-gradient(135deg, #fff7f0 0%, #f0f9ff 100%)' }};
             color: #333;
         }
-
-        .brand-color {
-            color: #28a745;
-        }
-
+        .brand-color { color: {{ '#28a745' if is_school_user else '#ff6b6b' }}; }
+        {% if is_school_user %}
         .btn-danger {
             background-color: #28a745 !important;
             border-color: #28a745 !important;
         }
-
         .btn-outline-danger {
             color: #28a745 !important;
             border-color: #28a745 !important;
         }
-
         .btn-outline-danger:hover {
             background-color: #28a745 !important;
             color: white !important;
         }
-
-        .card-tilt {
-            transform: rotate(-0.5deg);
-        }
-
-        .search-input {
-            border-radius: 50px;
-        }
-
-        .footer {
-            background: transparent;
-            color: #666;
-            padding: 1.25rem 0;
-        }
-    </style>
-    {% else %}
-    <style>
-        body {
-            background: linear-gradient(135deg, #fff7f0 0%, #f0f9ff 100%);
-            color: #333;
-        }
-
-        .brand-color {
-            color: #ff6b6b;
-        }
-
-        .card-tilt {
-            transform: rotate(-0.5deg);
-        }
-
-        .search-input {
-            border-radius: 50px;
-        }
-
-        .footer {
-            background: transparent;
-            color: #666;
-            padding: 1.25rem 0;
-        }
-    </style>
-    {% endif %}<style>
-        /* ポップな配色 */
-        body {
-            background: linear-gradient(135deg, #fff7f0 0%, #f0f9ff 100%);
-            color: #333;
-        }
-
-        .brand-color {
-            color: #ff6b6b;
-        }
-
-        .card-tilt {
-            transform: rotate(-0.5deg);
-        }
-
-        .search-input {
-            border-radius: 50px;
-        }
-
-        .uploader-link {
-            text-decoration: none;
-        }
-
-        .footer {
-            background: transparent;
-            color: #666;
-            padding: 1.25rem 0;
-        }
+        {% endif %}
+        .card-tilt { transform: rotate(-0.5deg); }
+        .search-input { border-radius: 50px; }
+        .uploader-link { text-decoration: none; }
+        .footer { background: transparent; color: #666; padding: 1.25rem 0; }
     </style>
 </head>
 
-<body class="{{ 'theme-green' if is_school_user else 'theme-pink' }}">
+<body>
     <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
         <div class="container">
             <a class="navbar-brand d-flex align-items-center" href="#">
                 <span class="fs-4 brand-color">図鑑</span>
-                {% if user_role in ['teacher', 'student', 'school_admin'] %}
+                {% if is_school_user %}
                 <small class="text-muted ms-2">{{ my_school.name if my_school else 'オンライン図鑑' }}</small>
                 {% else %}
                 <small class="text-muted ms-2">オンライン図鑑</small>
                 {% endif %}
             </a>
-            {% if user.role in ['teacher', 'school_admin'] %}
-            {% if my_school %}
-            <a class="btn btn-sm btn-success me-2" href="/school/dashboard">{{ my_school.name if my_school else '学校'
-                }}</a>
-            {% else %}
-            <a class="btn btn-sm btn-outline-success me-2" href="/school/join">学校に参加</a>
-            {% endif %}
-            {% endif %}
-            {% if user.role in ['teacher', 'school_admin', 'student'] %}
-            <a class="btn btn-sm btn-outline-success me-2" href="/school/mypage">マイページ</a>
-            <a class="btn btn-sm btn-outline-success me-2" href="/assignments">📝 課題</a>
-            {% endif %}
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navMenu">
                 <div class="d-flex flex-wrap align-items-center gap-2 mt-2 mt-lg-0 ms-auto">
                     {% if user.icon_image and user.icon_image.startswith('http') %}
-                    <img src="{{ user.icon_image }}" width="40" height="40" class="rounded-circle me-2 border"
+                    <img src="{{ user.icon_image }}" width="40" height="40" class="rounded-circle border"
                         style="object-fit: cover;">
                     {% else %}
                     <img src="{{ url_for('static', filename='icons/default.png') }}" width="40" height="40"
-                        class="rounded-circle me-2 border" style="object-fit: cover;">
+                        class="rounded-circle border" style="object-fit: cover;">
                     {% endif %}
-                    <span>ようこそ、<a href="/profile/{{ user.id }}" class="text-decoration-none text-dark"><strong>{{
-                                user.name }}</strong></a>さん</span>
+                    <span>ようこそ、<a href="/profile/{{ user.id }}" class="text-decoration-none text-dark"><strong>{{ user.name }}</strong></a>さん</span>
+
+                    {% if user.role in ['teacher', 'school_admin'] %}
+                        {% if my_school %}
+                        <a class="btn btn-sm btn-success" href="/school/dashboard">{{ my_school.name }}</a>
+                        {% else %}
+                        <a class="btn btn-sm btn-outline-success" href="/school/join">学校に参加</a>
+                        {% endif %}
+                    {% endif %}
+
+                    {% if user.role in ['teacher', 'school_admin', 'student'] %}
+                    <a class="btn btn-sm btn-outline-success" href="/school/mypage">マイページ</a>
+                    <a class="btn btn-sm btn-outline-success" href="/assignments">📝 課題</a>
+                    {% endif %}
+
                     <a class="btn btn-sm btn-outline-primary" href="/upload">アップロード</a>
+
                     {% if not is_school_user %}
                     <a class="btn btn-sm btn-outline-info" href="/friend_search">フレンド検索</a>
                     <a class="btn btn-sm btn-outline-info" href="/friends">フレンドリスト</a>
@@ -152,14 +85,9 @@
 
                     <a class="btn btn-sm btn-outline-warning" href="/feedback">フィードバック</a>
                     {%- if user.id == 2 %}
-                    <a class="btn btn-sm btn-outline-danger" href="/feedback/admin">
-                        📬 管理
-                        {% set unread = namespace(count=0) %}
-                    </a>
-                    {%- endif %}
-                    {%- if user.id == 2 %}
+                    <a class="btn btn-sm btn-outline-danger" href="/feedback/admin">📬 管理</a>
                     <a class="btn btn-sm btn-outline-success" href="/users">ユーザ一覧</a>
-                    <a class="btn btn-sm btn-outline-success me-2" href="/admin/schools">学校管理</a>
+                    <a class="btn btn-sm btn-outline-success" href="/admin/schools">学校管理</a>
                     {%- endif %}
                     <a class="btn btn-sm btn-outline-secondary" href="/logout">ログアウト</a>
                 </div>
@@ -178,12 +106,13 @@
         {% endfor %}
         {% endif %}
         {% endwith %}
+
         <div class="row mb-3 align-items-center">
             <div class="col-md-6">
                 <form class="d-flex" method="get">
                     <input class="form-control me-2 search-input" type="search" placeholder="名前で検索" aria-label="Search"
                         id="queryname" name="search" required>
-                    <button class="btn btn-danger" type="submit">検索</button>
+                    <button class="btn {{ 'btn-success' if is_school_user else 'btn-danger' }}" type="submit">検索</button>
                 </form>
             </div>
             {% if not is_school_user %}
@@ -233,16 +162,14 @@
         <h4 class="mb-3 brand-color">📝 課題</h4>
         <div class="row row-cols-1 row-cols-md-3 g-3 mb-4">
             {% for assignment in my_assignments %}
-            {% set is_passed = assignment.deadline < now_dt %}
+            {% set deadline_naive = assignment.deadline.replace(tzinfo=None) %}
+            {% set is_passed = deadline_naive < now_dt %}
             {% set is_closed = assignment.is_closed == 1 %}
-            {% set days_left = (assignment.deadline - now_dt).days %}
+            {% set days_left = (deadline_naive - now_dt).days %}
             <div class="col">
                 <div class="card shadow-sm border-0 h-100"
                     style="border-radius:1rem;
-                    border-left: 4px solid
-                    {% if is_closed or is_passed %}#6c757d
-                    {% elif days_left <= 1 %}#dc3545
-                    {% else %}#28a745{% endif %} !important;">
+                    border-left: 4px solid {% if is_closed or is_passed %}#6c757d{% elif days_left <= 1 %}#dc3545{% else %}#28a745{% endif %} !important;">
                     <div class="card-body p-3">
                         <div class="d-flex justify-content-between align-items-start">
                             <h6 class="fw-bold mb-1">📝 {{ assignment.title }}</h6>
@@ -319,8 +246,7 @@
                             </div>
                             <div>
                                 <a href="/like/{{ date.id }}"
-                                    class="btn btn-sm {% if date.is_liked %}btn-danger{% else %}btn-outline-danger{% endif %} me-1">{%
-                                    if date.is_liked %}いいね解除{% else %}いいね{% endif %}</a>
+                                    class="btn btn-sm {% if date.is_liked %}btn-danger{% else %}btn-outline-danger{% endif %} me-1">{% if date.is_liked %}いいね解除{% else %}いいね{% endif %}</a>
                                 <a href="/date/{{ date.id }}" class="btn btn-sm btn-outline-primary me-1">詳細</a>
                                 {% if session.get('is_admin') == 1 %}
                                 <a href="/toggle_hide/{{ date.id }}"
