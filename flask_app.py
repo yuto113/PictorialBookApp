@@ -960,7 +960,9 @@ def signup():
             new_user = User(name=name, password=password_s, icon_image=icon)
             db_session.add(new_user)
             db_session.commit()
-            return render_template('signup.html',messege='自分のIDは'+str(new_user.id)+'です')
+            session['user_id'] = new_user.id
+            flash(f'🎉 ようこそ!あなたのIDは「{new_user.id}」です。大切に保管してください！', 'success')
+            return redirect('/user')
         else:
             return render_template('signup.html',messege='パスワードが一致しません')
             
@@ -1842,6 +1844,12 @@ def admin_approve_review(review_id):
     
     return redirect('/admin/reviews')
 
+@app.route('/admin')
+def admin_dashboard():
+    user_id = session.get('user_id')
+    if not user_id or user_id != 2:
+        return redirect('/login')
+    return render_template('admin_dashboard.html')
 
 @app.route('/admin/reviews/delete/<int:review_id>', methods=['POST'])
 def admin_delete_review(review_id):
