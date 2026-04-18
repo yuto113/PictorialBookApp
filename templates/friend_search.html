@@ -9,51 +9,13 @@
         integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
     <style>
         body {
-            background: {
-                    {
-                    'linear-gradient(135deg, #f0fff4 0%, #e8f5e9 100%)' if is_school_user else 'linear-gradient(135deg, #fff7f0 0%, #f0f9ff 100%)'
-                }
-            }
-
-            ;
+            background: linear-gradient(135deg, #fff7f0 0%, #f0f9ff 100%);
             color: #333;
         }
-
-        .brand-color {
-            color: {
-                    {
-                    '#28a745' if is_school_user else '#ff6b6b'
-                }
-            }
-
-            ;
-        }
-
-            {
-            % if is_school_user %
-        }
-
-        .btn-primary,
-        .btn-danger {
-            background-color: #28a745 !important;
-            border-color: #28a745 !important;
-        }
-
-        .btn-outline-primary,
-        .btn-outline-danger {
-            color: #28a745 !important;
-            border-color: #28a745 !important;
-        }
-
-        .btn-outline-primary:hover,
-        .btn-outline-danger:hover {
-            background-color: #28a745 !important;
-            color: white !important;
-        }
-
-            {
-            % endif %
-        }
+        .brand-color { color: #ff6b6b; }
+        .card-tilt { transform: rotate(-0.5deg); }
+        .search-input { border-radius: 50px; }
+        .footer { background: transparent; color: #666; padding: 1.25rem 0; }
     </style>
 </head>
 
