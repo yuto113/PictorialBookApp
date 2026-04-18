@@ -1,17 +1,32 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>学校ダッシュボード</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        body { background: linear-gradient(135deg, #f0fff4 0%, #f0f9ff 100%); color: #333; }
-        .brand-color { color: #28a745; }
-        .footer { color: #666; padding: 1rem 0; }
-        .card { border-radius: 1rem; }
+        body {
+            background: linear-gradient(135deg, #f0fff4 0%, #f0f9ff 100%);
+            color: #333;
+        }
+
+        .brand-color {
+            color: #28a745;
+        }
+
+        .footer {
+            color: #666;
+            padding: 1rem 0;
+        }
+
+        .card {
+            border-radius: 1rem;
+        }
     </style>
 </head>
+
 <body class="{{ 'theme-green' if is_school_user else 'theme-pink' }}">
     <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
         <div class="container">
@@ -33,7 +48,16 @@
         {% endwith %}
 
         <h2 class="mb-4 brand-color">{{ school.name }} ダッシュボード</h2>
-        <p class="text-muted">学校コード: <code class="fw-bold">{{ school.code }}</code></p>
+        <div class="d-flex gap-3 align-items-center mb-3">
+            <p class="text-muted mb-0">学校コード: <code class="fw-bold">{{ school.code }}</code></p>
+            {% if user.role == 'school_admin' %}
+            <form method="POST" action="/school/toggle_map" class="d-inline">
+                <button type="submit" class="btn btn-sm {{ 'btn-success' if school.use_map == 1 else 'btn-outline-secondary' }}">
+                    🗺️ 地図機能: {{ 'ON' if school.use_map == 1 else 'OFF' }}
+                </button>
+            </form>
+            {% endif %}
+        </div>
 
         <div class="row g-4">
 
@@ -43,9 +67,37 @@
                     <h5 class="fw-bold mb-3">📚 クラス一覧</h5>
                     {% for cls in classes %}
                     <div class="border rounded p-2 mb-2">
-                        <strong>{{ cls.name }}</strong>
-                        <span class="text-muted small ms-2">コード: <code>{{ cls.code }}</code></span>
-                        <span class="badge bg-info text-dark ms-2">{{ cls.members|length }}人</span>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <strong>{{ cls.name }}</strong>
+                                <span class="text-muted small ms-2">コード: <code>{{ cls.code }}</code></span>
+                                <span class="badge bg-info text-dark ms-2">{{ cls.members|length }}人</span>
+                            </div>
+                        </div>
+                        <!-- 担任設定（school_adminのみ） -->
+                        {% if user.role == 'school_admin' %}
+                        <div class="mt-2">
+                            <small class="text-muted">担任:
+                                {% if class_teachers[cls.id] %}
+                                <strong>{{ class_teachers[cls.id].name }}</strong>
+                                {% else %}
+                                未設定
+                                {% endif %}
+                            </small>
+                            <form method="POST" action="/school/set_teacher" class="d-flex gap-2 mt-1">
+                                <input type="hidden" name="class_id" value="{{ cls.id }}">
+                                <select name="teacher_id" class="form-select form-select-sm" style="width:150px;">
+                                    <option value="">担任を選択</option>
+                                    {% for teacher in teachers %}
+                                    <option value="{{ teacher.id }}" {% if class_teachers[cls.id] and
+                                        class_teachers[cls.id].id==teacher.id %}selected{% endif %}>{{ teacher.name }}
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                                <button type="submit" class="btn btn-sm btn-success">設定</button>
+                            </form>
+                        </div>
+                        {% endif %}
                     </div>
                     {% else %}
                     <p class="text-muted small">まだクラスがありません。</p>
@@ -54,7 +106,8 @@
                     <hr>
                     <h6 class="fw-bold">新しいクラスを作成</h6>
                     <form method="POST" action="/school/create_class" class="d-flex gap-2">
-                        <input type="text" name="class_name" class="form-control form-control-sm" placeholder="クラス名（例：1年A組）" required>
+                        <input type="text" name="class_name" class="form-control form-control-sm"
+                            placeholder="クラス名（例：1年A組）" required>
                         <button type="submit" class="btn btn-sm btn-success">作成</button>
                     </form>
                 </div>
@@ -74,12 +127,12 @@
                                 {% for cm in student.dates %}{% endfor %}
                                 {% set class_count = namespace(count=0) %}
                                 {% for cls in classes %}
-                                    {% for cm in cls.members %}
-                                        {% if cm.user_id == student.id %}
-                                            <span class="badge bg-success">{{ cls.name }}</span>
-                                            {% set class_count.count = class_count.count + 1 %}
-                                        {% endif %}
-                                    {% endfor %}
+                                {% for cm in cls.members %}
+                                {% if cm.user_id == student.id %}
+                                <span class="badge bg-success">{{ cls.name }}</span>
+                                {% set class_count.count = class_count.count + 1 %}
+                                {% endif %}
+                                {% endfor %}
                                 {% endfor %}
                             </div>
                         </div>
@@ -92,8 +145,10 @@
                     <h6 class="fw-bold">生徒を新規登録</h6>
                     <form method="POST" action="/school/create_student">
                         <div class="d-flex gap-2 mb-2">
-                            <input type="text" name="name" class="form-control form-control-sm" placeholder="名前" required>
-                            <input type="text" name="password" class="form-control form-control-sm" placeholder="初期パスワード" required>
+                            <input type="text" name="name" class="form-control form-control-sm" placeholder="名前"
+                                required>
+                            <input type="text" name="password" class="form-control form-control-sm"
+                                placeholder="初期パスワード" required>
                         </div>
                         <button type="submit" class="btn btn-sm btn-success w-100">登録</button>
                     </form>
@@ -144,8 +199,10 @@
                     <h6 class="fw-bold">教師を新規登録</h6>
                     <form method="POST" action="/school/create_teacher">
                         <div class="d-flex gap-2 mb-2">
-                            <input type="text" name="name" class="form-control form-control-sm" placeholder="名前" required>
-                            <input type="text" name="password" class="form-control form-control-sm" placeholder="初期パスワード" required>
+                            <input type="text" name="name" class="form-control form-control-sm" placeholder="名前"
+                                required>
+                            <input type="text" name="password" class="form-control form-control-sm"
+                                placeholder="初期パスワード" required>
                         </div>
                         <button type="submit" class="btn btn-sm btn-primary w-100">登録</button>
                     </form>
@@ -163,4 +220,5 @@
     </footer>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>

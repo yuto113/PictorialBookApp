@@ -289,6 +289,58 @@ def user_page():
         return render_template('user.html', user=user, dates=dates, filter_ev=Illustrated_ev, filter_ki=Illustrated_ki, filter_friend=Illustrated_friend, friends=friends, my_school=my_school, user_role=user.role, my_classes=my_classes)
     return redirect('/login')
 
+@app.route('/school/toggle_map', methods=['POST'])
+def toggle_map():
+    user_id = session.get('user_id')
+    if not user_id:
+        return redirect('/login')
+    
+    user = User.query.get(user_id)
+    if user.role != 'school_admin':
+        return redirect('/user')
+    
+    my_member = SchoolMember.query.filter_by(user_id=user_id).first()
+    if not my_member:
+        return redirect('/school/join')
+    
+    school = School.query.get(my_member.school_id)
+    if school:
+        school.use_map = 0 if school.use_map == 1 else 1
+        db.session.commit()
+    
+    return redirect('/school/dashboard')
+
+
+@app.route('/school/set_teacher', methods=['POST'])
+def set_teacher():
+    user_id = session.get('user_id')
+    if not user_id:
+        return redirect('/login')
+    
+    user = User.query.get(user_id)
+    if user.role != 'school_admin':
+        return redirect('/user')
+    
+    class_id = request.form.get('class_id')
+    teacher_id = request.form.get('teacher_id')
+    
+    if class_id and teacher_id:
+        # 既存の担任を削除
+        existing = ClassTeacher.query.filter_by(class_id=int(class_id)).first()
+        if existing:
+            db.session.delete(existing)
+        
+        # 新しい担任を設定
+        new_teacher = ClassTeacher(
+            class_id=int(class_id),
+            teacher_id=int(teacher_id)
+        )
+        db.session.add(new_teacher)
+        db.session.commit()
+        flash('担任を設定しました！', 'success')
+    
+    return redirect('/school/dashboard')
+
 # ↓↓↓ここから↓↓↓
 @app.route('/school/dashboard')
 def school_dashboard():
@@ -321,12 +373,18 @@ def school_dashboard():
     # 学校内の教師一覧
     teachers = [m for m in members if m.role in ['teacher', 'school_admin']]
     
+    class_teachers = {}
+    for cls in classes:
+        ct = ClassTeacher.query.filter_by(class_id=cls.id).first()
+        class_teachers[cls.id] = ct.teacher if ct else None
+    
     return render_template('school_dashboard.html', 
-                           user=user,
-                           school=school,
-                           classes=classes,
-                           students=students,
-                           teachers=teachers)
+                            user=user,
+                            school=school,
+                            classes=classes,
+                            students=students,
+                            teachers=teachers,
+                            class_teachers=class_teachers)
 
 
 @app.route('/school/create_class', methods=['POST'])
