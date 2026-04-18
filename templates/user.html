@@ -13,28 +13,66 @@
         type="text/javascript"></script>
     <style>
         body {
-            background: {{ 'linear-gradient(135deg, #f0fff4 0%, #e8f5e9 100%)' if is_school_user else 'linear-gradient(135deg, #fff7f0 0%, #f0f9ff 100%)' }};
+            background: {
+                    {
+                    'linear-gradient(135deg, #f0fff4 0%, #e8f5e9 100%)' if is_school_user else 'linear-gradient(135deg, #fff7f0 0%, #f0f9ff 100%)'
+                }
+            }
+
+            ;
             color: #333;
         }
-        .brand-color { color: {{ '#28a745' if is_school_user else '#ff6b6b' }}; }
-        {% if is_school_user %}
+
+        .brand-color {
+            color: {
+                    {
+                    '#28a745' if is_school_user else '#ff6b6b'
+                }
+            }
+
+            ;
+        }
+
+            {
+            % if is_school_user %
+        }
+
         .btn-danger {
             background-color: #28a745 !important;
             border-color: #28a745 !important;
         }
+
         .btn-outline-danger {
             color: #28a745 !important;
             border-color: #28a745 !important;
         }
+
         .btn-outline-danger:hover {
             background-color: #28a745 !important;
             color: white !important;
         }
-        {% endif %}
-        .card-tilt { transform: rotate(-0.5deg); }
-        .search-input { border-radius: 50px; }
-        .uploader-link { text-decoration: none; }
-        .footer { background: transparent; color: #666; padding: 1.25rem 0; }
+
+            {
+            % endif %
+        }
+
+        .card-tilt {
+            transform: rotate(-0.5deg);
+        }
+
+        .search-input {
+            border-radius: 50px;
+        }
+
+        .uploader-link {
+            text-decoration: none;
+        }
+
+        .footer {
+            background: transparent;
+            color: #666;
+            padding: 1.25rem 0;
+        }
     </style>
 </head>
 
@@ -61,14 +99,15 @@
                     <img src="{{ url_for('static', filename='icons/default.png') }}" width="40" height="40"
                         class="rounded-circle border" style="object-fit: cover;">
                     {% endif %}
-                    <span>ようこそ、<a href="/profile/{{ user.id }}" class="text-decoration-none text-dark"><strong>{{ user.name }}</strong></a>さん</span>
+                    <span>ようこそ、<a href="/profile/{{ user.id }}" class="text-decoration-none text-dark"><strong>{{
+                                user.name }}</strong></a>さん</span>
 
                     {% if user.role in ['teacher', 'school_admin'] %}
-                        {% if my_school %}
-                        <a class="btn btn-sm btn-success" href="/school/dashboard">{{ my_school.name }}</a>
-                        {% else %}
-                        <a class="btn btn-sm btn-outline-success" href="/school/join">学校に参加</a>
-                        {% endif %}
+                    {% if my_school %}
+                    <a class="btn btn-sm btn-success" href="/school/dashboard">{{ my_school.name }}</a>
+                    {% else %}
+                    <a class="btn btn-sm btn-outline-success" href="/school/join">学校に参加</a>
+                    {% endif %}
                     {% endif %}
 
                     {% if user.role in ['teacher', 'school_admin', 'student'] %}
@@ -84,8 +123,10 @@
                     {% endif %}
 
                     <a class="btn btn-sm btn-outline-warning" href="/feedback">フィードバック</a>
+                    <a class="btn btn-sm btn-outline-warning" href="/review">⭐ レビュー</a>
                     {%- if user.id == 2 %}
                     <a class="btn btn-sm btn-outline-danger" href="/feedback/admin">📬 管理</a>
+                    <a class="btn btn-sm btn-outline-danger" href="/admin/reviews">⭐ レビュー管理</a>
                     <a class="btn btn-sm btn-outline-success" href="/users">ユーザ一覧</a>
                     <a class="btn btn-sm btn-outline-success" href="/admin/schools">学校管理</a>
                     {%- endif %}
@@ -112,7 +153,8 @@
                 <form class="d-flex" method="get">
                     <input class="form-control me-2 search-input" type="search" placeholder="名前で検索" aria-label="Search"
                         id="queryname" name="search" required>
-                    <button class="btn {{ 'btn-success' if is_school_user else 'btn-danger' }}" type="submit">検索</button>
+                    <button class="btn {{ 'btn-success' if is_school_user else 'btn-danger' }}"
+                        type="submit">検索</button>
                 </form>
             </div>
             {% if not is_school_user %}
@@ -163,10 +205,8 @@
         <div class="row row-cols-1 row-cols-md-3 g-3 mb-4">
             {% for assignment in my_assignments %}
             {% set deadline_naive = assignment.deadline.replace(tzinfo=None) %}
-            {% set is_passed = deadline_naive < now_dt %}
-            {% set is_closed = assignment.is_closed == 1 %}
-            {% set days_left = (deadline_naive - now_dt).days %}
-            <div class="col">
+            {% set is_passed = deadline_naive < now_dt %} {% set is_closed=assignment.is_closed==1 %} {% set
+                days_left=(deadline_naive - now_dt).days %} <div class="col">
                 <div class="card shadow-sm border-0 h-100"
                     style="border-radius:1rem;
                     border-left: 4px solid {% if is_closed or is_passed %}#6c757d{% elif days_left <= 1 %}#dc3545{% else %}#28a745{% endif %} !important;">
@@ -177,15 +217,15 @@
                             <span class="badge bg-dark">締め切り済み</span>
                             {% elif is_passed %}
                             <span class="badge bg-secondary">期限切れ</span>
-                            {% elif days_left <= 1 %}
-                            <span class="badge bg-danger">もうすぐ締め切り</span>
-                            {% else %}
-                            <span class="badge bg-success">受付中</span>
-                            {% endif %}
+                            {% elif days_left <= 1 %} <span class="badge bg-danger">もうすぐ締め切り</span>
+                                {% else %}
+                                <span class="badge bg-success">受付中</span>
+                                {% endif %}
                         </div>
                         <p class="text-muted small mb-1">{{ assignment.school_class.name }}</p>
                         {% if assignment.description %}
-                        <p class="text-muted small mb-2" style="display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">
+                        <p class="text-muted small mb-2"
+                            style="display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">
                             {{ assignment.description }}
                         </p>
                         {% endif %}
@@ -195,82 +235,83 @@
                         </div>
                     </div>
                 </div>
-            </div>
-            {% endfor %}
         </div>
-        {% endif %}
+        {% endfor %}
+    </div>
+    {% endif %}
 
-        <h2 class="mb-4">みんなのコレクション</h2>
+    <h2 class="mb-4">みんなのコレクション</h2>
 
-        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
-            {% for date in dates %}
-            <div class="col">
-                <div class="card h-100 card-tilt shadow-sm border-0" style="border-radius: 1rem;">
-                    {% if date.imagepass %}
-                    <a href="{{ date.imagepass }}" data-lightbox="group" class="d-block overflow-hidden"
-                        style="border-top-left-radius:1rem; border-top-right-radius:1rem;">
-                        <img src="{{ date.imagepass }}" class="card-img-top" alt="{{ date.name }}"
-                            style="height:220px; object-fit:cover;">
-                    </a>
-                    {% else %}
-                    <div class="text-center py-5 bg-light"
-                        style="height:220px; border-top-left-radius:1rem; border-top-right-radius:1rem;">
-                        <span class="text-muted">No Image</span>
-                    </div>
-                    {% endif %}
-                    <div class="card-body">
-                        <h5 class="card-title mb-1">{{ date.name }}</h5>
-                        {%- if date.subject %}
-                        <p class="card-text text-muted small mb-1">種類: {{ date.subject }}</p>
-                        {%- endif %}
-                        <p class="card-text text-muted small mb-1"
-                            style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
-                            見つけた場所: {{ date.place }}</p>
-                        <p class="card-text text-muted small mb-1"
-                            style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
-                            詳しい説明: {{ date.explanatorytext }}</p>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div>
-                                {% if date.user_id == 2 %}
-                                <span class="badge bg-warning text-dark">公式</span>
-                                {% else %}
-                                <p class="text-muted mb-2">
-                                    投稿者:
-                                    <a href="/profile/{{ date.user_id }}" class="text-decoration-none fw-bold">
-                                        {{ date.user.name }}
-                                    </a>
-                                </p>
-                                {% endif %}
-                                <span class="badge bg-info text-dark">いいね: {{ date.goodpoint }}</span>
-                                <span class="badge bg-info text-dark">コメント: {{ date.chat_count }}</span>
-                            </div>
-                            <div>
-                                <a href="/like/{{ date.id }}"
-                                    class="btn btn-sm {% if date.is_liked %}btn-danger{% else %}btn-outline-danger{% endif %} me-1">{% if date.is_liked %}いいね解除{% else %}いいね{% endif %}</a>
-                                <a href="/date/{{ date.id }}" class="btn btn-sm btn-outline-primary me-1">詳細</a>
-                                {% if session.get('is_admin') == 1 %}
-                                <a href="/toggle_hide/{{ date.id }}"
-                                    class="btn btn-sm {{ 'btn-warning' if date.is_hidden == 1 else 'btn-outline-warning' }} me-1">
-                                    {{ '👁️ 表示中' if date.is_hidden == 0 else '🙈 非表示中' }}
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
+        {% for date in dates %}
+        <div class="col">
+            <div class="card h-100 card-tilt shadow-sm border-0" style="border-radius: 1rem;">
+                {% if date.imagepass %}
+                <a href="{{ date.imagepass }}" data-lightbox="group" class="d-block overflow-hidden"
+                    style="border-top-left-radius:1rem; border-top-right-radius:1rem;">
+                    <img src="{{ date.imagepass }}" class="card-img-top" alt="{{ date.name }}"
+                        style="height:220px; object-fit:cover;">
+                </a>
+                {% else %}
+                <div class="text-center py-5 bg-light"
+                    style="height:220px; border-top-left-radius:1rem; border-top-right-radius:1rem;">
+                    <span class="text-muted">No Image</span>
+                </div>
+                {% endif %}
+                <div class="card-body">
+                    <h5 class="card-title mb-1">{{ date.name }}</h5>
+                    {%- if date.subject %}
+                    <p class="card-text text-muted small mb-1">種類: {{ date.subject }}</p>
+                    {%- endif %}
+                    <p class="card-text text-muted small mb-1"
+                        style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
+                        見つけた場所: {{ date.place }}</p>
+                    <p class="card-text text-muted small mb-1"
+                        style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
+                        詳しい説明: {{ date.explanatorytext }}</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            {% if date.user_id == 2 %}
+                            <span class="badge bg-warning text-dark">公式</span>
+                            {% else %}
+                            <p class="text-muted mb-2">
+                                投稿者:
+                                <a href="/profile/{{ date.user_id }}" class="text-decoration-none fw-bold">
+                                    {{ date.user.name }}
                                 </a>
-                                {% endif %}
-                                {% if date.user_id == session.get('user_id') or session.get('is_admin') == 1 %}
-                                <form method="post" action="/delete_date/{{ date.id }}" class="d-inline">
-                                    <button type="submit" class="btn btn-sm btn-outline-danger"
-                                        onclick="return confirm('{{ date.name }}のデータを本当に消しますか？')">削除</button>
-                                </form>
-                                {% endif %}
-                            </div>
+                            </p>
+                            {% endif %}
+                            <span class="badge bg-info text-dark">いいね: {{ date.goodpoint }}</span>
+                            <span class="badge bg-info text-dark">コメント: {{ date.chat_count }}</span>
+                        </div>
+                        <div>
+                            <a href="/like/{{ date.id }}"
+                                class="btn btn-sm {% if date.is_liked %}btn-danger{% else %}btn-outline-danger{% endif %} me-1">{%
+                                if date.is_liked %}いいね解除{% else %}いいね{% endif %}</a>
+                            <a href="/date/{{ date.id }}" class="btn btn-sm btn-outline-primary me-1">詳細</a>
+                            {% if session.get('is_admin') == 1 %}
+                            <a href="/toggle_hide/{{ date.id }}"
+                                class="btn btn-sm {{ 'btn-warning' if date.is_hidden == 1 else 'btn-outline-warning' }} me-1">
+                                {{ '👁️ 表示中' if date.is_hidden == 0 else '🙈 非表示中' }}
+                            </a>
+                            {% endif %}
+                            {% if date.user_id == session.get('user_id') or session.get('is_admin') == 1 %}
+                            <form method="post" action="/delete_date/{{ date.id }}" class="d-inline">
+                                <button type="submit" class="btn btn-sm btn-outline-danger"
+                                    onclick="return confirm('{{ date.name }}のデータを本当に消しますか？')">削除</button>
+                            </form>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
             </div>
-            {% endfor %}
         </div>
+        {% endfor %}
+    </div>
 
-        {% if dates|length == 0 %}
-        <div class="alert alert-info mt-4">該当する図鑑が見つかりませんでした。新しく投稿してみましょう！</div>
-        {% endif %}
+    {% if dates|length == 0 %}
+    <div class="alert alert-info mt-4">該当する図鑑が見つかりませんでした。新しく投稿してみましょう！</div>
+    {% endif %}
     </div>
 
     <footer class="footer text-center">

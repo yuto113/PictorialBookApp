@@ -20,7 +20,6 @@
             color: #ff6b6b;
         }
 
-        /* ヒーローセクション */
         .hero {
             background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 50%, #ffd1ff 100%);
             color: white;
@@ -127,7 +126,6 @@
             animation: pulse 1s infinite;
         }
 
-        /* 統計セクション */
         .stats-section {
             background: white;
             padding: 3rem 0;
@@ -157,7 +155,6 @@
             font-size: 1rem;
         }
 
-        /* 機能セクション */
         .feature-section {
             padding: 4rem 0;
         }
@@ -189,7 +186,6 @@
             animation: pulse 1s ease infinite;
         }
 
-        /* レビューセクション */
         .reviews-section {
             background: linear-gradient(135deg, #fafafa 0%, #fff 100%);
             padding: 4rem 0;
@@ -227,7 +223,6 @@
             font-weight: bold;
         }
 
-        /* コレクションセクション */
         .collection-section {
             padding: 4rem 0;
             background: linear-gradient(135deg, #fff7f0 0%, #f0f9ff 100%);
@@ -242,7 +237,6 @@
             transform: rotate(0deg) scale(1.03);
         }
 
-        /* CTAセクション */
         .cta-section {
             background: linear-gradient(135deg, #ff6b6b 0%, #ff9a9e 100%);
             color: white;
@@ -262,7 +256,6 @@
             background: white;
         }
 
-        /* スマホ対応 */
         @media (max-width: 768px) {
             .hero h1 {
                 font-size: 2.2rem;
@@ -301,7 +294,6 @@
         </div>
     </nav>
 
-    <!-- ヒーローセクション -->
     <div class="hero">
         <div class="container position-relative">
             <div class="hero-emoji">🌸</div>
@@ -316,39 +308,31 @@
         </div>
     </div>
 
-    <!-- 統計セクション -->
     <div class="stats-section">
         <div class="container">
-            <div class="row g-4">
-                <div class="col-6 col-md-3">
+            <div class="row g-4 justify-content-center">
+                <div class="col-6 col-md-4">
                     <div class="stat-card">
                         <div class="stat-number">{{ stats.users }}</div>
                         <div class="stat-label">👥 ユーザー数</div>
                     </div>
                 </div>
-                <div class="col-6 col-md-3">
+                <div class="col-6 col-md-4">
                     <div class="stat-card">
                         <div class="stat-number">{{ stats.posts }}</div>
                         <div class="stat-label">📷 投稿数</div>
                     </div>
                 </div>
-                <div class="col-6 col-md-3">
+                <div class="col-6 col-md-4">
                     <div class="stat-card">
                         <div class="stat-number">{{ stats.likes }}</div>
                         <div class="stat-label">❤️ いいね数</div>
-                    </div>
-                </div>
-                <div class="col-6 col-md-3">
-                    <div class="stat-card">
-                        <div class="stat-number">{{ stats.schools }}</div>
-                        <div class="stat-label">🏫 学校数</div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- 機能セクション -->
     <div class="feature-section">
         <div class="container">
             <h2 class="text-center fw-bold mb-2">✨ 図鑑でできること</h2>
@@ -400,95 +384,34 @@
         </div>
     </div>
 
-    <!-- レビューセクション -->
+    {% if reviews %}
     <div class="reviews-section">
         <div class="container">
             <h2 class="text-center fw-bold mb-2">🌟 みんなの声</h2>
             <p class="text-center text-muted mb-5">利用者の方々から嬉しいお声をいただいています！</p>
             <div class="row g-4">
+                {% for review in reviews %}
                 <div class="col-md-4">
                     <div class="review-card">
                         <div class="d-flex align-items-center mb-3">
-                            <div class="review-avatar">A</div>
+                            <div class="review-avatar">{{ review.user.name[0] }}</div>
                             <div class="ms-3">
-                                <h6 class="mb-0 fw-bold">あいさん</h6>
-                                <small class="text-muted">小学生</small>
+                                <h6 class="mb-0 fw-bold">{{ review.user.name }}さん</h6>
+                                {% if review.role_label %}
+                                <small class="text-muted">{{ review.role_label }}</small>
+                                {% endif %}
                             </div>
                         </div>
-                        <div class="review-stars mb-2">★★★★★</div>
-                        <p class="text-muted small mb-0">学校の宿題で使ってます！校庭で見つけた花を写真に撮って、みんなに見せられるのが楽しい！</p>
+                        <div class="review-stars mb-2">{{ '★' * review.stars }}{{ '☆' * (5 - review.stars) }}</div>
+                        <p class="text-muted small mb-0">{{ review.message }}</p>
                     </div>
                 </div>
-                <div class="col-md-4">
-                    <div class="review-card">
-                        <div class="d-flex align-items-center mb-3">
-                            <div class="review-avatar">B</div>
-                            <div class="ms-3">
-                                <h6 class="mb-0 fw-bold">けんたさん</h6>
-                                <small class="text-muted">中学生</small>
-                            </div>
-                        </div>
-                        <div class="review-stars mb-2">★★★★★</div>
-                        <p class="text-muted small mb-0">虫が大好きで、見つけた虫を全部記録してます。地図で場所も残せるのが便利！</p>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="review-card">
-                        <div class="d-flex align-items-center mb-3">
-                            <div class="review-avatar">C</div>
-                            <div class="ms-3">
-                                <h6 class="mb-0 fw-bold">先生</h6>
-                                <small class="text-muted">小学校教員</small>
-                            </div>
-                        </div>
-                        <div class="review-stars mb-2">★★★★★</div>
-                        <p class="text-muted small mb-0">理科の授業で使っています。生徒たちの観察力が驚くほど伸びました!</p>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="review-card">
-                        <div class="d-flex align-items-center mb-3">
-                            <div class="review-avatar">D</div>
-                            <div class="ms-3">
-                                <h6 class="mb-0 fw-bold">ゆきさん</h6>
-                                <small class="text-muted">高校生</small>
-                            </div>
-                        </div>
-                        <div class="review-stars mb-2">★★★★☆</div>
-                        <p class="text-muted small mb-0">散歩しながら気になった植物を記録してます。フレンド機能で友達と共有できて楽しい〜!</p>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="review-card">
-                        <div class="d-flex align-items-center mb-3">
-                            <div class="review-avatar">E</div>
-                            <div class="ms-3">
-                                <h6 class="mb-0 fw-bold">お母さん</h6>
-                                <small class="text-muted">保護者</small>
-                            </div>
-                        </div>
-                        <div class="review-stars mb-2">★★★★★</div>
-                        <p class="text-muted small mb-0">子供と一緒に使ってます。週末の公園散歩がもっと楽しくなりました!</p>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="review-card">
-                        <div class="d-flex align-items-center mb-3">
-                            <div class="review-avatar">F</div>
-                            <div class="ms-3">
-                                <h6 class="mb-0 fw-bold">たくさん</h6>
-                                <small class="text-muted">大学生</small>
-                            </div>
-                        </div>
-                        <div class="review-stars mb-2">★★★★★</div>
-                        <p class="text-muted small mb-0">生物学を勉強中。いろんな人の投稿を見て、自分も知らない種類を発見できる!</p>
-                    </div>
-                </div>
+                {% endfor %}
             </div>
         </div>
     </div>
+    {% endif %}
 
-    <!-- コレクションセクション -->
     {% if dates %}
     <div class="collection-section">
         <div class="container">
@@ -530,7 +453,6 @@
     </div>
     {% endif %}
 
-    <!-- CTAセクション -->
     <div class="cta-section">
         <div class="container">
             <h2>🎉 さあ、はじめよう！</h2>
@@ -544,7 +466,7 @@
 
     <footer class="footer text-center">
         <div class="container">
-            <small>© {{ now.year }} 図鑑 — オンライン図鑑をみんなで作ろう</small>
+            <small>© {{ now().year }} 図鑑 — オンライン図鑑をみんなで作ろう</small>
         </div>
     </footer>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

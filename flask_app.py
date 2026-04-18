@@ -1,7 +1,7 @@
 import os
 os.makedirs('/app/instance', exist_ok=True)
 from flask import Flask, render_template, request, redirect, session, flash
-from models import User, db, Date, Like, Chat, Friend, Feedback, School, SchoolMember, SchoolClass, ClassMember, SchoolMessage, SchoolMessageReply, ClassChat, ClassChatReply, ClassTeacher, Assignment, AssignmentSubmission, AssignmentChat, AssignmentChatReply, AppSetting
+from models import User, db, Date, Like, Chat, Friend, Feedback, School, SchoolMember, SchoolClass, ClassMember, SchoolMessage, SchoolMessageReply, ClassChat, ClassChatReply, ClassTeacher, Assignment, AssignmentSubmission, AssignmentChat, AssignmentChatReply, AppSetting, Review
 from sqlalchemy import or_
 from datetime import datetime
 from zoneinfo import ZoneInfo
@@ -1767,7 +1767,6 @@ def index():
     if session.get('user_id'):
         return redirect('/user')
     
-    # 統計情報を取得
     school_user_ids = [m.user_id for m in SchoolMember.query.all()]
     public_dates = Date.query.filter(
         Date.user_id.notin_(school_user_ids),
@@ -1778,10 +1777,85 @@ def index():
         'users': User.query.count(),
         'posts': Date.query.filter(Date.is_hidden != 1).count(),
         'likes': Like.query.count(),
-        'schools': School.query.count(),
     }
     
-    return render_template('landing.html', dates=public_dates, stats=stats)
+    # 承認済みレビューを取得
+    reviews = Review.query.filter_by(is_approved=1).order_by(Review.created_at.desc()).limit(6).all()
+    
+    return render_template('landing.html', dates=public_dates, stats=stats, reviews=reviews)
+
+@app.route('/review', methods=['GET', 'POST'])
+def review_post():
+    user_id = session.get('user_id')
+    if not user_id:
+        return redirect('/login')
+    
+    user = User.query.get(user_id)
+    if not user:
+        return redirect('/login')
+    
+    if request.method == 'POST':
+        role_label = request.form.get('role_label')
+        stars = int(request.form.get('stars', 5))
+        message = request.form.get('message')
+        
+        if message:
+            new_review = Review(
+                user_id=user_id,
+                role_label=role_label,
+                stars=stars,
+                message=message,
+                is_approved=0
+            )
+            db.session.add(new_review)
+            db.session.commit()
+            flash('レビューを投稿しました！承認されると公開されます。', 'success')
+            return redirect('/review')
+    
+    my_reviews = Review.query.filter_by(user_id=user_id).order_by(Review.created_at.desc()).all()
+    return render_template('review.html', user=user, my_reviews=my_reviews)
+
+
+@app.route('/admin/reviews', methods=['GET'])
+def admin_reviews():
+    user_id = session.get('user_id')
+    if not user_id or user_id != 2:
+        return redirect('/login')
+    
+    pending = Review.query.filter_by(is_approved=0).order_by(Review.created_at.desc()).all()
+    approved = Review.query.filter_by(is_approved=1).order_by(Review.created_at.desc()).all()
+    
+    return render_template('admin_reviews.html', pending=pending, approved=approved)
+
+
+@app.route('/admin/reviews/approve/<int:review_id>', methods=['POST'])
+def admin_approve_review(review_id):
+    user_id = session.get('user_id')
+    if not user_id or user_id != 2:
+        return redirect('/login')
+    
+    review = Review.query.get(review_id)
+    if review:
+        review.is_approved = 1
+        db.session.commit()
+        flash('レビューを承認しました。', 'success')
+    
+    return redirect('/admin/reviews')
+
+
+@app.route('/admin/reviews/delete/<int:review_id>', methods=['POST'])
+def admin_delete_review(review_id):
+    user_id = session.get('user_id')
+    if not user_id or user_id != 2:
+        return redirect('/login')
+    
+    review = Review.query.get(review_id)
+    if review:
+        db.session.delete(review)
+        db.session.commit()
+        flash('レビューを削除しました。', 'success')
+    
+    return redirect('/admin/reviews')
 
 @app.route('/logout')
 def logout():

@@ -266,6 +266,20 @@ class AssignmentChatReply(db.Model):
     
     user = db.relationship('User', backref='assignment_chat_replies')
 
+class Review(db.Model):
+    """利用者レビュー"""
+    __tablename__ = 'review'
+    
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id', ondelete='CASCADE'), nullable=False)
+    role_label = db.Column(db.String(50), nullable=True)  # 例：小学生、中学生、保護者など
+    stars = db.Column(db.Integer, default=5)  # 1-5
+    message = db.Column(db.Text, nullable=False)
+    is_approved = db.Column(db.Integer, default=0)  # 0:未承認 1:承認済み
+    created_at = db.Column(db.DateTime(timezone=True), default=func.now())
+    
+    user = db.relationship('User', backref='reviews')
+
 class AppSetting(db.Model):
     """アプリ全体の設定"""
     __tablename__ = 'app_setting'
