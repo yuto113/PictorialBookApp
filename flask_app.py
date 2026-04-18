@@ -1775,10 +1775,13 @@ def index():
         Date.is_hidden != 1
     ).order_by(Date.id.desc()).limit(12).all()
     
+    from sqlalchemy import func as sql_func
+    total_likes = db_session.query(sql_func.sum(Date.goodpoint)).scalar() or 0
+    
     stats = {
         'users': User.query.count(),
         'posts': Date.query.filter(Date.is_hidden != 1).count(),
-        'likes': Like.query.count(),
+        'likes': total_likes,
     }
     
     # 承認済みレビューを取得
