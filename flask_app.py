@@ -238,6 +238,14 @@ def user_page():
             session.clear()
             flash('このアカウントは停止されています。管理者にお問い合わせください。', 'danger')
             return redirect('/login')
+        if check_user and check_user.role in ['teacher', 'school_admin', 'student']:
+            my_member_check = SchoolMember.query.filter_by(user_id=user_id).first()
+            if my_member_check:
+                school_check = School.query.get(my_member_check.school_id)
+                if school_check and school_check.is_active == 0:
+                    flash('所属している学校が現在停止中です。管理者にお問い合わせください。', 'warning')
+                    session.clear()
+                    return redirect('/login')
         search = request.args.get("search",None)
         Illustrated_ev = request.args.get("ev",None)
         Illustrated_ki = request.args.get("ki",None)
@@ -842,17 +850,19 @@ def admin_schools():
     return render_template('admin_schools.html', schools=schools)
 
 
-@app.route('/admin/schools/delete/<int:school_id>', methods=['POST'])
-def admin_delete_school(school_id):
+@app.route('/admin/schools/toggle/<int:school_id>', methods=['POST'])
+def admin_toggle_school(school_id):
     user_id = session.get('user_id')
     if not user_id or user_id != 2:
-        return redirect('/user')
+        return redirect('/login')
     
     school = School.query.get(school_id)
     if school:
-        db.session.delete(school)
+        school.is_active = 0 if school.is_active == 1 else 1
         db.session.commit()
-        flash('学校を削除しました。', 'success')
+        status = '再開' if school.is_active == 1 else '停止'
+        flash(f'学校「{school.name}」を{status}しました。', 'success')
+    
     return redirect('/admin/schools')
 
 @app.route('/update_verj', methods=['POST'])

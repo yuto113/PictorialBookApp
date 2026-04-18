@@ -156,7 +156,8 @@ class School(db.Model):
     created_at = db.Column(db.DateTime(timezone=True), default=func.now())
     # ↓↓↓ここから↓↓↓
     use_map = db.Column(db.Integer, default=1)  # 0:OFF 1:ON
-    
+    is_active = db.Column(db.Integer, default=1)  # 1:有効 0:停止
+
     members = db.relationship('SchoolMember', backref='school', cascade='all, delete-orphan')
     classes = db.relationship('SchoolClass', backref='school', cascade='all, delete-orphan')
 
