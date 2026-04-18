@@ -10,36 +10,18 @@
         integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
     <style>
         body {
-            background: linear-gradient(135deg, #fff7f0 0%, #f0f9ff 100%);
+            background: {{ 'linear-gradient(135deg, #f0fff4 0%, #e8f5e9 100%)' if is_school_user else 'linear-gradient(135deg, #fff7f0 0%, #f0f9ff 100%)' }};
             color: #333;
         }
-
-        .brand-color {
-            color: #ff6b6b;
-        }
-
-        .card-upload {
-            border-radius: 1rem;
-            box-shadow: 0 10px 30px rgba(16, 24, 40, 0.06);
-        }
-
-        .footer {
-            color: #666;
-            padding: 1rem 0;
-        }
-
-        .form-control:focus {
-            box-shadow: 0 0 0 0.2rem rgba(255, 107, 107, 0.12);
-        }
-
-        #map {
-            width: 100%;
-            height: 300px;
-        }
+        .brand-color { color: {{ '#28a745' if is_school_user else '#ff6b6b' }}; }
+        .card-upload { border-radius: 1rem; box-shadow: 0 10px 30px rgba(16, 24, 40, 0.06); }
+        .footer { color: #666; padding: 1rem 0; }
+        .form-control:focus { box-shadow: 0 0 0 0.2rem rgba(255, 107, 107, 0.12); }
+        #map { width: 100%; height: 300px; }
     </style>
 </head>
 
-<body class="{{ 'theme-green' if is_school_user else 'theme-pink' }}">
+<body>
     <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
         <div class="container">
             <a class="navbar-brand d-flex align-items-center" href="/user">
@@ -76,6 +58,7 @@
                             <textarea id="knowledge" name="knowledge" class="form-control" rows="3"
                                 placeholder="この生き物について知っていることを書いてみよう！"></textarea>
                         </div>
+
                         {% if school_use_map %}
                         <div class="mb-3">
                             <label class="form-label fw-bold">📍 場所を地図で選ぶ</label>
@@ -83,94 +66,89 @@
                         </div>
                         {% endif %}
 
-                        <!-- 送信先選択 -->
+                        {% if user_role in ['teacher', 'school_admin'] %}
                         <div class="mb-3">
-                            {% if user_role in ['teacher', 'school_admin'] %}
-                            <div class="mb-3">
-                                <label class="form-label fw-bold">📤 送信先</label>
-                                <div class="border rounded p-3 bg-light">
-                                    <div class="form-check mb-2">
-                                        <input class="form-check-input" type="checkbox" name="send_school"
-                                            id="send_school" checked>
-                                        <label class="form-check-label" for="send_school">
-                                            🏫 学校全体
-                                        </label>
-                                    </div>
-                                    {% if my_classes %}
-                                    <hr class="my-2">
-                                    <p class="small text-muted mb-2">クラスを選択：</p>
-                                    {% for cls in my_classes %}
-                                    <div class="form-check mb-1">
-                                        <input class="form-check-input" type="checkbox" name="send_class_{{ cls.id }}"
-                                            id="send_class_{{ cls.id }}">
-                                        <label class="form-check-label" for="send_class_{{ cls.id }}">
-                                            📚 {{ cls.name }}
-                                        </label>
-                                    </div>
-                                    {% endfor %}
-                                    {% endif %}
+                            <label class="form-label fw-bold">📤 送信先</label>
+                            <div class="border rounded p-3 bg-light">
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox" name="send_school"
+                                        id="send_school" checked>
+                                    <label class="form-check-label" for="send_school">
+                                        🏫 学校全体
+                                    </label>
                                 </div>
-                            </div>
-                            {% endif %}
-
-                            {% if available_assignments %}
-                            <div class="mb-3">
-                                <label class="form-label fw-bold">📝 課題に提出</label>
-                                <select name="assignment_id" class="form-select">
-                                    <option value="">課題を選択しない</option>
-                                    {% for assignment in available_assignments %}
-                                    <option value="{{ assignment.id }}">{{ assignment.title }}（{{
-                                        assignment.school_class.name }}）締切: {{ assignment.deadline.strftime('%m/%d
-                                        %H:%M') }}</option>
-                                    {% endfor %}
-                                </select>
-                            </div>
-                            {% endif %}
-
-                            {% else %}
-                            <div id="map" style="width:100%; height:300px;"></div>
-                            {% endif %}
-
-                            {%- if session.get('user_id') == 2 %}
-                            <div class="mb-3">
-                                <label for="subject" class="form-label">種類（公式用）</label>
-                                <input type="text" id="subject" name="subject" class="form-control" />
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="explanatorytext" class="form-label">説明文（公式用）</label>
-                                <textarea id="explanatorytext" name="explanatorytext" class="form-control"
-                                    rows="3"></textarea>
-                            </div>
-                            {%- endif %}
-
-                            <div class="mb-3">
-                                <label for="file" class="form-label">画像</label>
-                                <input type="file" id="file" name="file" class="form-control" required />
-                            </div>
-                            <div id="map"></div>
-
-
-                            <input type="hidden" id="lat" name="lat" />
-                            <input type="hidden" id="lng" name="lng" />
-
-                            <div class="mb-3 form-check">
-                                <input type="checkbox" class="form-check-input" id="copyright_check" required>
-                                <label class="form-check-label" for="copyright_check">
-                                    投稿する画像・情報は自分で撮影・作成したものであり、
-                                    他者の著作権を侵害していないことを確認しました。
-                                </label>
-                            </div>
-
-                            <div class="d-flex justify-content-between align-items-center">
-                                <button class="btn btn-danger">送信</button>
-                                <div class="text-end">
-                                    {% if upload %}
-                                    <div class="text-success">{{ upload }} をアップロードできました。</div>
-                                    {% endif %}
-                                    <a href="/user" class="btn btn-link">ホーム画面へ</a>
+                                {% if my_classes %}
+                                <hr class="my-2">
+                                <p class="small text-muted mb-2">クラスを選択：</p>
+                                {% for cls in my_classes %}
+                                <div class="form-check mb-1">
+                                    <input class="form-check-input" type="checkbox" name="send_class_{{ cls.id }}"
+                                        id="send_class_{{ cls.id }}">
+                                    <label class="form-check-label" for="send_class_{{ cls.id }}">
+                                        📚 {{ cls.name }}
+                                    </label>
                                 </div>
+                                {% endfor %}
+                                {% endif %}
                             </div>
+                        </div>
+                        {% endif %}
+
+                        {% if available_assignments %}
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">📝 課題に提出</label>
+                            <select name="assignment_id" class="form-select">
+                                <option value="">課題を選択しない</option>
+                                {% for assignment in available_assignments %}
+                                <option value="{{ assignment.id }}">{{ assignment.title }}（{{ assignment.school_class.name }}）締切: {{ assignment.deadline.strftime('%m/%d %H:%M') }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        {% endif %}
+
+                        {% else %}
+                        <!-- 通常ユーザー用の地図 -->
+                        <div id="map"></div>
+                        {% endif %}
+
+                        {%- if session.get('user_id') == 2 %}
+                        <div class="mb-3">
+                            <label for="subject" class="form-label">種類（公式用）</label>
+                            <input type="text" id="subject" name="subject" class="form-control" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="explanatorytext" class="form-label">説明文（公式用）</label>
+                            <textarea id="explanatorytext" name="explanatorytext" class="form-control"
+                                rows="3"></textarea>
+                        </div>
+                        {%- endif %}
+
+                        <div class="mb-3">
+                            <label for="file" class="form-label">画像</label>
+                            <input type="file" id="file" name="file" class="form-control" required />
+                        </div>
+
+                        <input type="hidden" id="lat" name="lat" />
+                        <input type="hidden" id="lng" name="lng" />
+
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="copyright_check" required>
+                            <label class="form-check-label" for="copyright_check">
+                                投稿する画像・情報は自分で撮影・作成したものであり、
+                                他者の著作権を侵害していないことを確認しました。
+                            </label>
+                        </div>
+
+                        <div class="d-flex justify-content-between align-items-center">
+                            <button class="btn btn-danger">送信</button>
+                            <div class="text-end">
+                                {% if upload %}
+                                <div class="text-success">{{ upload }} をアップロードできました。</div>
+                                {% endif %}
+                                <a href="/user" class="btn btn-link">ホーム画面へ</a>
+                            </div>
+                        </div>
                     </form>
                 </div>
             </div>
@@ -182,6 +160,7 @@
             <small>© {{ now().year }} 図鑑 — {{ verj }}</small>
         </div>
     </footer>
+
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
         window.addEventListener('load', () => {
@@ -207,56 +186,9 @@
             });
         });
     </script>
-    if (document.getElementById('map')) {
-    const map2 = L.map('map').setView([35.125695, 136.918672], 15);
-
-    L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png', {
-    attribution: "<a href='https://maps.gsi.go.jp/development/ichiran.html' target='_blank'>地理院タイル</a>"
-    }).addTo(map2);
-    map2.invalidateSize();
-
-    const marker3 = L.marker(map2.getCenter()).addTo(map2);
-    map2.on('click', function(e) {
-    const latlng = e.latlng;
-    document.getElementById('lat').value = latlng.lat;
-    document.getElementById('lng').value = latlng.lng;
-    marker3.setLatLng(latlng);
-    marker3.setPopupContent("座標: " + latlng.toString()).openPopup();
-    });
-    }
-    </script>
-
-    // --- タイルレイヤー（国土地理院）の追加 ---
-
-    // 著作権表記（attribution）に国土地理院のルールを適用
-    L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png', {
-    attribution: "<a href='https://maps.gsi.go.jp/development/ichiran.html' target='_blank'>地理院タイル</a>"
-    }).addTo(map);
-    map.invalidateSize();
-    </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
         crossorigin="anonymous"></script>
-    <script>
-        const marker3 = L.marker(map.getCenter()).addTo(map);
-
-        // クリックした場所にピンを移動させる機能
-        map.on('click', function (e) {
-            // クリックした地点の緯度・経度を取得
-            const latlng = e.latlng;
-
-            // 取得した緯度・経度をフォームの隠しフィールドにセット
-            document.getElementById('lat').value = latlng.lat;
-            document.getElementById('lng').value = latlng.lng;
-
-            // マーカーの位置を更新
-            marker3.setLatLng(latlng);
-            // ポップアップの内容も書き換えて表示
-            marker3.setPopupContent("座標: " + latlng.toString()).openPopup();
-        });
-    </script>
-    <!-- 次回は緯度(lat)・軽度(lng)をsqliteのdateテーブルに入れてく -->
-
 </body>
 
 </html>
