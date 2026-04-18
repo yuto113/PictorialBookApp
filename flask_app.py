@@ -1767,14 +1767,21 @@ def index():
     if session.get('user_id'):
         return redirect('/user')
     
-    # 公開データを取得（通常ユーザーのデータのみ・非表示除外）
+    # 統計情報を取得
     school_user_ids = [m.user_id for m in SchoolMember.query.all()]
     public_dates = Date.query.filter(
         Date.user_id.notin_(school_user_ids),
         Date.is_hidden != 1
     ).order_by(Date.id.desc()).limit(12).all()
     
-    return render_template('landing.html', dates=public_dates)
+    stats = {
+        'users': User.query.count(),
+        'posts': Date.query.filter(Date.is_hidden != 1).count(),
+        'likes': Like.query.count(),
+        'schools': School.query.count(),
+    }
+    
+    return render_template('landing.html', dates=public_dates, stats=stats)
 
 @app.route('/logout')
 def logout():
