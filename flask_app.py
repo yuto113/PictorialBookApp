@@ -943,12 +943,13 @@ def login():
 @app.route('/signup',methods=['GET','POST'])
 def signup():
     if request.method == 'POST':
-        if not request.form.get('agree'):
-            return render_template('signup.html', messege='利用規約に同意してください')
-        name = request.form['name']
         print(request.form)
         password_s = request.form['password_s']
         password_s2 = request.form['password_s2']
+
+        if not request.form.get('agree'):
+            return render_template('signup.html', messege='利用規約に同意してください')
+        name = request.form['name']
 
         icon_type = request.form.get('icon_type', 'default')
         icon = 'default.png'
