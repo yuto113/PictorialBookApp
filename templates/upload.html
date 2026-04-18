@@ -70,6 +70,16 @@
                             <input type="text" id="place" name="place" class="form-control" required />
                         </div>
 
+                        {% if is_school_user %}
+                        <div class="mb-3">
+                            <label for="knowledge" class="form-label">知っていること</label>
+                            <textarea id="knowledge" name="knowledge" class="form-control" rows="3"
+                                placeholder="この生き物について知っていることを書いてみよう！"></textarea>
+                        </div>
+                        {% else %}
+                        <div id="map"></div>
+                        {% endif %}
+
                         {%- if session.get('user_id') == 2 %}
                         <div class="mb-3">
                             <label for="subject" class="form-label">種類（公式用）</label>

@@ -185,6 +185,7 @@
                     <button class="btn btn-danger" type="submit">検索</button>
                 </form>
             </div>
+            {% if not is_school_user %}
             <div class="col-md-6 text-md-end mt-3 mt-md-0">
                 <form method="get" class="d-inline-block">
                     <div class="form-check form-check-inline">
@@ -209,6 +210,7 @@
                     </div>
                 </form>
             </div>
+            {% endif %}
         </div>
 
         {% if is_school_user and my_school %}

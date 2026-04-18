@@ -75,6 +75,9 @@ def school_messages():
     school = School.query.get(my_member.school_id)
     
     if request.method == 'POST':
+        if user.role not in ['teacher', 'school_admin']:
+            flash('メッセージの送信は教師・学校管理者のみ可能です。', 'danger')
+            return redirect('/school/messages')
         message = request.form.get('message')
         if message:
             new_msg = SchoolMessage(
@@ -831,6 +834,11 @@ def login():
                 return render_template('login.html')
             session['user_id'] = user.id
             session['is_admin'] = getattr(user, 'is_admin', 0)
+            # 学校ユーザーで未参加の場合は参加ページへ
+            if user.role in ['teacher', 'school_admin', 'student']:
+                existing = SchoolMember.query.filter_by(user_id=user.id).first()
+                if not existing:
+                    return redirect('/school/join')
             return redirect('/user')
 
         else:
@@ -1005,7 +1013,10 @@ def school_mypage():
     
     # 所属クラス
     my_class_members = ClassMember.query.filter_by(user_id=user_id).all()
-    my_classes = [SchoolClass.query.get(cm.class_id) for cm in my_class_members]
+    my_classes = [SchoolClass.query.get(cm.class_id) for cm in my_class_members if SchoolClass.query.get(cm.class_id)]
+    # 教師・school_adminは学校内の全クラスを表示
+    if user.role in ['teacher', 'school_admin'] and my_member:
+        my_classes = SchoolClass.query.filter_by(school_id=my_member.school_id).all()
     
     message = None
     if request.method == 'POST':
@@ -1062,20 +1073,22 @@ def upload():
         except Exception:
             subject = None
             explanatorytext = None
+        knowledge = request.form.get('knowledge')
         if file:
             result = cloudinary.uploader.upload(file)
             image_url = result['secure_url']
             save_date = Date(
-                    user_id=session.get('user_id'),
-                    name=name,
-                    place=place,
-                    subject=subject,
-                    explanatorytext=explanatorytext,
-                    imagepass=image_url,
-                    goodpoint=0,
-                    ido=ido,
-                    keido=keido
-                )
+                user_id=session.get('user_id'),
+                name=name,
+                place=place,
+                subject=subject,
+                explanatorytext=explanatorytext,
+                imagepass=image_url,
+                goodpoint=0,
+                ido=ido,
+                keido=keido,
+                knowledge=knowledge
+            )
             db_session.add(save_date)
             db_session.commit()
             upload_user = User.query.get(session.get('user_id'))

@@ -43,6 +43,7 @@ class Date(db.Model):
 
     school_id = db.Column(db.Integer, db.ForeignKey('school.id'), nullable=True)
 
+    knowledge = db.Column(db.Text, nullable=True)
     # リレーションシップ設定
     user = db.relationship(
         'User', 
