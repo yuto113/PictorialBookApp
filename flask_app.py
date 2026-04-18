@@ -220,6 +220,14 @@ def delete_class_chat(chat_id):
 def user_page():
     # show user page only when logged in
     user_id = session.get('user_id')
+
+    search = request.args.get("search",None)
+    Illustrated_ev = request.args.get("ev",None)
+    Illustrated_ki = request.args.get("ki",None)
+    Illustrated_friend = request.args.get("friend",None)
+    user = db_session.query(User).filter_by(id=user_id).first()
+    if not user:
+        return redirect('/login')
     if user_id:
         check_user = User.query.get(user_id)
         if check_user and check_user.role == 'suspended':
@@ -1236,6 +1244,29 @@ def friend_search():
     user_id = session.get('user_id')
     if not user_id:
         return redirect('/login')
+    search_user = User.query.get(user_id)
+    if not search_user:
+        return redirect('/login')
+    
+    if request.method == 'POST':
+        nickname = request.form.get('nickname')
+        if nickname:
+            if search_user.role in ['teacher', 'student', 'school_admin']:
+                my_member = SchoolMember.query.filter_by(user_id=user_id).first()
+                if my_member:
+                    school_member_ids = [m.user_id for m in SchoolMember.query.filter_by(school_id=my_member.school_id).all()]
+                    users = db_session.query(User).filter(
+                        User.name.like(f'%{nickname}%'),
+                        User.id.in_(school_member_ids)
+                    ).all()
+                else:
+                    users = []
+            else:
+                school_user_ids = [m.user_id for m in SchoolMember.query.all()]
+                users = db_session.query(User).filter(
+                    User.name.like(f'%{nickname}%'),
+                    User.id.notin_(school_user_ids)
+                ).all()
     
     if request.method == 'POST':
         nickname = request.form.get('nickname')
@@ -1734,6 +1765,11 @@ def assignment_list():
         return redirect('/login')
     
     user = User.query.get(user_id)
+    if user.role not in ['teacher', 'school_admin', 'student']:
+        return redirect('/user')
+    user = User.query.get(user_id)
+    if not user:
+        return redirect('/login')
     if user.role not in ['teacher', 'school_admin', 'student']:
         return redirect('/user')
     
