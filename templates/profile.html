@@ -3,26 +3,76 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{ target_user.name }}さんのプロフィール</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: {
+                    {
+                    'linear-gradient(135deg, #f0fff4 0%, #e8f5e9 100%)' if is_school_user else 'linear-gradient(135deg, #fff7f0 0%, #f0f9ff 100%)'
+                }
+            }
+
+            ;
+            color: #333;
+            min-height: 100vh;
+        }
+
+        .profile-card {
+            border-radius: 1.5rem;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .profile-icon {
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            border: 4px solid white;
+        }
+
+        /* スマホ対応 */
+        @media (max-width: 576px) {
+            .profile-icon {
+                width: 100px;
+                height: 100px;
+            }
+
+            .display-5 {
+                font-size: 1.75rem;
+            }
+
+            .btn-group-profile {
+                display: flex;
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .btn-group-profile .btn {
+                width: 100%;
+            }
+        }
+    </style>
 </head>
 
-<body
-    style="background: {{ 'linear-gradient(135deg, #f0fff4 0%, #e8f5e9 100%)' if is_school_user else 'linear-gradient(135deg, #fff7f0 0%, #f0f9ff 100%)' }}; color:#333;">
-    <div class="container py-5">
-        <div class="card shadow-sm p-4 text-center">
+<body>
+    <div class="container py-4">
+        <div class="card profile-card p-4 text-center">
 
             <div class="mb-3">
                 {% if target_user.icon_image and target_user.icon_image.startswith('http') %}
-                <img src="{{ target_user.icon_image }}" {% else %} <img
-                    src="{{ url_for('static', filename='icons/default.png') }}" {% endif %} width="150" height="150"
-                    class="rounded-circle border border-4 border-white shadow" style="object-fit: cover;">
+                <img src="{{ target_user.icon_image }}" class="rounded-circle profile-icon shadow">
+                {% else %}
+                <img src="{{ url_for('static', filename='icons/default.png') }}"
+                    class="rounded-circle profile-icon shadow">
+                {% endif %}
             </div>
 
-            <h1 class="display-5 fw-bold">{{ target_user.name }}</h1>
+            <h1 class="display-5 fw-bold mb-1">{{ target_user.name }}</h1>
+            <p class="text-muted mb-1">ID: <span class="badge bg-secondary fs-6">{{ target_user.id }}</span></p>
             <p class="text-muted">さんのプロフィールページ</p>
 
-            <div class="mt-3">
+            <div class="btn-group-profile mt-3 d-flex gap-2 justify-content-center flex-wrap">
                 {% if is_me %}
                 <button type="button" class="btn btn-outline-primary px-4" data-bs-toggle="modal"
                     data-bs-target="#editProfileModal">プロフィールを編集</button>
@@ -57,7 +107,7 @@
                             </h5>
 
                             <a href="/like/{{ post.id }}" class="btn btn-primary btn-sm px-3 rounded-pill">
-                                ❤️ {{ post.goodpoint if post.goodpoint else 0 }} いいね
+                                ❤️ {{ post.goodpoint if post.goodpoint else 0 }}
                             </a>
                         </div>
 
@@ -67,11 +117,11 @@
 
                         <div class="text-center">
                             {% if post.imagepass %}
-                            <img src="{{ url_for('static', filename='uploads/' + post.imagepass) }}" alt="image"
-                                width="200px" height="auto" class="rounded shadow-sm">
+                            <img src="{{ post.imagepass }}" alt="image" class="rounded shadow-sm img-fluid"
+                                style="max-height:200px; object-fit:cover;">
                             {% else %}
                             <img src="{{ url_for('static', filename='uploads/No_Image.png') }}" alt="No_Image"
-                                width="200px" height="auto" class="rounded border">
+                                class="rounded border img-fluid" style="max-height:200px;">
                             {% endif %}
                         </div>
 
@@ -95,6 +145,9 @@
                         </div>
 
                         <div class="modal-body">
+                            <p class="text-muted">あなたのID: <span class="badge bg-secondary fs-6">{{ target_user.id
+                                    }}</span></p>
+
                             <div class="mb-4">
                                 <label for="user_name" class="form-label fw-bold">なまえ</label>
                                 <input type="text" id="user_name" name="user_name" class="form-control"
@@ -132,15 +185,6 @@
             </div>
         </div>
 
-        <!-- <div class="mb-3">
-                            <label class="form-label fw-bold">新しいアイコン画像を選ぶ</label>
-                            <p class="text-muted small mb-1">変えない場合はそのままでOKです</p>
-                            <input type="file" name="icon_file" class="form-control" accept="image/*">
-                        </div> -->
-    </div>
-    </form>
-    </div>
-    </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
