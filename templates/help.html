@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>ヘルプ・使い方</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background: linear-gradient(135deg, #fff7f0 0%, #f0f9ff 100%); color: #333; min-height: 100vh; }
+        .brand-color { color: #ff6b6b; }
+        .footer { color: #666; padding: 1rem 0; }
+        .help-section {
+            background: white;
+            border-radius: 1.5rem;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+        }
+        .help-section h3 {
+            color: #ff6b6b;
+            border-bottom: 3px solid #ffd4d4;
+            padding-bottom: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .help-icon {
+            font-size: 2rem;
+            margin-right: 0.5rem;
+        }
+        .step-box {
+            background: #fafafa;
+            border-left: 4px solid #ff9a9e;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0.5rem;
+        }
+        .step-box strong { color: #ff6b6b; }
+        .apply-link {
+            color: #007bff;
+            text-decoration: underline;
+            font-weight: bold;
+        }
+        .apply-link:hover {
+            color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="/">
+                <span class="fs-4 brand-color">📚 図鑑</span>
+                <small class="text-muted ms-2">ヘルプ・使い方</small>
+            </a>
+            <a class="btn btn-sm btn-outline-secondary" href="/user">戻る</a>
+        </div>
+    </nav>
+
+    <div class="container py-4">
+        <h2 class="brand-color text-center fw-bold mb-4">❓ ヘルプ・使い方ガイド</h2>
+        <p class="text-center text-muted mb-4">図鑑の使い方を紹介します！困ったときはこちらをご覧ください。</p>
+
+        <!-- はじめに -->
+        <div class="help-section">
+            <h3><span class="help-icon">🌟</span>はじめての方へ</h3>
+            <p>「図鑑」は、見つけた植物・動物の写真と情報をみんなと共有できるオンライン図鑑アプリです。</p>
+            <div class="step-box">
+                <strong>3ステップで始められます</strong>
+                <ol class="mb-0 mt-2">
+                    <li>新規登録（30秒で完了）</li>
+                    <li>見つけた生き物の写真を撮影</li>
+                    <li>アップロードして図鑑にコレクション！</li>
+                </ol>
+            </div>
+        </div>
+
+        <!-- 基本の使い方 -->
+        <div class="help-section">
+            <h3><span class="help-icon">📷</span>投稿のしかた</h3>
+            <p>画面右上の「アップロード」ボタンから投稿できます。</p>
+            <div class="step-box">
+                <strong>投稿に必要な情報</strong>
+                <ul class="mb-0 mt-2">
+                    <li>名前（植物・動物の名前）</li>
+                    <li>見つけた場所</li>
+                    <li>写真（必須）</li>
+                    <li>地図で場所を選択</li>
+                </ul>
+            </div>
+            <p class="mt-3 text-muted small">※ 投稿する画像は自分で撮影したものに限ります。他人の著作権を侵害しないようご注意ください。</p>
+        </div>
+
+        <!-- いいね・コメント -->
+        <div class="help-section">
+            <h3><span class="help-icon">💬</span>みんなと交流しよう</h3>
+            <p>他の人の投稿に「いいね」やコメントができます！</p>
+            <div class="step-box">
+                <strong>💖 いいね</strong>
+                <p class="mb-0">カードの「いいね」ボタンをクリック。もう一度押すと解除できます。</p>
+            </div>
+            <div class="step-box">
+                <strong>💬 コメント</strong>
+                <p class="mb-0">「詳細」ページからコメントを投稿できます。返信もできるので、みんなで盛り上がりましょう！</p>
+            </div>
+            <div class="step-box">
+                <strong>👥 フレンド機能</strong>
+                <p class="mb-0">「フレンド検索」から他のユーザーを探して、フレンド申請を送れます。フレンドになると相手の投稿をフィルターできます。</p>
+            </div>
+        </div>
+
+        <!-- 学校モード -->
+        <div class="help-section">
+            <h3><span class="help-icon">🏫</span>学校で使いたい方へ</h3>
+            <p>図鑑は学校の授業でも使えます！クラスごとに課題を出したり、学校全体で観察記録を共有できます。</p>
+            <div class="step-box">
+                <strong>🎓 学校モードでできること</strong>
+                <ul class="mb-0 mt-2">
+                    <li>クラスごとの課題作成・提出</li>
+                    <li>学校全体・クラス単位でのメッセージ共有</li>
+                    <li>地図機能のON/OFF（学校ごとに設定可）</li>
+                    <li>教師・生徒・学校管理者の役割分け</li>
+                </ul>
+            </div>
+            <div class="alert alert-info mt-3">
+                <strong>💡 学校グループを作りたい方</strong><br>
+                学校グループの作成には管理者による承認が必要です。
+                <a href="/feedback" class="apply-link">こちらから学校グループ作成を申請</a>してください。
+            </div>
+        </div>
+
+        <!-- トラブル -->
+        <div class="help-section">
+            <h3><span class="help-icon">🛠️</span>困ったときは</h3>
+            <div class="step-box">
+                <strong>パスワードを忘れた</strong>
+                <p class="mb-0">管理者にお問い合わせください。フィードバック機能からご連絡ください。</p>
+            </div>
+            <div class="step-box">
+                <strong>不適切な投稿を見つけた</strong>
+                <p class="mb-0">フィードバック機能からご報告ください。管理者が確認します。</p>
+            </div>
+            <div class="step-box">
+                <strong>その他のご質問</strong>
+                <p class="mb-0"><a href="/feedback" class="apply-link">フィードバックページ</a>からお問い合わせください。</p>
+            </div>
+        </div>
+
+        <!-- レビュー -->
+        <div class="help-section">
+            <h3><span class="help-icon">⭐</span>レビューについて</h3>
+            <p>使ってみた感想を「レビュー」から投稿できます！承認されると、トップページに表示されます。</p>
+        </div>
+
+    </div>
+
+    <footer class="footer text-center">
+        <div class="container">
+            <small>© {{ now().year }} 図鑑 — {{ verj }}</small>
+        </div>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

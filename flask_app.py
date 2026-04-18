@@ -1764,6 +1764,10 @@ def account():
 
     return render_template('account.html', user=user)
 
+@app.route('/help')
+def help_page():
+    return render_template('help.html')
+
 @app.route('/')
 def index():
     if session.get('user_id'):
