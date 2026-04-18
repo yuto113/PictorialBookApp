@@ -1717,6 +1717,150 @@ def check_role():
     return f'user_id={user.id}, name={user.name}, role={user.role}'
 # ↑↑↑ここまで↑↑↑
 
+@app.route('/assignments', methods=['GET'])
+def assignment_list():
+    user_id = session.get('user_id')
+    if not user_id:
+        return redirect('/login')
+    
+    user = User.query.get(user_id)
+    if user.role not in ['teacher', 'school_admin', 'student']:
+        return redirect('/user')
+    
+    my_member = SchoolMember.query.filter_by(user_id=user_id).first()
+    if not my_member:
+        return redirect('/school/join')
+    
+    school = School.query.get(my_member.school_id)
+    
+    # 自分が見られる課題を取得
+    from datetime import datetime as dt
+    now = dt.now(tz=ZoneInfo("Asia/Tokyo"))
+    
+    if user.role == 'student':
+        # 生徒は所属クラスの課題のみ
+        class_members = ClassMember.query.filter_by(user_id=user_id).all()
+        class_ids = [cm.class_id for cm in class_members]
+        assignments = Assignment.query.filter(
+            Assignment.class_id.in_(class_ids)
+        ).order_by(Assignment.deadline.asc()).all()
+    else:
+        # 教師・school_adminは学校内の全課題
+        class_ids = [cls.id for cls in SchoolClass.query.filter_by(school_id=my_member.school_id).all()]
+        assignments = Assignment.query.filter(
+            Assignment.class_id.in_(class_ids)
+        ).order_by(Assignment.deadline.asc()).all()
+    
+    # 担任のクラスを取得（課題作成用）
+    if user.role == 'teacher':
+        my_teaching = ClassTeacher.query.filter_by(teacher_id=user_id).first()
+        can_create_classes = [my_teaching.school_class] if my_teaching else []
+    elif user.role == 'school_admin':
+        can_create_classes = SchoolClass.query.filter_by(school_id=my_member.school_id).all()
+    else:
+        can_create_classes = []
+    
+    return render_template('assignment_list.html',
+                           user=user,
+                           school=school,
+                           assignments=assignments,
+                           can_create_classes=can_create_classes,
+                           now=now)
+
+
+@app.route('/assignments/create', methods=['POST'])
+def create_assignment():
+    user_id = session.get('user_id')
+    if not user_id:
+        return redirect('/login')
+    
+    user = User.query.get(user_id)
+    if user.role not in ['teacher', 'school_admin']:
+        return redirect('/user')
+    
+    title = request.form.get('title')
+    description = request.form.get('description')
+    class_id = request.form.get('class_id')
+    deadline_str = request.form.get('deadline')
+    
+    if title and class_id and deadline_str:
+        from datetime import datetime as dt
+        deadline = dt.strptime(deadline_str, '%Y-%m-%dT%H:%M').replace(tzinfo=ZoneInfo("Asia/Tokyo"))
+        
+        # 教師は自分の担任クラスのみ
+        if user.role == 'teacher':
+            my_teaching = ClassTeacher.query.filter_by(
+                teacher_id=user_id, class_id=int(class_id)).first()
+            if not my_teaching:
+                flash('担任のクラスにのみ課題を出せます。', 'danger')
+                return redirect('/assignments')
+        
+        new_assignment = Assignment(
+            title=title,
+            description=description,
+            class_id=int(class_id),
+            created_by=user_id,
+            deadline=deadline
+        )
+        db.session.add(new_assignment)
+        db.session.commit()
+        flash(f'課題「{title}」を作成しました！', 'success')
+    
+    return redirect('/assignments')
+
+
+@app.route('/assignments/<int:assignment_id>/close', methods=['POST'])
+def close_assignment(assignment_id):
+    user_id = session.get('user_id')
+    if not user_id:
+        return redirect('/login')
+    
+    user = User.query.get(user_id)
+    assignment = Assignment.query.get(assignment_id)
+    
+    if not assignment:
+        return redirect('/assignments')
+    
+    # 担任またはschool_adminのみ
+    cls = SchoolClass.query.get(assignment.class_id)
+    my_teaching = ClassTeacher.query.filter_by(
+        class_id=assignment.class_id, teacher_id=user_id).first()
+    
+    if user.role == 'school_admin' or my_teaching:
+        assignment.is_closed = 1
+        db.session.commit()
+        flash('課題を締め切りました。', 'success')
+    
+    return redirect(f'/assignments/{assignment_id}')
+
+
+@app.route('/assignments/<int:assignment_id>/extend', methods=['POST'])
+def extend_assignment(assignment_id):
+    user_id = session.get('user_id')
+    if not user_id:
+        return redirect('/login')
+    
+    user = User.query.get(user_id)
+    assignment = Assignment.query.get(assignment_id)
+    
+    if not assignment:
+        return redirect('/assignments')
+    
+    my_teaching = ClassTeacher.query.filter_by(
+        class_id=assignment.class_id, teacher_id=user_id).first()
+    
+    if user.role == 'school_admin' or my_teaching:
+        deadline_str = request.form.get('deadline')
+        if deadline_str:
+            from datetime import datetime as dt
+            new_deadline = dt.strptime(deadline_str, '%Y-%m-%dT%H:%M').replace(tzinfo=ZoneInfo("Asia/Tokyo"))
+            assignment.deadline = new_deadline
+            assignment.is_closed = 0
+            db.session.commit()
+            flash('締め切りを延長しました。', 'success')
+    
+    return redirect(f'/assignments/{assignment_id}')
+
 if __name__ == '__main__':
 
     app.run(debug=True)

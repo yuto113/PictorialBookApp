@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>課題一覧</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background: linear-gradient(135deg, #f0fff4 0%, #e8f5e9 100%); color: #333; }
+        .brand-color { color: #28a745; }
+        .footer { color: #666; padding: 1rem 0; }
+        .assignment-card { border-radius: 1rem; transition: transform 0.2s; }
+        .assignment-card:hover { transform: translateY(-2px); }
+        .deadline-close { border-left: 4px solid #dc3545; }
+        .deadline-ok { border-left: 4px solid #28a745; }
+        .deadline-passed { border-left: 4px solid #6c757d; opacity: 0.7; }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="/user">
+                <span class="fs-4 brand-color">図鑑</span>
+                <small class="text-muted ms-2">{{ school.name }}</small>
+            </a>
+            <a class="btn btn-sm btn-outline-secondary" href="/user">ホームへ</a>
+        </div>
+    </nav>
+
+    <div class="container py-4">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        {% for category, message in messages %}
+        <div class="alert alert-{{ category }}">{{ message }}</div>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
+
+        <h2 class="mb-4 brand-color">📝 課題一覧</h2>
+
+        <!-- 課題作成フォーム（教師・school_adminのみ） -->
+        {% if can_create_classes %}
+        <div class="card shadow-sm border-0 p-4 mb-4" style="border-radius:1rem;">
+            <h5 class="fw-bold mb-3">➕ 新しい課題を作成</h5>
+            <form method="POST" action="/assignments/create">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label small fw-bold">タイトル</label>
+                        <input type="text" name="title" class="form-control" required placeholder="例：校庭の植物を探そう">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label small fw-bold">対象クラス</label>
+                        <select name="class_id" class="form-select" required>
+                            <option value="">選択してください</option>
+                            {% for cls in can_create_classes %}
+                            <option value="{{ cls.id }}">{{ cls.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label small fw-bold">締め切り</label>
+                        <input type="datetime-local" name="deadline" class="form-control" required>
+                    </div>
+                    <div class="col-md-12">
+                        <label class="form-label small fw-bold">説明</label>
+                        <textarea name="description" class="form-control" rows="2" placeholder="課題の説明を入力..."></textarea>
+                    </div>
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-success">作成する</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        {% endif %}
+
+        <!-- 課題一覧 -->
+        {% if assignments %}
+        <div class="row g-3">
+            {% for assignment in assignments %}
+            {% set is_passed = assignment.deadline < now %}
+            {% set is_closed = assignment.is_closed == 1 %}
+            {% set days_left = (assignment.deadline - now).days %}
+            <div class="col-md-6">
+                <div class="card shadow-sm border-0 assignment-card p-3
+                    {% if is_closed or is_passed %}deadline-passed
+                    {% elif days_left <= 1 %}deadline-close
+                    {% else %}deadline-ok{% endif %}">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <h5 class="fw-bold mb-1">
+                                <a href="/assignments/{{ assignment.id }}" class="text-decoration-none text-dark">
+                                    📝 {{ assignment.title }}
+                                </a>
+                            </h5>
+                            <small class="text-muted">{{ assignment.school_class.name }}</small>
+                        </div>
+                        <div class="text-end">
+                            {% if is_closed %}
+                            <span class="badge bg-dark">締め切り済み</span>
+                            {% elif is_passed %}
+                            <span class="badge bg-secondary">期限切れ</span>
+                            {% elif days_left <= 1 %}
+                            <span class="badge bg-danger">もうすぐ締め切り</span>
+                            {% else %}
+                            <span class="badge bg-success">受付中</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% if assignment.description %}
+                    <p class="text-muted small mt-2 mb-2">{{ assignment.description }}</p>
+                    {% endif %}
+                    <div class="d-flex justify-content-between align-items-center mt-2">
+                        <small class="text-muted">締切: {{ assignment.deadline.strftime('%Y/%m/%d %H:%M') }}</small>
+                        <div class="d-flex gap-2">
+                            <span class="badge bg-info text-dark">{{ assignment.submissions|length }}件提出</span>
+                            <a href="/assignments/{{ assignment.id }}" class="btn btn-sm btn-outline-success">詳細</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="text-center py-5">
+            <p class="text-muted">まだ課題がありません。</p>
+        </div>
+        {% endif %}
+    </div>
+
+    <footer class="footer text-center mt-4">
+        <div class="container">
+            <small>© {{ now.year }} 図鑑 — {{ verj }}</small>
+        </div>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
