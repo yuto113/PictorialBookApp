@@ -107,8 +107,8 @@
         <div class="row g-3">
             {% for assignment in assignments %}
             {% set deadline_naive = assignment.deadline.replace(tzinfo=None) %}
-            {% set is_passed = deadline_naive < now %} {% set is_closed=assignment.is_closed==1 %} {% set
-                days_left=(assignment.deadline - now).days %} <div class="col-md-6">
+            {% set is_passed = deadline_naive < now_dt %} {% set is_closed=assignment.is_closed==1 %} {% set
+                days_left=(deadline_naive - now_dt).days %} <div class="col-md-6">
                 <div class="card shadow-sm border-0 assignment-card p-3
                     {% if is_closed or is_passed %}deadline-passed
                     {% elif days_left <= 1 %}deadline-close
