@@ -1861,6 +1861,192 @@ def extend_assignment(assignment_id):
     
     return redirect(f'/assignments/{assignment_id}')
 
+@app.route('/assignments/<int:assignment_id>', methods=['GET', 'POST'])
+def assignment_detail(assignment_id):
+    user_id = session.get('user_id')
+    if not user_id:
+        return redirect('/login')
+    
+    user = User.query.get(user_id)
+    if user.role not in ['teacher', 'school_admin', 'student']:
+        return redirect('/user')
+    
+    assignment = Assignment.query.get(assignment_id)
+    if not assignment:
+        return redirect('/assignments')
+    
+    from datetime import datetime as dt
+    now = dt.now(tz=ZoneInfo("Asia/Tokyo"))
+    is_passed = assignment.deadline < now
+    is_closed = assignment.is_closed == 1
+    can_submit = not is_passed and not is_closed
+    
+    # 担任チェック
+    my_teaching = ClassTeacher.query.filter_by(
+        class_id=assignment.class_id, teacher_id=user_id).first()
+    can_manage = user.role == 'school_admin' or my_teaching is not None
+    
+    my_member = SchoolMember.query.filter_by(user_id=user_id).first()
+    school = School.query.get(my_member.school_id) if my_member else None
+    
+    # 提出一覧
+    submissions = AssignmentSubmission.query.filter_by(
+        assignment_id=assignment_id
+    ).order_by(AssignmentSubmission.submitted_at.desc()).all()
+    
+    # チャット一覧
+    chats = AssignmentChat.query.filter_by(
+        assignment_id=assignment_id
+    ).order_by(AssignmentChat.created_at.asc()).all()
+    
+    return render_template('assignment_detail.html',
+                           user=user,
+                           school=school,
+                           assignment=assignment,
+                           submissions=submissions,
+                           chats=chats,
+                           can_submit=can_submit,
+                           can_manage=can_manage,
+                           is_passed=is_passed,
+                           is_closed=is_closed,
+                           now=now)
+
+
+@app.route('/api/assignments/<int:assignment_id>/chats', methods=['GET'])
+def get_assignment_chats(assignment_id):
+    user_id = session.get('user_id')
+    if not user_id:
+        return {'error': 'unauthorized'}, 401
+    
+    chats = AssignmentChat.query.filter_by(
+        assignment_id=assignment_id
+    ).order_by(AssignmentChat.created_at.asc()).all()
+    
+    result = []
+    for chat in chats:
+        replies = []
+        for reply in chat.replies:
+            replies.append({
+                'id': reply.id,
+                'user_name': reply.user.name,
+                'reply': reply.reply,
+                'created_at': str(reply.created_at)
+            })
+        result.append({
+            'id': chat.id,
+            'user_id': chat.user_id,
+            'user_name': chat.user.name,
+            'message': chat.message,
+            'created_at': str(chat.created_at),
+            'replies': replies,
+            'can_delete': (chat.user_id == user_id or user_id == 2)
+        })
+    return {'chats': result}
+
+
+@app.route('/api/assignments/<int:assignment_id>/chats', methods=['POST'])
+def post_assignment_chat(assignment_id):
+    user_id = session.get('user_id')
+    if not user_id:
+        return {'error': 'unauthorized'}, 401
+    
+    data = request.get_json()
+    message = data.get('message')
+    if not message:
+        return {'error': 'no message'}, 400
+    
+    new_chat = AssignmentChat(
+        assignment_id=assignment_id,
+        user_id=user_id,
+        message=message,
+        created_at=datetime.now(tz=ZoneInfo("Asia/Tokyo")).replace(microsecond=0)
+    )
+    db.session.add(new_chat)
+    db.session.commit()
+    
+    return {'success': True, 'chat': {
+        'id': new_chat.id,
+        'user_id': new_chat.user_id,
+        'user_name': new_chat.user.name,
+        'message': new_chat.message,
+        'created_at': str(new_chat.created_at),
+        'replies': [],
+        'can_delete': True
+    }}
+
+
+@app.route('/api/assignments/chats/<int:chat_id>/reply', methods=['POST'])
+def post_assignment_chat_reply(chat_id):
+    user_id = session.get('user_id')
+    if not user_id:
+        return {'error': 'unauthorized'}, 401
+    
+    data = request.get_json()
+    reply_text = data.get('reply')
+    if not reply_text:
+        return {'error': 'no reply'}, 400
+    
+    chat = AssignmentChat.query.get(chat_id)
+    if not chat:
+        return {'error': 'not found'}, 404
+    
+    new_reply = AssignmentChatReply(
+        chat_id=chat_id,
+        user_id=user_id,
+        reply=reply_text,
+        created_at=datetime.now(tz=ZoneInfo("Asia/Tokyo")).replace(microsecond=0)
+    )
+    db.session.add(new_reply)
+    db.session.commit()
+    
+    return {'success': True, 'reply': {
+        'id': new_reply.id,
+        'user_name': new_reply.user.name,
+        'reply': new_reply.reply,
+        'created_at': str(new_reply.created_at)
+    }}
+
+
+@app.route('/api/assignments/chats/<int:chat_id>/delete', methods=['DELETE'])
+def delete_assignment_chat(chat_id):
+    user_id = session.get('user_id')
+    if not user_id:
+        return {'error': 'unauthorized'}, 401
+    
+    chat = AssignmentChat.query.get(chat_id)
+    if not chat:
+        return {'error': 'not found'}, 404
+    
+    if chat.user_id != user_id and user_id != 2:
+        return {'error': 'forbidden'}, 403
+    
+    db.session.delete(chat)
+    db.session.commit()
+    return {'success': True}
+
+
+@app.route('/api/assignments/<int:assignment_id>/submissions', methods=['GET'])
+def get_assignment_submissions(assignment_id):
+    user_id = session.get('user_id')
+    if not user_id:
+        return {'error': 'unauthorized'}, 401
+    
+    submissions = AssignmentSubmission.query.filter_by(
+        assignment_id=assignment_id
+    ).order_by(AssignmentSubmission.submitted_at.desc()).all()
+    
+    result = []
+    for sub in submissions:
+        result.append({
+            'id': sub.id,
+            'user_name': sub.user.name,
+            'date_id': sub.date_id,
+            'date_name': sub.date.name,
+            'date_image': sub.date.imagepass,
+            'submitted_at': str(sub.submitted_at)
+        })
+    return {'submissions': result}
+
 if __name__ == '__main__':
 
     app.run(debug=True)
