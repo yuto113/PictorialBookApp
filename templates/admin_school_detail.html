@@ -131,7 +131,9 @@
                                 {% for date in dates %}
                                 <tr>
                                     <td>{{ date.id }}</td>
-                                    <td>{{ date.name }}</td>
+                                    <td>
+                                        <a href="/date/{{ date.id }}" class="text-decoration-none fw-bold">{{ date.name }}</a>
+                                    </td>
                                     <td>{{ date.user.name }}</td>
                                     <td>
                                         {% if date.is_hidden == 1 %}
@@ -141,6 +143,7 @@
                                         {% endif %}
                                     </td>
                                     <td>
+                                        <a href="/date/{{ date.id }}" class="btn btn-sm btn-outline-primary">詳細</a>
                                         <form method="POST" action="/admin/toggle_school_date/{{ date.id }}" class="d-inline">
                                             <input type="hidden" name="school_id" value="{{ school.id }}">
                                             <button type="submit" class="btn btn-sm btn-outline-warning">
