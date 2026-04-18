@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>マイページ</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background: linear-gradient(135deg, #f0fff4 0%, #e8f5e9 100%); color: #333; }
+        .brand-color { color: #28a745; }
+        .footer { color: #666; padding: 1rem 0; }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="/user">
+                <span class="fs-4 brand-color">図鑑</span>
+                <small class="text-muted ms-2">{{ my_school.name if my_school else 'オンライン図鑑' }}</small>
+            </a>
+            <a class="btn btn-sm btn-outline-secondary" href="/user">ホームへ</a>
+        </div>
+    </nav>
+
+    <div class="container py-4">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        {% for category, message in messages %}
+        <div class="alert alert-{{ category }}">{{ message }}</div>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
+
+        <h2 class="mb-4 brand-color">マイページ</h2>
+
+        <div class="row g-4">
+            <!-- プロフィール情報 -->
+            <div class="col-md-6">
+                <div class="card shadow-sm border-0 p-4" style="border-radius:1rem;">
+                    <h5 class="fw-bold mb-3">👤 プロフィール</h5>
+                    <p><strong>名前：</strong>{{ user.name }}</p>
+                    <p><strong>ID：</strong>{{ user.id }}</p>
+                    <p><strong>役割：</strong>
+                        {% if user.role == 'student' %}
+                        <span class="badge bg-success">学生</span>
+                        {% elif user.role == 'teacher' %}
+                        <span class="badge bg-primary">教師</span>
+                        {% elif user.role == 'school_admin' %}
+                        <span class="badge bg-warning text-dark">学校管理者</span>
+                        {% endif %}
+                    </p>
+                    <p><strong>学校：</strong>{{ my_school.name if my_school else '未参加' }}</p>
+                </div>
+            </div>
+
+            <!-- 所属クラス -->
+            <div class="col-md-6">
+                <div class="card shadow-sm border-0 p-4" style="border-radius:1rem;">
+                    <h5 class="fw-bold mb-3">📚 所属クラス</h5>
+                    {% for cls in my_classes %}
+                    <div class="border rounded p-2 mb-2">
+                        <strong>{{ cls.name }}</strong>
+                    </div>
+                    {% else %}
+                    <p class="text-muted small">まだクラスに登録されていません。</p>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- パスワード変更 -->
+            <div class="col-md-6">
+                <div class="card shadow-sm border-0 p-4" style="border-radius:1rem;">
+                    <h5 class="fw-bold mb-3">🔑 パスワード変更</h5>
+
+                    {% if message %}
+                    <div class="alert alert-danger">{{ message }}</div>
+                    {% endif %}
+
+                    <form method="POST">
+                        <div class="mb-3">
+                            <label class="form-label small fw-bold">現在のパスワード</label>
+                            <input type="password" name="current_password" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small fw-bold">新しいパスワード</label>
+                            <input type="password" name="new_password" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small fw-bold">新しいパスワード（確認）</label>
+                            <input type="password" name="new_password2" class="form-control" required>
+                        </div>
+                        <button type="submit" class="btn btn-success w-100">変更する</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer text-center mt-4">
+        <div class="container">
+            <small>© {{ now().year }} 図鑑 — {{ verj }}</small>
+        </div>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
