@@ -1144,7 +1144,7 @@ def upload():
             
             # 利用可能な課題を取得（締め切り前のみ）
             from datetime import datetime as dt
-            now = dt.now(tz=ZoneInfo("Asia/Tokyo"))
+            now = dt.now()
             for cls in my_classes:
                 assignments = Assignment.query.filter_by(
                     class_id=cls.id,
@@ -1745,7 +1745,7 @@ def assignment_list():
     
     # 自分が見られる課題を取得
     from datetime import datetime as dt
-    now = dt.now(tz=ZoneInfo("Asia/Tokyo"))
+    now = dt.now()
     
     if user.role == 'student':
         # 生徒は所属クラスの課題のみ
@@ -1771,11 +1771,11 @@ def assignment_list():
         can_create_classes = []
     
     return render_template('assignment_list.html',
-                           user=user,
-                           school=school,
-                           assignments=assignments,
-                           can_create_classes=can_create_classes,
-                           now=now)
+                            user=user,
+                            school=school,
+                            assignments=assignments,
+                            can_create_classes=can_create_classes,
+                            now=now)
 
 
 @app.route('/assignments/create', methods=['POST'])
@@ -1886,8 +1886,9 @@ def assignment_detail(assignment_id):
         return redirect('/assignments')
     
     from datetime import datetime as dt
-    now = dt.now(tz=ZoneInfo("Asia/Tokyo"))
-    is_passed = assignment.deadline < now
+    now = dt.now()
+    deadline = assignment.deadline.replace(tzinfo=None) if assignment.deadline.tzinfo else assignment.deadline
+    is_passed = deadline < now
     is_closed = assignment.is_closed == 1
     can_submit = not is_passed and not is_closed
     

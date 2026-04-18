@@ -1,21 +1,50 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>課題一覧</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        body { background: linear-gradient(135deg, #f0fff4 0%, #e8f5e9 100%); color: #333; }
-        .brand-color { color: #28a745; }
-        .footer { color: #666; padding: 1rem 0; }
-        .assignment-card { border-radius: 1rem; transition: transform 0.2s; }
-        .assignment-card:hover { transform: translateY(-2px); }
-        .deadline-close { border-left: 4px solid #dc3545; }
-        .deadline-ok { border-left: 4px solid #28a745; }
-        .deadline-passed { border-left: 4px solid #6c757d; opacity: 0.7; }
+        body {
+            background: linear-gradient(135deg, #f0fff4 0%, #e8f5e9 100%);
+            color: #333;
+        }
+
+        .brand-color {
+            color: #28a745;
+        }
+
+        .footer {
+            color: #666;
+            padding: 1rem 0;
+        }
+
+        .assignment-card {
+            border-radius: 1rem;
+            transition: transform 0.2s;
+        }
+
+        .assignment-card:hover {
+            transform: translateY(-2px);
+        }
+
+        .deadline-close {
+            border-left: 4px solid #dc3545;
+        }
+
+        .deadline-ok {
+            border-left: 4px solid #28a745;
+        }
+
+        .deadline-passed {
+            border-left: 4px solid #6c757d;
+            opacity: 0.7;
+        }
     </style>
 </head>
+
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
         <div class="container">
@@ -77,10 +106,9 @@
         {% if assignments %}
         <div class="row g-3">
             {% for assignment in assignments %}
-            {% set is_passed = assignment.deadline < now %}
-            {% set is_closed = assignment.is_closed == 1 %}
-            {% set days_left = (assignment.deadline - now).days %}
-            <div class="col-md-6">
+            {% set deadline_naive = assignment.deadline.replace(tzinfo=None) %}
+            {% set is_passed = deadline_naive < now %} {% set is_closed=assignment.is_closed==1 %} {% set
+                days_left=(assignment.deadline - now).days %} <div class="col-md-6">
                 <div class="card shadow-sm border-0 assignment-card p-3
                     {% if is_closed or is_passed %}deadline-passed
                     {% elif days_left <= 1 %}deadline-close
@@ -99,11 +127,10 @@
                             <span class="badge bg-dark">締め切り済み</span>
                             {% elif is_passed %}
                             <span class="badge bg-secondary">期限切れ</span>
-                            {% elif days_left <= 1 %}
-                            <span class="badge bg-danger">もうすぐ締め切り</span>
-                            {% else %}
-                            <span class="badge bg-success">受付中</span>
-                            {% endif %}
+                            {% elif days_left <= 1 %} <span class="badge bg-danger">もうすぐ締め切り</span>
+                                {% else %}
+                                <span class="badge bg-success">受付中</span>
+                                {% endif %}
                         </div>
                     </div>
                     {% if assignment.description %}
@@ -117,14 +144,14 @@
                         </div>
                     </div>
                 </div>
-            </div>
-            {% endfor %}
         </div>
-        {% else %}
-        <div class="text-center py-5">
-            <p class="text-muted">まだ課題がありません。</p>
-        </div>
-        {% endif %}
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="text-center py-5">
+        <p class="text-muted">まだ課題がありません。</p>
+    </div>
+    {% endif %}
     </div>
 
     <footer class="footer text-center mt-4">
@@ -134,4 +161,5 @@
     </footer>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>
