@@ -9,6 +9,7 @@ import os
 from werkzeug.utils import secure_filename
 import cloudinary
 import cloudinary.uploader
+from werkzeug.security import generate_password_hash, check_password_hash
 
 cloudinary.config(
     cloud_name=os.environ.get('CLOUDINARY_CLOUD_NAME'),
@@ -666,8 +667,7 @@ def admin_reset_password(target_user_id):
     
     target = User.query.get(target_user_id)
     if target:
-        # パスワードを「reset」にリセット、変更必須フラグを立てる
-        target.password = 'reset'
+        target.password = generate_password_hash('reset')
         target.must_change_password = 1
         db.session.commit()
         flash(f'{target.name}さんのパスワードを「reset」にリセットしました。', 'success')
@@ -698,7 +698,7 @@ def force_change_password():
         if new_password == 'reset':
             return render_template('force_change_password.html', message='「reset」は使用できません')
         
-        user.password = new_password
+        user.password = generate_password_hash(new_password)
         user.must_change_password = 0
         db.session.commit()
         flash('パスワードを変更しました！', 'success')
@@ -963,31 +963,38 @@ def login():
     if request.method == 'POST':
         id = request.form['id']
         password = request.form['password']
-        user = db_session.query(User).filter_by(id=id, password=password).first()
-        
-        if user:
-            session['user_id'] = user.id
-            session['is_admin'] = getattr(user, 'is_admin', 0)
-            if user.must_change_password == 1:
-                return redirect('/force_change_password')
-            return redirect('/user')
-        
-        if user and user.password == password:
-            if user.role == 'suspended':
-                flash('このアカウントは停止されています。管理者にお問い合わせください。', 'danger')
-                return render_template('login.html')
-            session['user_id'] = user.id
-            session['is_admin'] = getattr(user, 'is_admin', 0)
-            # 学校ユーザーで未参加の場合は参加ページへ
-            if user.role in ['teacher', 'school_admin', 'student']:
-                existing = SchoolMember.query.filter_by(user_id=user.id).first()
-                if not existing:
-                    return redirect('/school/join')
-            return redirect('/user')
+        user = db_session.query(User).filter_by(id=id).first()
 
-        else:
-            flash('ログインに失敗しました。名前かパスワードが間違っています。', 'danger')
-            return render_template('login.html')
+        if user:
+            # ハッシュ化されたパスワードかチェック
+            password_match = False
+            if user.password.startswith('pbkdf2:') or user.password.startswith('scrypt:'):
+                # ハッシュ化済み
+                password_match = check_password_hash(user.password, password)
+            else:
+                # 平文（旧データ）→ 一致したらハッシュ化して保存
+                if user.password == password:
+                    password_match = True
+                    user.password = generate_password_hash(password)
+                    db_session.commit()
+            
+            if password_match:
+                if user.role == 'suspended':
+                    flash('このアカウントは停止されています。管理者にお問い合わせください。', 'danger')
+                    return render_template('login.html')
+                session['user_id'] = user.id
+                session['is_admin'] = 1 if user.role == 'admin' else 0
+                if user.must_change_password == 1:
+                    return redirect('/force_change_password')
+                # 学校ユーザーで未参加の場合は参加ページへ
+                if user.role in ['teacher', 'school_admin', 'student']:
+                    existing = SchoolMember.query.filter_by(user_id=user.id).first()
+                    if not existing:
+                        return redirect('/school/join')
+                return redirect('/user')
+
+        flash('ログインに失敗しました。名前かパスワードが間違っています。', 'danger')
+        return render_template('login.html')
         
     return render_template('login.html')
 
@@ -1011,11 +1018,12 @@ def signup():
                 icon = result['secure_url']
 
         if password_s == password_s2:
-            new_user = User(name=name, password=password_s, icon_image=icon)
+            hashed_pw = generate_password_hash(password_s)
+            new_user = User(name=name, password=hashed_pw, icon_image=icon)
             db_session.add(new_user)
             db_session.commit()
             session['user_id'] = new_user.id
-            flash(f'🎉 ようこそ!あなたのIDは「{new_user.id}」です。大切に保管してください！', 'success')
+            flash(f'🎉 ようこそ!あなたのIDは「{new_user.id}」です。大切に保管してください!', 'success')
             return redirect('/user')
         else:
             return render_template('signup.html',messege='パスワードが一致しません')
@@ -1173,23 +1181,23 @@ def school_mypage():
         new_pw = request.form.get('new_password')
         new_pw2 = request.form.get('new_password2')
         
-        if current_pw != user.password:
+        password_match = False
+        if user.password.startswith('pbkdf2:') or user.password.startswith('scrypt:'):
+            password_match = check_password_hash(user.password, current_pw)
+        else:
+            password_match = (user.password == current_pw)
+        
+        if not password_match:
             message = '現在のパスワードが違います。'
         elif new_pw != new_pw2:
             message = '新しいパスワードが一致しません。'
         elif not new_pw:
             message = '新しいパスワードを入力してください。'
         else:
-            user.password = new_pw
+            user.password = generate_password_hash(new_pw)
             db.session.commit()
             flash('パスワードを変更しました！', 'success')
             return redirect('/school/mypage')
-    
-    return render_template('school_mypage.html',
-                            user=user,
-                            my_school=my_school,
-                            my_classes=my_classes,
-                            message=message)
 
 #アップロードの機能を追加する。(エンドポイント)
 @app.route('/upload', methods=['GET', 'POST'])
@@ -1636,15 +1644,19 @@ def profile(user_id):
             current_pw = request.form.get('current_password')
             new_pw = request.form.get('new_password')
 
-            # パスワード欄に何か入力されている場合
             if current_pw or new_pw:
-                # 現在のパスワードが合っているか確認
-                if target_user.password == current_pw:
-                    if new_pw: # 新しいパスワードがあれば上書き
-                        target_user.password = new_pw
+                # 現在のパスワードが合っているかチェック（ハッシュ化対応）
+                password_match = False
+                if target_user.password.startswith('pbkdf2:') or target_user.password.startswith('scrypt:'):
+                    password_match = check_password_hash(target_user.password, current_pw)
+                else:
+                    password_match = (target_user.password == current_pw)
+                
+                if password_match:
+                    if new_pw:
+                        target_user.password = generate_password_hash(new_pw)
                         flash('パスワードも新しく更新しました！', 'success')
                 else:
-                    # パスワードが間違っている場合は、名前や画像の保存もキャンセルして弾く！
                     flash('現在のパスワードが間違っています。変更はキャンセルされました。', 'danger')
                     return redirect(f'/profile/{user_id}')
 

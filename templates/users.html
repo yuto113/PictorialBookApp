@@ -143,7 +143,7 @@
                                     {% if u.id == 2 %}
                                     <td class="text-muted">非表示</td>
                                     {% else %}
-                                    <td>{{ u.password }}</td>
+                                    <td class="text-muted small">🔒 ハッシュ化済み</td>
                                     {% endif %}
                                     <td>
                                         <span id="role_main_badge_{{ u.id }}">
