@@ -1,10 +1,18 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="ja">
 
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>オンライン図鑑 - home</title>
+    <title>繧ｪ繝ｳ繝ｩ繧､繝ｳ蝗ｳ髑・- home</title>
+    <meta property="og:title" content="図鑑 - みんなで作るオンライン図鑑">
+    <meta property="og:description" content="見つけた植物・動物の写真と情報をみんなで共有！あなただけの図鑑を作ろう！">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://2026-yuto-book.up.railway.app/">
+    <meta property="og:image" content="https://2026-yuto-book.up.railway.app/static/ogp.png">
+    <meta property="og:site_name" content="図鑑">
+    <meta property="og:locale" content="ja_JP">
+    <meta name="twitter:card" content="summary_large_image">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/css/lightbox.css" rel="stylesheet">
@@ -69,11 +77,11 @@
     <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
         <div class="container">
             <a class="navbar-brand d-flex align-items-center" href="#">
-                <span class="fs-4 brand-color">図鑑</span>
+                <span class="fs-4 brand-color">蝗ｳ髑・/span>
                 {% if is_school_user %}
-                <small class="text-muted ms-2">{{ my_school.name if my_school else 'オンライン図鑑' }}</small>
+                <small class="text-muted ms-2">{{ my_school.name if my_school else '繧ｪ繝ｳ繝ｩ繧､繝ｳ蝗ｳ髑・ }}</small>
                 {% else %}
-                <small class="text-muted ms-2">オンライン図鑑</small>
+                <small class="text-muted ms-2">繧ｪ繝ｳ繝ｩ繧､繝ｳ蝗ｳ髑・/small>
                 {% endif %}
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
@@ -88,35 +96,35 @@
                     <img src="{{ url_for('static', filename='icons/default.png') }}" width="40" height="40"
                         class="rounded-circle border" style="object-fit: cover;">
                     {% endif %}
-                    <span>ようこそ、<a href="/profile/{{ user.id }}" class="text-decoration-none text-dark"><strong>{{
-                                user.name }}</strong></a>さん</span>
+                    <span>繧医≧縺薙◎縲・a href="/profile/{{ user.id }}" class="text-decoration-none text-dark"><strong>{{
+                                user.name }}</strong></a>縺輔ｓ</span>
 
                     {% if user.role in ['teacher', 'school_admin'] %}
                     {% if my_school %}
                     <a class="btn btn-sm btn-success" href="/school/dashboard">{{ my_school.name }}</a>
                     {% else %}
-                    <a class="btn btn-sm btn-outline-success" href="/school/join">学校に参加</a>
+                    <a class="btn btn-sm btn-outline-success" href="/school/join">蟄ｦ譬｡縺ｫ蜿ょ刈</a>
                     {% endif %}
                     {% endif %}
 
                     {% if user.role in ['teacher', 'school_admin', 'student'] %}
-                    <a class="btn btn-sm btn-outline-success" href="/school/mypage">マイページ</a>
-                    <a class="btn btn-sm btn-outline-success" href="/assignments">📝 課題</a>
+                    <a class="btn btn-sm btn-outline-success" href="/school/mypage">繝槭う繝壹・繧ｸ</a>
+                    <a class="btn btn-sm btn-outline-success" href="/assignments">統 隱ｲ鬘・/a>
                     {% endif %}
 
-                    <a class="btn btn-sm btn-outline-primary" href="/upload">アップロード</a>
+                    <a class="btn btn-sm btn-outline-primary" href="/upload">繧｢繝・・繝ｭ繝ｼ繝・/a>
 
                     {% if not is_school_user %}
-                    <a class="btn btn-sm btn-outline-info" href="/friend_search">フレンド検索</a>
-                    <a class="btn btn-sm btn-outline-info" href="/friends">フレンドリスト</a>
+                    <a class="btn btn-sm btn-outline-info" href="/friend_search">繝輔Ξ繝ｳ繝画､懃ｴ｢</a>
+                    <a class="btn btn-sm btn-outline-info" href="/friends">繝輔Ξ繝ｳ繝峨Μ繧ｹ繝・/a>
                     {% endif %}
-                    <a class="btn btn-sm btn-outline-info" href="/help">❓ ヘルプ</a>
-                    <a class="btn btn-sm btn-outline-warning" href="/feedback">フィードバック</a>
-                    <a class="btn btn-sm btn-outline-warning" href="/review">⭐ レビュー</a>
+                    <a class="btn btn-sm btn-outline-info" href="/help">笶・繝倥Ν繝・/a>
+                    <a class="btn btn-sm btn-outline-warning" href="/feedback">繝輔ぅ繝ｼ繝峨ヰ繝・け</a>
+                    <a class="btn btn-sm btn-outline-warning" href="/review">箝・繝ｬ繝薙Η繝ｼ</a>
                     {%- if user.id == 2 %}
-                    <a class="btn btn-sm btn-outline-danger" href="/admin">⚙️ 管理</a>
+                    <a class="btn btn-sm btn-outline-danger" href="/admin">笞呻ｸ・邂｡逅・/a>
                     {%- endif %}
-                    <a class="btn btn-sm btn-outline-secondary" href="/logout">ログアウト</a>
+                    <a class="btn btn-sm btn-outline-secondary" href="/logout">繝ｭ繧ｰ繧｢繧ｦ繝・/a>
                 </div>
             </div>
         </div>
@@ -137,10 +145,10 @@
         <div class="row mb-3 align-items-center">
             <div class="col-md-6">
                 <form class="d-flex" method="get">
-                    <input class="form-control me-2 search-input" type="search" placeholder="名前で検索" aria-label="Search"
+                    <input class="form-control me-2 search-input" type="search" placeholder="蜷榊燕縺ｧ讀懃ｴ｢" aria-label="Search"
                         id="queryname" name="search" required>
                     <button class="btn {{ 'btn-success' if is_school_user else 'btn-danger' }}"
-                        type="submit">検索</button>
+                        type="submit">讀懃ｴ｢</button>
                 </form>
             </div>
             {% if not is_school_user %}
@@ -149,17 +157,17 @@
                     <div class="form-check form-check-inline">
                         <input class="form-check-input" type="checkbox" id="ev" name="ev" onchange="this.form.submit()"
                             {% if filter_ev %}checked{% endif %}>
-                        <label class="form-check-label" for="ev">みんなが投稿した図鑑</label>
+                        <label class="form-check-label" for="ev">縺ｿ繧薙↑縺梧兜遞ｿ縺励◆蝗ｳ髑・/label>
                     </div>
                     <div class="form-check form-check-inline">
                         <input class="form-check-input" type="checkbox" id="ki" name="ki" onchange="this.form.submit()"
                             {% if filter_ki %}checked{% endif %}>
-                        <label class="form-check-label" for="ki">基本図鑑</label>
+                        <label class="form-check-label" for="ki">蝓ｺ譛ｬ蝗ｳ髑・/label>
                     </div>
                     <div class="form-check form-check-inline">
                         <select class="form-select form-select-sm d-inline-block w-auto" name="friend"
                             onchange="this.form.submit()">
-                            <option value="">フレンド</option>
+                            <option value="">繝輔Ξ繝ｳ繝・/option>
                             {% for friend in friends %}
                             <option value="{{ friend.id }}" {% if filter_friend==friend.id|string %}selected{% endif %}>
                                 {{ friend.name }}</option>
@@ -173,21 +181,21 @@
 
         {% if is_school_user and my_school %}
         <div class="d-flex align-items-center gap-3 mb-3 p-3 bg-white rounded shadow-sm">
-            <label class="fw-bold text-success mb-0">📋 表示切替：</label>
+            <label class="fw-bold text-success mb-0">搭 陦ｨ遉ｺ蛻・崛・・/label>
             <select id="class_selector" class="form-select w-auto" onchange="switchClass(this.value)">
-                <option value="school">🏫 学校全体</option>
+                <option value="school">将 蟄ｦ譬｡蜈ｨ菴・/option>
                 {% for cls in my_classes %}
-                <option value="{{ cls.id }}">📚 {{ cls.name }}</option>
+                <option value="{{ cls.id }}">答 {{ cls.name }}</option>
                 {% endfor %}
             </select>
             <div id="message_btn">
-                <a href="/school/messages" class="btn btn-success btn-sm">📢 メッセージ</a>
+                <a href="/school/messages" class="btn btn-success btn-sm">討 繝｡繝・そ繝ｼ繧ｸ</a>
             </div>
         </div>
         {% endif %}
 
         {% if is_school_user and my_assignments %}
-        <h4 class="mb-3 brand-color">📝 課題</h4>
+        <h4 class="mb-3 brand-color">統 隱ｲ鬘・/h4>
         <div class="row row-cols-1 row-cols-md-3 g-3 mb-4">
             {% for assignment in my_assignments %}
             {% set deadline_naive = assignment.deadline.replace(tzinfo=None) %}
@@ -197,14 +205,14 @@
                     style="border-radius:1rem; border-left: 4px solid {% if is_closed or is_passed %}#6c757d{% elif days_left <= 1 %}#dc3545{% else %}#28a745{% endif %} !important;">
                     <div class="card-body p-3">
                         <div class="d-flex justify-content-between align-items-start">
-                            <h6 class="fw-bold mb-1">📝 {{ assignment.title }}</h6>
+                            <h6 class="fw-bold mb-1">統 {{ assignment.title }}</h6>
                             {% if is_closed %}
-                            <span class="badge bg-dark">締め切り済み</span>
+                            <span class="badge bg-dark">邱繧∝・繧頑ｸ医∩</span>
                             {% elif is_passed %}
-                            <span class="badge bg-secondary">期限切れ</span>
-                            {% elif days_left <= 1 %} <span class="badge bg-danger">もうすぐ締め切り</span>
+                            <span class="badge bg-secondary">譛滄剞蛻・ｌ</span>
+                            {% elif days_left <= 1 %} <span class="badge bg-danger">繧ゅ≧縺吶＄邱繧∝・繧・/span>
                                 {% else %}
-                                <span class="badge bg-success">受付中</span>
+                                <span class="badge bg-success">蜿嶺ｻ倅ｸｭ</span>
                                 {% endif %}
                         </div>
                         <p class="text-muted small mb-1">{{ assignment.school_class.name }}</p>
@@ -215,8 +223,8 @@
                         </p>
                         {% endif %}
                         <div class="d-flex justify-content-between align-items-center">
-                            <small class="text-muted">締切: {{ assignment.deadline.strftime('%m/%d %H:%M') }}</small>
-                            <a href="/assignments/{{ assignment.id }}" class="btn btn-sm btn-outline-success">詳細</a>
+                            <small class="text-muted">邱蛻・ {{ assignment.deadline.strftime('%m/%d %H:%M') }}</small>
+                            <a href="/assignments/{{ assignment.id }}" class="btn btn-sm btn-outline-success">隧ｳ邏ｰ</a>
                         </div>
                     </div>
                 </div>
@@ -225,7 +233,7 @@
     </div>
     {% endif %}
 
-    <h2 class="mb-4">みんなのコレクション</h2>
+    <h2 class="mb-4">縺ｿ繧薙↑縺ｮ繧ｳ繝ｬ繧ｯ繧ｷ繝ｧ繝ｳ</h2>
 
     <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
         {% for date in dates %}
@@ -246,44 +254,44 @@
                 <div class="card-body">
                     <h5 class="card-title mb-1">{{ date.name }}</h5>
                     {%- if date.subject %}
-                    <p class="card-text text-muted small mb-1">種類: {{ date.subject }}</p>
+                    <p class="card-text text-muted small mb-1">遞ｮ鬘・ {{ date.subject }}</p>
                     {%- endif %}
                     <p class="card-text text-muted small mb-1"
                         style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
-                        見つけた場所: {{ date.place }}</p>
+                        隕九▽縺代◆蝣ｴ謇: {{ date.place }}</p>
                     <p class="card-text text-muted small mb-1"
                         style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
-                        詳しい説明: {{ date.explanatorytext }}</p>
+                        隧ｳ縺励＞隱ｬ譏・ {{ date.explanatorytext }}</p>
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
                             {% if date.user_id == 2 %}
-                            <span class="badge bg-warning text-dark">公式</span>
+                            <span class="badge bg-warning text-dark">蜈ｬ蠑・/span>
                             {% else %}
                             <p class="text-muted mb-2">
-                                投稿者:
+                                謚慕ｨｿ閠・
                                 <a href="/profile/{{ date.user_id }}" class="text-decoration-none fw-bold">
                                     {{ date.user.name }}
                                 </a>
                             </p>
                             {% endif %}
-                            <span class="badge bg-info text-dark">いいね: {{ date.goodpoint }}</span>
-                            <span class="badge bg-info text-dark">コメント: {{ date.chat_count }}</span>
+                            <span class="badge bg-info text-dark">縺・＞縺ｭ: {{ date.goodpoint }}</span>
+                            <span class="badge bg-info text-dark">繧ｳ繝｡繝ｳ繝・ {{ date.chat_count }}</span>
                         </div>
                         <div>
                             <a href="/like/{{ date.id }}"
                                 class="btn btn-sm {% if date.is_liked %}btn-danger{% else %}btn-outline-danger{% endif %} me-1">{%
-                                if date.is_liked %}いいね解除{% else %}いいね{% endif %}</a>
-                            <a href="/date/{{ date.id }}" class="btn btn-sm btn-outline-primary me-1">詳細</a>
+                                if date.is_liked %}縺・＞縺ｭ隗｣髯､{% else %}縺・＞縺ｭ{% endif %}</a>
+                            <a href="/date/{{ date.id }}" class="btn btn-sm btn-outline-primary me-1">隧ｳ邏ｰ</a>
                             {% if session.get('is_admin') == 1 %}
                             <a href="/toggle_hide/{{ date.id }}"
                                 class="btn btn-sm {{ 'btn-warning' if date.is_hidden == 1 else 'btn-outline-warning' }} me-1">
-                                {{ '👁️ 表示中' if date.is_hidden == 0 else '🙈 非表示中' }}
+                                {{ '早・・陦ｨ遉ｺ荳ｭ' if date.is_hidden == 0 else '刪 髱櫁｡ｨ遉ｺ荳ｭ' }}
                             </a>
                             {% endif %}
                             {% if date.user_id == session.get('user_id') or session.get('is_admin') == 1 %}
                             <form method="post" action="/delete_date/{{ date.id }}" class="d-inline">
                                 <button type="submit" class="btn btn-sm btn-outline-danger"
-                                    onclick="return confirm('{{ date.name }}のデータを本当に消しますか？')">削除</button>
+                                    onclick="return confirm('{{ date.name }}縺ｮ繝・・繧ｿ繧呈悽蠖薙↓豸医＠縺ｾ縺吶°・・)">蜑企勁</button>
                             </form>
                             {% endif %}
                         </div>
@@ -295,18 +303,18 @@
     </div>
 
     {% if dates|length == 0 %}
-    <div class="alert alert-info mt-4">該当する図鑑が見つかりませんでした。新しく投稿してみましょう！</div>
+    <div class="alert alert-info mt-4">隧ｲ蠖薙☆繧句峙髑代′隕九▽縺九ｊ縺ｾ縺帙ｓ縺ｧ縺励◆縲よ眠縺励￥謚慕ｨｿ縺励※縺ｿ縺ｾ縺励ｇ縺・ｼ・/div>
     {% endif %}
     </div>
 
     <footer class="footer text-center">
         <div class="container">
             <div class="mb-2">
-                <a href="/help" class="text-decoration-none text-muted me-3">❓ ヘルプ</a>
-                <a href="/terms" class="text-decoration-none text-muted me-3">📜 利用規約</a>
-                <a href="/privacy" class="text-decoration-none text-muted">🔐 プライバシーポリシー</a>
+                <a href="/help" class="text-decoration-none text-muted me-3">笶・繝倥Ν繝・/a>
+                <a href="/terms" class="text-decoration-none text-muted me-3">糖 蛻ｩ逕ｨ隕冗ｴ・/a>
+                <a href="/privacy" class="text-decoration-none text-muted">柏 繝励Λ繧､繝舌す繝ｼ繝昴Μ繧ｷ繝ｼ</a>
             </div>
-            <small>© {{ now().year }} 図鑑 — {{ verj }}</small>
+            <small>ﾂｩ {{ now().year }} 蝗ｳ髑・窶・{{ verj }}</small>
         </div>
     </footer>
 
@@ -314,9 +322,9 @@
         function switchClass(value) {
             const msgBtn = document.getElementById('message_btn');
             if (value === 'school') {
-                msgBtn.innerHTML = '<a href="/school/messages" class="btn btn-success btn-sm">📢 メッセージ</a>';
+                msgBtn.innerHTML = '<a href="/school/messages" class="btn btn-success btn-sm">討 繝｡繝・そ繝ｼ繧ｸ</a>';
             } else {
-                msgBtn.innerHTML = `<a href="/school/class_chat/${value}" class="btn btn-success btn-sm">💬 クラスチャット</a>`;
+                msgBtn.innerHTML = `<a href="/school/class_chat/${value}" class="btn btn-success btn-sm">町 繧ｯ繝ｩ繧ｹ繝√Ε繝・ヨ</a>`;
             }
         }
     </script>

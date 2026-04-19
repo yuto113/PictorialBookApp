@@ -1,10 +1,10 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ja">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>学校ダッシュボード</title>
+    <title>蟄ｦ譬｡繝繝・す繝･繝懊・繝・/title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
@@ -31,10 +31,10 @@
     <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
         <div class="container">
             <a class="navbar-brand d-flex align-items-center" href="/user">
-                <span class="fs-4 brand-color">図鑑</span>
+                <span class="fs-4 brand-color">蝗ｳ髑・/span>
                 <small class="text-muted ms-2">{{ school.name }}</small>
             </a>
-            <a class="btn btn-sm btn-outline-secondary" href="/user">ホームへ</a>
+            <a class="btn btn-sm btn-outline-secondary" href="/user">繝帙・繝縺ｸ</a>
         </div>
     </nav>
 
@@ -47,13 +47,13 @@
         {% endif %}
         {% endwith %}
 
-        <h2 class="mb-4 brand-color">{{ school.name }} ダッシュボード</h2>
+        <h2 class="mb-4 brand-color">{{ school.name }} 繝繝・す繝･繝懊・繝・/h2>
         <div class="d-flex gap-3 align-items-center mb-3">
-            <p class="text-muted mb-0">学校コード: <code class="fw-bold">{{ school.code }}</code></p>
+            <p class="text-muted mb-0">蟄ｦ譬｡繧ｳ繝ｼ繝・ <code class="fw-bold">{{ school.code }}</code></p>
             {% if user.role == 'school_admin' %}
             <form method="POST" action="/school/toggle_map" class="d-inline">
                 <button type="submit" class="btn btn-sm {{ 'btn-success' if school.use_map == 1 else 'btn-outline-secondary' }}">
-                    🗺️ 地図機能: {{ 'ON' if school.use_map == 1 else 'OFF' }}
+                    亮・・蝨ｰ蝗ｳ讖溯・: {{ 'ON' if school.use_map == 1 else 'OFF' }}
                 </button>
             </form>
             {% endif %}
@@ -61,69 +61,69 @@
 
         <div class="row g-4">
 
-            <!-- クラス一覧・作成 -->
+            <!-- 繧ｯ繝ｩ繧ｹ荳隕ｧ繝ｻ菴懈・ -->
             <div class="col-md-6">
                 <div class="card shadow-sm border-0 p-4 h-100">
-                    <h5 class="fw-bold mb-3">📚 クラス一覧</h5>
+                    <h5 class="fw-bold mb-3">答 繧ｯ繝ｩ繧ｹ荳隕ｧ</h5>
                     {% for cls in classes %}
                     <div class="border rounded p-2 mb-2">
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
                                 <strong>{{ cls.name }}</strong>
-                                <span class="text-muted small ms-2">コード: <code>{{ cls.code }}</code></span>
-                                <span class="badge bg-info text-dark ms-2">{{ cls.members|length }}人</span>
+                                <span class="text-muted small ms-2">繧ｳ繝ｼ繝・ <code>{{ cls.code }}</code></span>
+                                <span class="badge bg-info text-dark ms-2">{{ cls.members|length }}莠ｺ</span>
                             </div>
                         </div>
-                        <!-- 担任設定（school_adminのみ） -->
+                        <!-- 諡・ｻｻ險ｭ螳夲ｼ・chool_admin縺ｮ縺ｿ・・-->
                         {% if user.role == 'school_admin' %}
                         <div class="mt-2">
-                            <small class="text-muted">担任:
+                            <small class="text-muted">諡・ｻｻ:
                                 {% if class_teachers[cls.id] %}
                                 <strong>{{ class_teachers[cls.id].name }}</strong>
                                 {% else %}
-                                未設定
+                                譛ｪ險ｭ螳・
                                 {% endif %}
                             </small>
                             <form method="POST" action="/school/set_teacher" class="d-flex gap-2 mt-1">
                                 <input type="hidden" name="class_id" value="{{ cls.id }}">
                                 <select name="teacher_id" class="form-select form-select-sm" style="width:150px;">
-                                    <option value="">担任を選択</option>
+                                    <option value="">諡・ｻｻ繧帝∈謚・/option>
                                     {% for teacher in teachers %}
                                     <option value="{{ teacher.id }}" {% if class_teachers[cls.id] and
                                         class_teachers[cls.id].id==teacher.id %}selected{% endif %}>{{ teacher.name }}
                                     </option>
                                     {% endfor %}
                                 </select>
-                                <button type="submit" class="btn btn-sm btn-success">設定</button>
+                                <button type="submit" class="btn btn-sm btn-success">險ｭ螳・/button>
                             </form>
                         </div>
                         {% endif %}
                     </div>
                     {% else %}
-                    <p class="text-muted small">まだクラスがありません。</p>
+                    <p class="text-muted small">縺ｾ縺繧ｯ繝ｩ繧ｹ縺後≠繧翫∪縺帙ｓ縲・/p>
                     {% endfor %}
 
                     <hr>
-                    <h6 class="fw-bold">新しいクラスを作成</h6>
+                    <h6 class="fw-bold">譁ｰ縺励＞繧ｯ繝ｩ繧ｹ繧剃ｽ懈・</h6>
                     <form method="POST" action="/school/create_class" class="d-flex gap-2">
                         <input type="text" name="class_name" class="form-control form-control-sm"
-                            placeholder="クラス名（例：1年A組）" required>
-                        <button type="submit" class="btn btn-sm btn-success">作成</button>
+                            placeholder="繧ｯ繝ｩ繧ｹ蜷搾ｼ井ｾ具ｼ・蟷ｴA邨・ｼ・ required>
+                        <button type="submit" class="btn btn-sm btn-success">菴懈・</button>
                     </form>
                 </div>
             </div>
 
-            <!-- 生徒一覧・登録 -->
+            <!-- 逕溷ｾ剃ｸ隕ｧ繝ｻ逋ｻ骭ｲ -->
             <div class="col-md-6">
                 <div class="card shadow-sm border-0 p-4 h-100">
-                    <h5 class="fw-bold mb-3">👨‍🎓 生徒一覧</h5>
+                    <h5 class="fw-bold mb-3">捉窶昨沁・逕溷ｾ剃ｸ隕ｧ</h5>
                     <div style="max-height:200px; overflow-y:auto;">
                         {% for student in students %}
                         <div class="border rounded p-2 mb-2">
                             <strong>{{ student.name }}</strong>
                             <span class="text-muted small ms-2">ID: {{ student.id }}</span>
                             <div class="text-muted small">
-                                所属クラス:
+                                謇螻槭け繝ｩ繧ｹ:
                                 {% for cm in student.dates %}{% endfor %}
                                 {% set class_count = namespace(count=0) %}
                                 {% for cls in classes %}
@@ -137,57 +137,57 @@
                             </div>
                         </div>
                         {% else %}
-                        <p class="text-muted small">まだ生徒がいません。</p>
+                        <p class="text-muted small">縺ｾ縺逕溷ｾ偵′縺・∪縺帙ｓ縲・/p>
                         {% endfor %}
                     </div>
 
                     <hr>
-                    <h6 class="fw-bold">生徒を新規登録</h6>
+                    <h6 class="fw-bold">逕溷ｾ偵ｒ譁ｰ隕冗匳骭ｲ</h6>
                     <form method="POST" action="/school/create_student">
                         <div class="d-flex gap-2 mb-2">
-                            <input type="text" name="name" class="form-control form-control-sm" placeholder="名前"
+                            <input type="text" name="name" class="form-control form-control-sm" placeholder="蜷榊燕"
                                 required>
                             <input type="text" name="password" class="form-control form-control-sm"
-                                placeholder="初期パスワード" required>
+                                placeholder="蛻晄悄繝代せ繝ｯ繝ｼ繝・ required>
                         </div>
-                        <button type="submit" class="btn btn-sm btn-success w-100">登録</button>
+                        <button type="submit" class="btn btn-sm btn-success w-100">逋ｻ骭ｲ</button>
                     </form>
                 </div>
             </div>
 
-            <!-- クラスに生徒を登録 -->
+            <!-- 繧ｯ繝ｩ繧ｹ縺ｫ逕溷ｾ偵ｒ逋ｻ骭ｲ -->
             <div class="col-md-6">
                 <div class="card shadow-sm border-0 p-4">
-                    <h5 class="fw-bold mb-3">📋 生徒をクラスに登録</h5>
+                    <h5 class="fw-bold mb-3">搭 逕溷ｾ偵ｒ繧ｯ繝ｩ繧ｹ縺ｫ逋ｻ骭ｲ</h5>
                     <form method="POST" action="/school/register_student">
                         <div class="mb-2">
-                            <label class="form-label small fw-bold">生徒を選択</label>
+                            <label class="form-label small fw-bold">逕溷ｾ偵ｒ驕ｸ謚・/label>
                             <select name="student_id" class="form-select form-select-sm" required>
-                                <option value="">選択してください</option>
+                                <option value="">驕ｸ謚槭＠縺ｦ縺上□縺輔＞</option>
                                 {% for student in students %}
-                                <option value="{{ student.id }}">{{ student.name }}（ID: {{ student.id }}）</option>
+                                <option value="{{ student.id }}">{{ student.name }}・・D: {{ student.id }}・・/option>
                                 {% endfor %}
                             </select>
                         </div>
                         <div class="mb-2">
-                            <label class="form-label small fw-bold">クラスを選択</label>
+                            <label class="form-label small fw-bold">繧ｯ繝ｩ繧ｹ繧帝∈謚・/label>
                             <select name="class_id" class="form-select form-select-sm" required>
-                                <option value="">選択してください</option>
+                                <option value="">驕ｸ謚槭＠縺ｦ縺上□縺輔＞</option>
                                 {% for cls in classes %}
                                 <option value="{{ cls.id }}">{{ cls.name }}</option>
                                 {% endfor %}
                             </select>
                         </div>
-                        <button type="submit" class="btn btn-sm btn-success w-100">登録</button>
+                        <button type="submit" class="btn btn-sm btn-success w-100">逋ｻ骭ｲ</button>
                     </form>
                 </div>
             </div>
 
-            <!-- 教師一覧・登録（school_adminのみ） -->
+            <!-- 謨吝ｸｫ荳隕ｧ繝ｻ逋ｻ骭ｲ・・chool_admin縺ｮ縺ｿ・・-->
             {% if user.role == 'school_admin' %}
             <div class="col-md-6">
                 <div class="card shadow-sm border-0 p-4">
-                    <h5 class="fw-bold mb-3">👨‍🏫 教師一覧</h5>
+                    <h5 class="fw-bold mb-3">捉窶昨沛ｫ 謨吝ｸｫ荳隕ｧ</h5>
                     {% for teacher in teachers %}
                     <div class="border rounded p-2 mb-2">
                         <strong>{{ teacher.name }}</strong>
@@ -196,15 +196,15 @@
                     {% endfor %}
 
                     <hr>
-                    <h6 class="fw-bold">教師を新規登録</h6>
+                    <h6 class="fw-bold">謨吝ｸｫ繧呈眠隕冗匳骭ｲ</h6>
                     <form method="POST" action="/school/create_teacher">
                         <div class="d-flex gap-2 mb-2">
-                            <input type="text" name="name" class="form-control form-control-sm" placeholder="名前"
+                            <input type="text" name="name" class="form-control form-control-sm" placeholder="蜷榊燕"
                                 required>
                             <input type="text" name="password" class="form-control form-control-sm"
-                                placeholder="初期パスワード" required>
+                                placeholder="蛻晄悄繝代せ繝ｯ繝ｼ繝・ required>
                         </div>
-                        <button type="submit" class="btn btn-sm btn-primary w-100">登録</button>
+                        <button type="submit" class="btn btn-sm btn-primary w-100">逋ｻ骭ｲ</button>
                     </form>
                 </div>
             </div>
@@ -215,7 +215,7 @@
 
     <footer class="footer text-center mt-4">
         <div class="container">
-            <small>© {{ now().year }} 図鑑 — {{ verj }}</small>
+            <small>ﾂｩ {{ now().year }} 蝗ｳ髑・窶・{{ verj }}</small>
         </div>
     </footer>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
