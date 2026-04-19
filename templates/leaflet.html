@@ -1,18 +1,10 @@
-﻿<!--   <!DOCTYPE html>
+<!--   <!DOCTYPE html>
 <html>
 <head>
-    <title>Leaflet蜈･髢</title>
-    <meta property="og:title" content="図鑑 - みんなで作るオンライン図鑑">
-    <meta property="og:description" content="見つけた植物・動物の写真と情報をみんなで共有！あなただけの図鑑を作ろう！">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://2026-yuto-book.up.railway.app/">
-    <meta property="og:image" content="https://2026-yuto-book.up.railway.app/static/ogp.png">
-    <meta property="og:site_name" content="図鑑">
-    <meta property="og:locale" content="ja_JP">
-    <meta name="twitter:card" content="summary_large_image">
+    <title>Leaflet入門</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <style>
-        /* 蝨ｰ蝗ｳ縺ｮ繧ｵ繧､繧ｺ繧貞ｿ・★謖・ｮ壹☆繧・*/
+        /* 地図のサイズを必ず指定する */
         #map { height: 500px; width: 100%; }
     </style>
 </head>
@@ -22,21 +14,21 @@
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
-        // 1. 蝨ｰ蝗ｳ縺ｮ蛻晄悄蛹・(邱ｯ蠎ｦ, 邨悟ｺｦ, 繧ｺ繝ｼ繝繝ｬ繝吶Ν)
-        const map = L.map('map').setView([35.125695, 136.918672], 13); // 譚ｱ莠ｬ鬧・ｻ倩ｿ・
+        // 1. 地図の初期化 (緯度, 経度, ズームレベル)
+        const map = L.map('map').setView([35.125695, 136.918672], 13); // 東京駅付近
 
-        // 2. 繧ｿ繧､繝ｫ繝ｬ繧､繝､繝ｼ・亥慍蝗ｳ縺ｮ邨ｵ・峨ｒ霑ｽ蜉
-        // OpenStreetMap繧剃ｽｿ逕ｨ縺吶ｋ縺ｮ縺御ｸ闊ｬ逧・〒縺・
+        // 2. タイルレイヤー（地図の絵）を追加
+        // OpenStreetMapを使用するのが一般的です
         L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
         }).addTo(map);
 
-        // 3. 繝槭・繧ｫ繝ｼ繧定ｿｽ蜉縺励※縺ｿ繧・
+        // 3. マーカーを追加してみる
         L.marker([35.125695, 136.918672]).addTo(map)
-            .bindPopup('縺薙％縺ｯdot.labo逾槫ｮｮ蜑肴｡縺ｧ縺呻ｼ・)
+            .bindPopup('ここはdot.labo神宮前校です！')
             .openPopup();
         L.marker([35.125695, 136.918672]).addTo(map)
-            .bindPopup('縺薙％縺ｯdot.labo逾槫ｮｮ蜑肴｡縺ｧ縺呻ｼ・)
+            .bindPopup('ここはdot.labo神宮前校です！')
             .openPopup();
     </script>
 </body>
@@ -46,12 +38,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Leaflet 蝨ｰ蝗ｳ蟄ｦ鄙偵し繝ｳ繝励Ν・亥嵜蝨溷慍逅・劼繧ｿ繧､繝ｫ・・/title>
+    <title>Leaflet 地図学習サンプル（国土地理院タイル）</title>
 
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 
     <style>
-        /* 2. 蝨ｰ蝗ｳ繧定｡ｨ遉ｺ縺吶ｋ遽・峇縺ｮ繧ｵ繧､繧ｺ繧呈欠螳壹☆繧具ｼ亥ｿ・茨ｼ・*/
+        /* 2. 地図を表示する範囲のサイズを指定する（必須） */
         #map {
             width: 100%;
             height: 600px;
@@ -64,73 +56,73 @@
 </head>
 <body class="{{ 'theme-green' if is_school_user else 'theme-pink' }}">
 
-    <h2>Leaflet ﾃ・蝗ｽ蝨溷慍逅・劼繧ｿ繧､繝ｫ</h2>
-    <p>蝨ｰ蝗ｳ繧偵け繝ｪ繝・け縺励◆蝣ｴ謇縺ｫ繝斐Φ繧堤ｧｻ蜍輔＆縺帙◆繧翫∝聖縺榊・縺励ｒ陦ｨ遉ｺ縺励◆繧翫〒縺阪∪縺吶・/p>
+    <h2>Leaflet × 国土地理院タイル</h2>
+    <p>地図をクリックした場所にピンを移動させたり、吹き出しを表示したりできます。</p>
 
     <div id="map"></div>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
     <script>
-        // --- 蝨ｰ蝗ｳ縺ｮ蛻晄悄險ｭ螳・---
+        // --- 地図の初期設定 ---
         
-        // 蝨ｰ蝗ｳ縺ｮ荳ｭ蠢・ｼ育ｷｯ蠎ｦ, 邨悟ｺｦ・峨→繧ｺ繝ｼ繝繝ｬ繝吶Ν繧定ｨｭ螳・
+        // 地図の中心（緯度, 経度）とズームレベルを設定
         const map = L.map('map').setView([35.125695, 136.918672], 15);
 
-        // --- 繧ｿ繧､繝ｫ繝ｬ繧､繝､繝ｼ・亥嵜蝨溷慍逅・劼・峨・霑ｽ蜉 ---
+        // --- タイルレイヤー（国土地理院）の追加 ---
         
-        // 闡嶺ｽ懈ｨｩ陦ｨ險假ｼ・ttribution・峨↓蝗ｽ蝨溷慍逅・劼縺ｮ繝ｫ繝ｼ繝ｫ繧帝←逕ｨ
+        // 著作権表記（attribution）に国土地理院のルールを適用
         L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png', {
-            attribution: "<a href='https://maps.gsi.go.jp/development/ichiran.html' target='_blank'>蝨ｰ逅・劼繧ｿ繧､繝ｫ</a>"
+            attribution: "<a href='https://maps.gsi.go.jp/development/ichiran.html' target='_blank'>地理院タイル</a>"
         }).addTo(map);
 
-        // --- 繝槭・繧ｫ繝ｼ・医ヴ繝ｳ・峨・霑ｽ蜉 ---
+        // --- マーカー（ピン）の追加 ---
 
-        // 繝槭・繧ｫ繝ｼ繧剃ｽ懈・縺励※蝨ｰ蝗ｳ縺ｫ霑ｽ蜉・井ｾ・ dot.labo・・
+        // マーカーを作成して地図に追加（例: dot.labo）
         const marker = L.marker([35.125695, 136.918672]).addTo(map);
-        marker.bindPopup("<b>縺薙％縺ｯdot.labo逾槫ｮｮ蜑肴｡縺ｧ縺・/b><br>10:00~ 繝励Ο繧ｰ繝ｩ繝溘Φ繧ｰ鬆大ｼｵ繧阪≧・・).openPopup();
+        marker.bindPopup("<b>ここはdot.labo神宮前校です</b><br>10:00~ プログラミング頑張ろう！").openPopup();
 
-        // 繧ゅ≧荳縺､縺ｮ蝗ｺ螳壹・繝ｼ繧ｫ繝ｼ・井ｾ・ 閾ｪ螳・ｼ・
+        // もう一つの固定マーカー（例: 自宅）
         const marker2 = L.marker([35.128277, 136.903349]).addTo(map);
-        marker2.bindPopup("<b>縺薙％縺ｯ螳ｶ縺ｧ縺・/b><br>譌ｩ縺丞ｸｰ繧阪≧・・);
+        marker2.bindPopup("<b>ここは家です</b><br>早く帰ろう！");
 
-        // --- 荳ｻ隕∝慍轤ｹ縺ｮ蝗ｺ螳壹ヴ繝ｳ・磯・驕灘ｺ懃恁縺斐→縺ｫ隍・焚・・---
+        // --- 主要地点の固定ピン（都道府県ごとに複数） ---
         const prefectures = {
-            "譚ｱ莠ｬ驛ｽ": [
-                { name: "譚ｱ莠ｬ鬧・, coords: [35.681236, 139.767125] },
-                { name: "貂玖ｰｷ繧ｹ繧ｯ繝ｩ繝ｳ繝悶Ν莠､蟾ｮ轤ｹ", coords: [35.659494, 139.700553] },
-                { name: "譁ｰ螳ｿ鬧・ｼ郁･ｿ蜿｣・・, coords: [35.690921, 139.700258] },
-                { name: "豬・拷蟇ｺ", coords: [35.714765, 139.796655] },
-                { name: "譚ｱ莠ｬ繧ｿ繝ｯ繝ｼ", coords: [35.6585805, 139.7454329] },
-                { name: "譚ｱ莠ｬ繧ｹ繧ｫ繧､繝・Μ繝ｼ", coords: [35.7100627, 139.8107004] },
-                { name: "荳企㍽蜈ｬ蝨・, coords: [35.713768, 139.774473] },
-                { name: "譏取ｲｻ逾槫ｮｮ", coords: [35.676397, 139.699325] },
-                { name: "驫蠎ｧ", coords: [35.671667, 139.764444] },
-                { name: "蜈ｭ譛ｬ譛ｨ繝偵Ν繧ｺ", coords: [35.660507, 139.729135] }
+            "東京都": [
+                { name: "東京駅", coords: [35.681236, 139.767125] },
+                { name: "渋谷スクランブル交差点", coords: [35.659494, 139.700553] },
+                { name: "新宿駅（西口）", coords: [35.690921, 139.700258] },
+                { name: "浅草寺", coords: [35.714765, 139.796655] },
+                { name: "東京タワー", coords: [35.6585805, 139.7454329] },
+                { name: "東京スカイツリー", coords: [35.7100627, 139.8107004] },
+                { name: "上野公園", coords: [35.713768, 139.774473] },
+                { name: "明治神宮", coords: [35.676397, 139.699325] },
+                { name: "銀座", coords: [35.671667, 139.764444] },
+                { name: "六本木ヒルズ", coords: [35.660507, 139.729135] }
             ],
-            "諢帷衍逵・: [
-                { name: "蜷榊商螻矩ｧ・, coords: [35.170915, 136.881537] },
-                { name: "蜷榊商螻句沁", coords: [35.185167, 136.89957] },
-                { name: "螟ｧ鬆郁ｦｳ髻ｳ・亥､ｧ鬆亥膚蠎苓｡暦ｼ・, coords: [35.154722, 136.906389] },
-                { name: "譬・ｼ井ｹ・ｱ句､ｧ騾夲ｼ・, coords: [35.170282, 136.905569] },
-                { name: "辭ｱ逕ｰ逾槫ｮｮ", coords: [35.14311, 136.906611] },
-                { name: "繝ｬ繧ｴ繝ｩ繝ｳ繝峨・繧ｸ繝｣繝代Φ", coords: [35.1175, 136.8997] },
-                { name: "雎顔伐繧ｹ繧ｿ繧ｸ繧｢繝・郁ｱ顔伐蟶ゑｼ・, coords: [35.084722, 137.156389] },
-                { name: "繝医Κ繧ｿ逕｣讌ｭ謚陦楢ｨ伜ｿｵ鬢ｨ", coords: [35.162223, 136.883643] },
-                { name: "蟯｡蟠主沁", coords: [34.948056, 137.163611] },
-                { name: "譚ｱ螻ｱ蜍墓､咲黄蝨・, coords: [35.148056, 136.985278] }
+            "愛知県": [
+                { name: "名古屋駅", coords: [35.170915, 136.881537] },
+                { name: "名古屋城", coords: [35.185167, 136.89957] },
+                { name: "大須観音（大須商店街）", coords: [35.154722, 136.906389] },
+                { name: "栄（久屋大通）", coords: [35.170282, 136.905569] },
+                { name: "熱田神宮", coords: [35.14311, 136.906611] },
+                { name: "レゴランド・ジャパン", coords: [35.1175, 136.8997] },
+                { name: "豊田スタジアム（豊田市）", coords: [35.084722, 137.156389] },
+                { name: "トヨタ産業技術記念館", coords: [35.162223, 136.883643] },
+                { name: "岡崎城", coords: [34.948056, 137.163611] },
+                { name: "東山動植物園", coords: [35.148056, 136.985278] }
             ],
-            "螟ｧ髦ｪ蠎・: [
-                { name: "螟ｧ髦ｪ鬧・ｼ域｢・伐・・, coords: [34.702485, 135.495951] },
-                { name: "螟ｧ髦ｪ蝓・, coords: [34.687315, 135.526201] },
-                { name: "驕馴灘・域・讖具ｼ・, coords: [34.668702, 135.501777] },
-                { name: "縺ｪ繧薙・・医Α繝翫Α・・, coords: [34.664567, 135.501256] },
-                { name: "譴・伐繧ｹ繧ｫ繧､繝薙Ν・育ｩｺ荳ｭ蠎ｭ蝨抵ｼ・, coords: [34.705332, 135.489538] },
-                { name: "螟ｩ邇句ｯｺ・磯壼､ｩ髢｣・・, coords: [34.654931, 135.513175] },
-                { name: "豬ｷ驕企､ｨ・亥､ｧ髦ｪ豌ｴ譌城､ｨ・・, coords: [34.654095, 135.428333] },
-                { name: "繝ｦ繝九ヰ繝ｼ繧ｵ繝ｫ繝ｻ繧ｹ繧ｿ繧ｸ繧ｪ繝ｻ繧ｸ繝｣繝代Φ", coords: [34.669419, 135.432446] },
-                { name: "菴丞翠螟ｧ遉ｾ", coords: [34.607506, 135.498652] },
-                { name: "蝗帛､ｩ邇句ｯｺ", coords: [34.651389, 135.513333] }
+            "大阪府": [
+                { name: "大阪駅（梅田）", coords: [34.702485, 135.495951] },
+                { name: "大阪城", coords: [34.687315, 135.526201] },
+                { name: "道頓堀（戎橋）", coords: [34.668702, 135.501777] },
+                { name: "なんば（ミナミ）", coords: [34.664567, 135.501256] },
+                { name: "梅田スカイビル（空中庭園）", coords: [34.705332, 135.489538] },
+                { name: "天王寺（通天閣）", coords: [34.654931, 135.513175] },
+                { name: "海遊館（大阪水族館）", coords: [34.654095, 135.428333] },
+                { name: "ユニバーサル・スタジオ・ジャパン", coords: [34.669419, 135.432446] },
+                { name: "住吉大社", coords: [34.607506, 135.498652] },
+                { name: "四天王寺", coords: [34.651389, 135.513333] }
             ]
         };
 
@@ -140,17 +132,17 @@
             });
         });
 
-        // --- 繧ｯ繝ｪ繝・け縺ｧ遘ｻ蜍輔☆繧九ヴ繝ｳ縺ｮ蛻晄悄蛹厄ｼ亥ｭ伜惠縺励↑縺九▲縺・marker3 繧貞ｮ夂ｾｩ・・---
+        // --- クリックで移動するピンの初期化（存在しなかった marker3 を定義） ---
         const marker3 = L.marker(map.getCenter()).addTo(map);
 
-        // 繧ｯ繝ｪ繝・け縺励◆蝣ｴ謇縺ｫ繝斐Φ繧堤ｧｻ蜍輔＆縺帙ｋ讖溯・
+        // クリックした場所にピンを移動させる機能
         map.on('click', function(e) {
-            // 繧ｯ繝ｪ繝・け縺励◆蝨ｰ轤ｹ縺ｮ邱ｯ蠎ｦ繝ｻ邨悟ｺｦ繧貞叙蠕・
+            // クリックした地点の緯度・経度を取得
             const latlng = e.latlng;
-            // 繝槭・繧ｫ繝ｼ縺ｮ菴咲ｽｮ繧呈峩譁ｰ
+            // マーカーの位置を更新
             marker3.setLatLng(latlng);
-            // 繝昴ャ繝励い繝・・縺ｮ蜀・ｮｹ繧よ嶌縺肴鋤縺医※陦ｨ遉ｺ
-            marker3.setPopupContent("蠎ｧ讓・ " + latlng.toString()).openPopup();
+            // ポップアップの内容も書き換えて表示
+            marker3.setPopupContent("座標: " + latlng.toString()).openPopup();
         });
     </script>
 
