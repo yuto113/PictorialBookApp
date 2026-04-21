@@ -821,9 +821,14 @@ def users_page():
     # POST で受け取ったパスワードが管理者パスワードと一致すれば一覧を表示する
     if request.method == 'POST':
         pw = request.form.get('password')
-        if pw and pw == admin.password:
-            # mark revealed for this render (do not persist in session)
-            # 管理者自身が一覧で自分のパスワード等を確認できないようにする
+        password_match = False
+        if pw:
+            if admin.password.startswith('scrypt:') or admin.password.startswith('pbkdf2:'):
+                password_match = check_password_hash(admin.password, pw)
+            else:
+                password_match = (pw == admin.password)
+        
+        if password_match:
             if current_user and current_user.id != 2:
                 revealed = {'id': current_user.id, 'name': current_user.name, 'password': current_user.password}
             users = q.all()
