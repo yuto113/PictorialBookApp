@@ -249,6 +249,57 @@ def edit_date(id):
     db_session.commit()
     return {'success': True}
 
+@app.route('/map')
+def map_page():
+    user_id = session.get('user_id')
+    if not user_id:
+        return redirect('/login')
+    
+    user = User.query.get(user_id)
+    
+    # 位置情報があるデータのみ取得
+    if user.role in ['teacher', 'school_admin', 'student']:
+        my_member = SchoolMember.query.filter_by(user_id=user_id).first()
+        if my_member:
+            school_member_ids = [m.user_id for m in SchoolMember.query.filter_by(school_id=my_member.school_id).all()]
+            dates = Date.query.filter(
+                Date.user_id.in_(school_member_ids),
+                Date.ido != None,
+                Date.ido != '',
+                Date.is_hidden != 1
+            ).all()
+        else:
+            dates = []
+    else:
+        school_user_ids = [m.user_id for m in SchoolMember.query.all()]
+        dates = Date.query.filter(
+            Date.user_id.notin_(school_user_ids),
+            Date.ido != None,
+            Date.ido != '',
+            Date.is_hidden != 1
+        ).all()
+    
+    # JSON用データ作成
+    map_data = []
+    for d in dates:
+        try:
+            if d.ido and d.keido:
+                map_data.append({
+                    'id': d.id,
+                    'name': d.name,
+                    'place': d.place or '',
+                    'image': d.imagepass or '',
+                    'user': d.user.name,
+                    'lat': float(d.ido),
+                    'lng': float(d.keido)
+                })
+        except:
+            pass
+    
+    import json
+    return render_template('map_view.html', map_data=json.dumps(map_data, ensure_ascii=False))
+
+
 @app.route('/user')
 def user_page():
     # show user page only when logged in
