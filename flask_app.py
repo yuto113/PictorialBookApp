@@ -215,6 +215,10 @@ def maintenance_on():
     flash('メンテナンスモードをONにしました！', 'warning')
     return redirect('/admin')
 
+@app.route('/api/is_admin')
+def is_admin():
+    return jsonify({'is_admin': session.get('user_id') == 2})
+
 @app.context_processor
 def inject_globals():
     user_id = session.get('user_id')
