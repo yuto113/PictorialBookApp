@@ -27,12 +27,15 @@
             font-size: 5rem;
             margin-bottom: 1rem;
             animation: spin 4s linear infinite;
+            display: inline-block;
         }
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
         .brand-color { color: #ff6b6b; }
+        .progress { height: 6px; border-radius: 3px; }
+        .countdown { font-size: 1.2rem; font-weight: bold; color: #ff6b6b; }
     </style>
 </head>
 <body>
@@ -40,12 +43,21 @@
         <div class="maintenance-icon">🔧</div>
         <h1 class="brand-color fw-bold mb-3">メンテナンス中</h1>
         <p class="text-muted fs-5 mb-2">ただいまシステムのメンテナンスを行っています。</p>
-        <p class="text-muted mb-4">しばらくお待ちください。</p>
-        <div class="alert alert-info">
-            <small>⏰ 通常、数分以内に復旧します。</small>
+        <p class="text-muted mb-3">しばらくお待ちください。</p>
+
+        <div class="alert alert-info mb-3">
+            <small>⏰ <span id="countdown_msg">30秒後に自動で再確認します</span></small>
         </div>
-        <button onclick="location.reload()" class="btn btn-danger mt-2">
-            🔄 再読み込み
+
+        <div class="progress mb-3">
+            <div class="progress-bar bg-danger" id="progress_bar"
+                role="progressbar" style="width: 100%"></div>
+        </div>
+
+        <p class="countdown" id="countdown">30</p>
+
+        <button onclick="checkNow()" class="btn btn-danger mt-2">
+            🔄 今すぐ確認する
         </button>
 
         {% if session.get('user_id') == 2 %}
@@ -58,5 +70,43 @@
         </form>
         {% endif %}
     </div>
+
+    <script>
+        const TOTAL = 30;
+        let remaining = TOTAL;
+        let returnUrl = document.referrer || '/';
+
+        function checkNow() {
+            // サイトが復旧しているか確認
+            fetch('/api/health')
+                .then(res => {
+                    if (res.ok) {
+                        // 復旧していたら元のページへ
+                        window.location.href = returnUrl;
+                    } else {
+                        // まだメンテナンス中
+                        remaining = TOTAL;
+                    }
+                })
+                .catch(() => {
+                    remaining = TOTAL;
+                });
+        }
+
+        function tick() {
+            remaining--;
+            document.getElementById('countdown').textContent = remaining;
+            const pct = (remaining / TOTAL) * 100;
+            document.getElementById('progress_bar').style.width = pct + '%';
+
+            if (remaining <= 0) {
+                document.getElementById('countdown_msg').textContent = '確認中...';
+                checkNow();
+                remaining = TOTAL;
+            }
+        }
+
+        setInterval(tick, 1000);
+    </script>
 </body>
 </html>

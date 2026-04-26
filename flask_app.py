@@ -58,6 +58,13 @@ def handle_exception(e):
     app.logger.error(f'Unhandled Exception: {e}\n{traceback.format_exc()}')
     return render_template('maintenance.html'), 500
 
+@app.route('/api/health')
+def health_check():
+    global MAINTENANCE_MODE
+    if MAINTENANCE_MODE:
+        return jsonify({'status': 'maintenance'}), 503
+    return jsonify({'status': 'ok'}), 200
+
 @app.route('/admin/maintenance/off', methods=['POST'])
 def maintenance_off():
     global MAINTENANCE_MODE
