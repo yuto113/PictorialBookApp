@@ -145,12 +145,11 @@ def run_tests():
         templates_dir = os.path.join(os.path.dirname(__file__), 'templates')
         mojibake_files = []
         for filepath in glob.glob(os.path.join(templates_dir, '*.html')):
-            with open(filepath, 'r', encoding='utf-8', errors='ignore') as f:
-                content = f.read()
-            for pattern in mojibake_patterns:
-                if pattern in content:
-                    mojibake_files.append(os.path.basename(filepath))
-                    break
+            with open(filepath, 'rb') as f:
+                raw = f.read()
+            text = raw.decode('utf-8', errors='replace')
+            if '\ufffd' in text:
+                mojibake_files.append(os.path.basename(filepath))
         if mojibake_files:
             results.append({'name': '文字化けチェック', 'status': 'error', 'detail': f'文字化けあり: {", ".join(mojibake_files[:3])}...', 'files': mojibake_files})
             all_ok = False
