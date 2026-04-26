@@ -1,68 +1,27 @@
 <!DOCTYPE html>
 <html lang="ja">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>管理ダッシュボード</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        body {
-            background: linear-gradient(135deg, #fff7f0 0%, #f0f9ff 100%);
-            color: #333;
-            min-height: 100vh;
-        }
-
-        .brand-color {
-            color: #ff6b6b;
-        }
-
-        .footer {
-            color: #666;
-            padding: 1rem 0;
-        }
-
+        body { background: linear-gradient(135deg, #fff7f0 0%, #f0f9ff 100%); color: #333; min-height: 100vh; }
+        .brand-color { color: #ff6b6b; }
+        .footer { color: #666; padding: 1rem 0; }
         .admin-card {
-            border-radius: 1.5rem;
-            transition: all 0.3s;
-            cursor: pointer;
-            border: 3px solid transparent;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
-            background: white;
-            text-decoration: none;
-            color: inherit;
-            display: block;
-            padding: 3rem 2rem;
-            text-align: center;
-            height: 100%;
+            border-radius: 1.5rem; transition: all 0.3s; cursor: pointer; border: 3px solid transparent;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05); background: white; text-decoration: none;
+            color: inherit; display: block; padding: 2.5rem 2rem; text-align: center; height: 100%;
         }
-
-        .admin-card:hover {
-            transform: translateY(-10px);
-            border-color: #ff9a9e;
-            box-shadow: 0 15px 40px rgba(255, 107, 107, 0.15);
-            color: #333;
-        }
-
-        .admin-icon {
-            font-size: 5rem;
-            margin-bottom: 1rem;
-            display: inline-block;
-        }
-
-        .admin-title {
-            font-size: 1.5rem;
-            font-weight: bold;
-            margin-bottom: 0.5rem;
-        }
-
-        .admin-desc {
-            color: #666;
-            font-size: 0.95rem;
-        }
+        .admin-card:hover { transform: translateY(-8px); border-color: #ff9a9e; box-shadow: 0 15px 40px rgba(255,107,107,0.15); color: #333; }
+        .admin-icon { font-size: 4rem; margin-bottom: 1rem; display: inline-block; }
+        .admin-title { font-size: 1.4rem; font-weight: bold; margin-bottom: 0.5rem; }
+        .admin-desc { color: #666; font-size: 0.9rem; }
+        .maintenance-section { background: white; border-radius: 1.5rem; padding: 2rem; box-shadow: 0 5px 20px rgba(0,0,0,0.05); }
+        .status-badge { font-size: 1rem; padding: 0.5rem 1rem; border-radius: 50px; }
     </style>
 </head>
-
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
         <div class="container">
@@ -75,9 +34,46 @@
     </nav>
 
     <div class="container py-5">
-        <h2 class="brand-color text-center fw-bold mb-2">⚙️ 管理ダッシュボード</h2>
-        <p class="text-center text-muted mb-5">管理メニューを選択してください</p>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        {% for category, message in messages %}
+        <div class="alert alert-{{ category }}">{{ message }}</div>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
 
+        <h2 class="brand-color text-center fw-bold mb-2">⚙️ 管理ダッシュボード</h2>
+        <p class="text-center text-muted mb-5">管理機能を選択してください</p>
+
+        <!-- メンテナンス管理セクション -->
+        <div class="maintenance-section mb-5">
+            <h4 class="fw-bold mb-3">🔧 メンテナンス管理</h4>
+            <div class="d-flex gap-3 align-items-center flex-wrap">
+                <div>
+                    <span class="text-muted me-2">現在の状態:</span>
+                    <span class="status-badge badge" id="maintenance_status_badge">確認中...</span>
+                </div>
+                <form method="POST" action="/admin/maintenance/test" class="d-inline">
+                    <button type="submit" class="btn btn-outline-warning"
+                        onclick="return confirm('システムテストを開始しますか？一時的にメンテナンス中になります。')">
+                        🔍 システムテスト実行
+                    </button>
+                </form>
+                <form method="POST" action="/admin/maintenance/on" class="d-inline">
+                    <button type="submit" class="btn btn-outline-danger"
+                        onclick="return confirm('メンテナンスモードをONにしますか？')">
+                        🔴 メンテナンスON
+                    </button>
+                </form>
+                <form method="POST" action="/admin/maintenance/off" class="d-inline">
+                    <button type="submit" class="btn btn-outline-success">
+                        🟢 メンテナンスOFF
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- 管理メニュー -->
         <div class="row g-4">
             <div class="col-md-6">
                 <a href="/feedback/admin" class="admin-card">
@@ -115,6 +111,27 @@
             <small>© {{ now().year }} 図鑑 — {{ verj }}</small>
         </div>
     </footer>
-</body>
 
+    <script>
+        // 0.3秒ごとにメンテナンス状態を確認
+        async function checkMaintenanceStatus() {
+            try {
+                const res = await fetch('/api/health');
+                const badge = document.getElementById('maintenance_status_badge');
+                if (res.ok) {
+                    badge.className = 'status-badge badge bg-success';
+                    badge.textContent = '🟢 正常稼働中';
+                } else {
+                    badge.className = 'status-badge badge bg-danger';
+                    badge.textContent = '🔴 メンテナンス中';
+                }
+            } catch(e) {
+                document.getElementById('maintenance_status_badge').textContent = '確認エラー';
+            }
+        }
+
+        checkMaintenanceStatus();
+        setInterval(checkMaintenanceStatus, 300);
+    </script>
+</body>
 </html>

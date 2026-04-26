@@ -1,4 +1,4 @@
-?<!doctype html>
+<!doctype html>
 <html lang="ja">
 
 <head>
@@ -244,7 +244,7 @@
             if (data.success) loadChats();
         }
 
-        // Enter�ő��M
+        // nter�ő��M
         document.getElementById('message').addEventListener('keydown', function (e) {
             if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();
@@ -306,6 +306,25 @@
         loadChats();
         setInterval(loadChats, 5000);
     </script>
+
+<script>
+    // メンテナンスモード監視（0.3秒ごと）
+    (function() {
+        const IS_MAINTENANCE_PAGE = window.location.pathname.includes('/maintenance');
+        if (IS_MAINTENANCE_PAGE) return;
+        
+        async function checkMaintenance() {
+            try {
+                const res = await fetch('/api/health', { cache: 'no-store' });
+                if (!res.ok) {
+                    window.location.href = '/maintenance/current';
+                }
+            } catch(e) {}
+        }
+        setInterval(checkMaintenance, 300);
+    })();
+</script>
+
 </body>
 
 </html>

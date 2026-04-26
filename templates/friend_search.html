@@ -1,4 +1,4 @@
-?<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ja">
 
 <head>
@@ -23,11 +23,11 @@
     <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
         <div class="container">
             <a class="navbar-brand d-flex align-items-center" href="/">
-                <span class="fs-4 brand-color">図鑁E/span>
-                <small class="text-muted ms-2">オンライン図鑁E/small>
+                <span class="fs-4 brand-color">図鑑/span>
+                <small class="text-muted ms-2">オンライン図鑑/small>
             </a>
             <div>
-                <a class="btn btn-sm btn-outline-secondary" href="/user">戻めE/a>
+                <a class="btn btn-sm btn-outline-secondary" href="/user">戻る/a>
             </div>
         </div>
     </nav>
@@ -42,7 +42,7 @@
                             <div class="mb-3">
                                 <label for="nickname" class="form-label">ユーザー名で検索</label>
                                 <input type="text" class="form-control search-input" id="nickname" name="nickname"
-                                    required placeholder="ユーザー名を入劁E>
+                                    required placeholder="ユーザー名を入力>
                             </div>
                             <button type="submit" class="btn btn-danger w-100">検索</button>
                         </form>
@@ -62,7 +62,7 @@
                         {% set relation = user_relations[user.id] %}
                         <div id="friend_status_{{ user.id }}">
                             {% if relation.status == 'accepted' %}
-                            <span class="badge bg-success">フレンチE/span>
+                            <span class="badge bg-success">フレンット/span>
                             {% elif relation.status == 'pending' %}
                             {% if relation.is_requester %}
                             <div class="d-flex gap-2 align-items-center">
@@ -71,10 +71,10 @@
                                     onclick="cancelFriend({{ user.id }})">申請解除</button>
                             </div>
                             {% else %}
-                            <span class="badge bg-info">承認征E��</span>
+                            <span class="badge bg-info">承認待ち��</span>
                             {% endif %}
                             {% else %}
-                            <button class="btn btn-primary" onclick="requestFriend({{ user.id }})">フレンド申諁E/button>
+                            <button class="btn btn-primary" onclick="requestFriend({{ user.id }})">フレンド申請/button>
                             {% endif %}
                         </div>
                     </div>
@@ -87,7 +87,7 @@
 
     <footer class="footer text-center">
         <div class="container">
-            <small>© 2026 図鑁E Ever.1.0</small>
+            <small>© 2026 図鑑 Ever.1.0</small>
         </div>
     </footer>
 
@@ -116,10 +116,29 @@
             const data = await res.json();
             if (data.success) {
                 document.getElementById(`friend_status_${userId}`).innerHTML = `
-                    <button class="btn btn-primary" onclick="requestFriend(${userId})">フレンド申諁E/button>`;
+                    <button class="btn btn-primary" onclick="requestFriend(${userId})">フレンド申請/button>`;
             }
         }
     </script>
+
+<script>
+    // メンテナンスモード監視（0.3秒ごと）
+    (function() {
+        const IS_MAINTENANCE_PAGE = window.location.pathname.includes('/maintenance');
+        if (IS_MAINTENANCE_PAGE) return;
+        
+        async function checkMaintenance() {
+            try {
+                const res = await fetch('/api/health', { cache: 'no-store' });
+                if (!res.ok) {
+                    window.location.href = '/maintenance/current';
+                }
+            } catch(e) {}
+        }
+        setInterval(checkMaintenance, 300);
+    })();
+</script>
+
 </body>
 
 </html>

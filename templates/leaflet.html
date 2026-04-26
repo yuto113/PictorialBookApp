@@ -1,10 +1,10 @@
-?<!--   <!DOCTYPE html>
+<!--   <!DOCTYPE html>
 <html>
 <head>
     <title>Leaflet入門</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <style>
-        /* 地図のサイズを忁E��持E��すめE*/
+        /* 地図のサイズを必要��持E��すめE*/
         #map { height: 500px; width: 100%; }
     </style>
 </head>
@@ -14,23 +14,42 @@
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
-        // 1. 地図の初期匁E(緯度, 経度, ズームレベル)
+        // 1. 地図の初期設定(緯度, 経度, ズームレベル)
         const map = L.map('map').setView([35.125695, 136.918672], 13); // 東京駁E��迁E
 
         // 2. タイルレイヤー�E�地図の絵�E�を追加
-        // OpenStreetMapを使用するのが一般皁E��ぁE
+        // OpenStreetMapを使用するのが一般皆��い
         L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
         }).addTo(map);
 
         // 3. マ�Eカーを追加してみめE
         L.marker([35.125695, 136.918672]).addTo(map)
-            .bindPopup('ここはdot.labo神宮前校です！E)
+            .bindPopup('ここはdot.labo神宮前校です！)
             .openPopup();
         L.marker([35.125695, 136.918672]).addTo(map)
-            .bindPopup('ここはdot.labo神宮前校です！E)
+            .bindPopup('ここはdot.labo神宮前校です！)
             .openPopup();
     </script>
+
+<script>
+    // メンテナンスモード監視（0.3秒ごと）
+    (function() {
+        const IS_MAINTENANCE_PAGE = window.location.pathname.includes('/maintenance');
+        if (IS_MAINTENANCE_PAGE) return;
+        
+        async function checkMaintenance() {
+            try {
+                const res = await fetch('/api/health', { cache: 'no-store' });
+                if (!res.ok) {
+                    window.location.href = '/maintenance/current';
+                }
+            } catch(e) {}
+        }
+        setInterval(checkMaintenance, 300);
+    })();
+</script>
+
 </body>
 </html> -->
 <!DOCTYPE html>
@@ -43,7 +62,7 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 
     <style>
-        /* 2. 地図を表示する篁E��のサイズを指定する（忁E��！E*/
+        /* 2. 地図を表示する範囲��のサイズを指定する（必要��！*/
         #map {
             width: 100%;
             height: 600px;
@@ -57,7 +76,7 @@
 <body class="{{ 'theme-green' if is_school_user else 'theme-pink' }}">
 
     <h2>Leaflet ÁE国土地琁E��タイル</h2>
-    <p>地図をクリチE��した場所にピンを移動させたり、吹き�Eしを表示したりできます、E/p>
+    <p>地図をクリット��した場所にピンを移動させたり、吹き出しを表示したりできます、/p>
 
     <div id="map"></div>
 
@@ -66,25 +85,25 @@
     <script>
         // --- 地図の初期設宁E---
         
-        // 地図の中忁E��緯度, 経度�E�とズームレベルを設宁E
+        // 地図の中必要��緯度, 経度�E�とズームレベルを設宁E
         const map = L.map('map').setView([35.125695, 136.918672], 15);
 
         // --- タイルレイヤー�E�国土地琁E���E��E追加 ---
         
-        // 著作権表記！Ettribution�E�に国土地琁E��のルールを適用
+        // 著作権表記！ttribution�E�に国土地琁E��のルールを適用
         L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png', {
             attribution: "<a href='https://maps.gsi.go.jp/development/ichiran.html' target='_blank'>地琁E��タイル</a>"
         }).addTo(map);
 
         // --- マ�Eカー�E�ピン�E��E追加 ---
 
-        // マ�Eカーを作�Eして地図に追加�E�侁E dot.labo�E�E
+        // マ�Eカーを作成して地図に追加�E�侁E dot.labo�E�E
         const marker = L.marker([35.125695, 136.918672]).addTo(map);
-        marker.bindPopup("<b>ここはdot.labo神宮前校でぁE/b><br>10:00~ プログラミング頑張ろう�E�E).openPopup();
+        marker.bindPopup("<b>ここはdot.labo神宮前校でい/b><br>10:00~ プログラミング頑張ろう�E�E).openPopup();
 
         // もう一つの固定�Eーカー�E�侁E 自宁E��E
         const marker2 = L.marker([35.128277, 136.903349]).addTo(map);
-        marker2.bindPopup("<b>ここは家でぁE/b><br>早く帰ろう�E�E);
+        marker2.bindPopup("<b>ここは家でい/b><br>早く帰ろう�E�E);
 
         // --- 主要地点の固定ピン�E��E道府県ごとに褁E���E�E---
         const prefectures = {
@@ -94,7 +113,7 @@
                 { name: "新宿駁E��西口�E�E, coords: [35.690921, 139.700258] },
                 { name: "流E��寺", coords: [35.714765, 139.796655] },
                 { name: "東京タワー", coords: [35.6585805, 139.7454329] },
-                { name: "東京スカイチE��ー", coords: [35.7100627, 139.8107004] },
+                { name: "東京スカイット��ー", coords: [35.7100627, 139.8107004] },
                 { name: "上野公圁E, coords: [35.713768, 139.774473] },
                 { name: "明治神宮", coords: [35.676397, 139.699325] },
                 { name: "銀座", coords: [35.671667, 139.764444] },
@@ -103,11 +122,11 @@
             "愛知省E: [
                 { name: "名古屋駁E, coords: [35.170915, 136.881537] },
                 { name: "名古屋城", coords: [35.185167, 136.89957] },
-                { name: "大須観音�E�大須商店街！E, coords: [35.154722, 136.906389] },
-                { name: "栁E��乁E��大通！E, coords: [35.170282, 136.905569] },
+                { name: "大須観音�E�大須商店街！, coords: [35.154722, 136.906389] },
+                { name: "栁E��乁E��大通！, coords: [35.170282, 136.905569] },
                 { name: "熱田神宮", coords: [35.14311, 136.906611] },
                 { name: "レゴランド�Eジャパン", coords: [35.1175, 136.8997] },
-                { name: "豊田スタジアム�E�豊田市！E, coords: [35.084722, 137.156389] },
+                { name: "豊田スタジアム�E�豊田市！, coords: [35.084722, 137.156389] },
                 { name: "トヨタ産業技術記念館", coords: [35.162223, 136.883643] },
                 { name: "岡崎城", coords: [34.948056, 137.163611] },
                 { name: "東山動植物圁E, coords: [35.148056, 136.985278] }
@@ -115,9 +134,9 @@
             "大阪庁E: [
                 { name: "大阪駁E��梁E���E�E, coords: [34.702485, 135.495951] },
                 { name: "大阪埁E, coords: [34.687315, 135.526201] },
-                { name: "道頓堀�E��E橋！E, coords: [34.668702, 135.501777] },
+                { name: "道頓堀�E��E橋！, coords: [34.668702, 135.501777] },
                 { name: "なん�E�E�ミナミ�E�E, coords: [34.664567, 135.501256] },
-                { name: "梁E��スカイビル�E�空中庭園！E, coords: [34.705332, 135.489538] },
+                { name: "梁E��スカイビル�E�空中庭園！, coords: [34.705332, 135.489538] },
                 { name: "天王寺�E�通天閣�E�E, coords: [34.654931, 135.513175] },
                 { name: "海遊館�E�大阪水族館�E�E, coords: [34.654095, 135.428333] },
                 { name: "ユニバーサル・スタジオ・ジャパン", coords: [34.669419, 135.432446] },
@@ -132,16 +151,16 @@
             });
         });
 
-        // --- クリチE��で移動するピンの初期化（存在しなかっぁEmarker3 を定義�E�E---
+        // --- クリット��で移動するピンの初期化（存在しなかっいmarker3 を定義�E�E---
         const marker3 = L.marker(map.getCenter()).addTo(map);
 
-        // クリチE��した場所にピンを移動させる機�E
+        // クリット��した場所にピンを移動させる機�E
         map.on('click', function(e) {
-            // クリチE��した地点の緯度・経度を取征E
+            // クリット��した地点の緯度・経度を取待ち
             const latlng = e.latlng;
             // マ�Eカーの位置を更新
             marker3.setLatLng(latlng);
-            // ポップアチE�Eの冁E��も書き換えて表示
+            // ポップアット�Eの冁E��も書き換えて表示
             marker3.setPopupContent("座樁E " + latlng.toString()).openPopup();
         });
     </script>

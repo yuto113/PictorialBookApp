@@ -1,9 +1,9 @@
-?<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{{ school.name }} 管琁E/title>
+    <title>{{ school.name }} 管理/title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body { background: linear-gradient(135deg, #fff7f0 0%, #f0f9ff 100%); color: #333; }
@@ -15,10 +15,10 @@
     <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
         <div class="container">
             <a class="navbar-brand d-flex align-items-center" href="/">
-                <span class="fs-4 brand-color">図鑁E/span>
-                <small class="text-muted ms-2">学校管琁E/small>
+                <span class="fs-4 brand-color">図鑑/span>
+                <small class="text-muted ms-2">学校管理/small>
             </a>
-            <a class="btn btn-sm btn-outline-secondary" href="/admin/schools">戻めE/a>
+            <a class="btn btn-sm btn-outline-secondary" href="/admin/schools">戻る/a>
         </div>
     </nav>
 
@@ -32,7 +32,7 @@
         {% endwith %}
 
         <h2 class="mb-2 brand-color">{{ school.name }}</h2>
-        <p class="text-muted">学校コーチE <code>{{ school.code }}</code></p>
+        <p class="text-muted">学校コード <code>{{ school.code }}</code></p>
 
         <div class="row g-4">
 
@@ -47,15 +47,15 @@
                             <input type="text" name="name" class="form-control form-control-sm" required>
                         </div>
                         <div class="mb-2">
-                            <label class="form-label small fw-bold">初期パスワーチE/label>
+                            <label class="form-label small fw-bold">初期パスワード/label>
                             <input type="text" name="password" class="form-control form-control-sm" required>
                         </div>
                         <div class="mb-2">
                             <label class="form-label small fw-bold">役割</label>
                             <select name="role" class="form-select form-select-sm">
-                                <option value="student">学甁E/option>
+                                <option value="student">学生/option>
                                 <option value="teacher">教師</option>
-                                <option value="school_admin">学校管琁E��E/option>
+                                <option value="school_admin">学校管理��E/option>
                             </select>
                         </div>
                         <button type="submit" class="btn btn-sm btn-danger w-100">登録</button>
@@ -70,11 +70,11 @@
                     {% for cls in classes %}
                     <div class="border rounded p-2 mb-2">
                         <strong>{{ cls.name }}</strong>
-                        <span class="text-muted small ms-2">コーチE <code>{{ cls.code }}</code></span>
+                        <span class="text-muted small ms-2">コード <code>{{ cls.code }}</code></span>
                         <span class="badge bg-info text-dark ms-1">{{ cls.members|length }}人</span>
                     </div>
                     {% else %}
-                    <p class="text-muted small">クラスがありません、E/p>
+                    <p class="text-muted small">クラスがありません、/p>
                     {% endfor %}
                 </div>
             </div>
@@ -90,7 +90,7 @@
                         <small class="text-muted ms-2">ID: {{ teacher.id }}</small>
                     </div>
                     {% else %}
-                    <p class="text-muted small">教師がいません、E/p>
+                    <p class="text-muted small">教師がいません、/p>
                     {% endfor %}
                 </div>
             </div>
@@ -106,7 +106,7 @@
                             <small class="text-muted ms-2">ID: {{ student.id }}</small>
                         </div>
                         {% else %}
-                        <p class="text-muted small">生徒がぁE��せん、E/p>
+                        <p class="text-muted small">生徒がい��せん、/p>
                         {% endfor %}
                     </div>
                 </div>
@@ -122,9 +122,9 @@
                                 <tr>
                                     <th>ID</th>
                                     <th>名前</th>
-                                    <th>投稿老E/th>
-                                    <th>状慁E/th>
-                                    <th>操佁E/th>
+                                    <th>投稿者/th>
+                                    <th>状態/th>
+                                    <th>操作/th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -158,7 +158,7 @@
                                 </tr>
                                 {% else %}
                                 <tr>
-                                    <td colspan="5" class="text-muted">投稿がありません、E/td>
+                                    <td colspan="5" class="text-muted">投稿がありません、/td>
                                 </tr>
                                 {% endfor %}
                             </tbody>
@@ -172,9 +172,28 @@
 
     <footer class="footer text-center mt-4">
         <div class="container">
-            <small>© {{ now().year }} 図鑁E E{{ verj }}</small>
+            <small>© {{ now().year }} 図鑑 E{{ verj }}</small>
         </div>
     </footer>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    // メンテナンスモード監視（0.3秒ごと）
+    (function() {
+        const IS_MAINTENANCE_PAGE = window.location.pathname.includes('/maintenance');
+        if (IS_MAINTENANCE_PAGE) return;
+        
+        async function checkMaintenance() {
+            try {
+                const res = await fetch('/api/health', { cache: 'no-store' });
+                if (!res.ok) {
+                    window.location.href = '/maintenance/current';
+                }
+            } catch(e) {}
+        }
+        setInterval(checkMaintenance, 300);
+    })();
+</script>
+
 </body>
 </html>

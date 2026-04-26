@@ -3,110 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>�����e�i���X�� - �}��</title>
+    <title>メンテナンス中 - 図鑑</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        body {
-            background: linear-gradient(135deg, #fff7f0 0%, #f0f9ff 100%);
-            color: #333;
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .maintenance-card {
-            background: white;
-            border-radius: 2rem;
-            padding: 3rem;
-            text-align: center;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.08);
-            max-width: 500px;
-            width: 100%;
-        }
-        .maintenance-icon {
-            font-size: 5rem;
-            margin-bottom: 1rem;
-            animation: spin 4s linear infinite;
-            display: inline-block;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
+        body { background: linear-gradient(135deg, #fff7f0 0%, #f0f9ff 100%); color: #333; min-height: 100vh; display: flex; align-items: center; justify-content: center; }
+        .maintenance-card { background: white; border-radius: 2rem; padding: 3rem; text-align: center; box-shadow: 0 10px 40px rgba(0,0,0,0.08); max-width: 500px; width: 100%; }
+        .maintenance-icon { font-size: 5rem; margin-bottom: 1rem; animation: spin 2s linear infinite; display: inline-block; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         .brand-color { color: #ff6b6b; }
         .progress { height: 6px; border-radius: 3px; }
-        .countdown { font-size: 1.2rem; font-weight: bold; color: #ff6b6b; }
+        .status-dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: #ff6b6b; animation: blink 0.6s ease-in-out infinite; margin-right: 6px; }
+        @keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0.2; } }
     </style>
 </head>
 <body>
     <div class="maintenance-card">
-        <div class="maintenance-icon">?</div>
-        <h1 class="brand-color fw-bold mb-3">�����e�i���X��</h1>
-        <p class="text-muted fs-5 mb-2">�������܃V�X�e���̃����e�i���X���s���Ă��܂��B</p>
-        <p class="text-muted mb-3">���΂炭���҂����������B</p>
-
+        <div class="maintenance-icon">🔧</div>
+        <h1 class="brand-color fw-bold mb-3">メンテナンス中</h1>
+        <p class="text-muted fs-5 mb-2">ただいまシステムのメンテナンスを行っています。</p>
+        <p class="text-muted mb-3">しばらくお待ちください。</p>
         <div class="alert alert-info mb-3">
-            <small>? <span id="countdown_msg">30�b��Ɏ����ōĊm�F���܂�</span></small>
+            <span class="status-dot"></span>
+            <small id="status_msg">復旧を確認中...</small>
         </div>
-
         <div class="progress mb-3">
-            <div class="progress-bar bg-danger" id="progress_bar"
-                role="progressbar" style="width: 100%"></div>
+            <div class="progress-bar bg-danger progress-bar-striped progress-bar-animated" style="width: 100%"></div>
         </div>
-
-        <p class="countdown" id="countdown">30</p>
-
-        <button onclick="checkNow()" class="btn btn-danger mt-2">
-            ? �������m�F����
-        </button>
-
         {% if session.get('user_id') == 2 %}
         <hr class="mt-4">
-        <p class="text-muted small">�Ǘ��҃��j���[</p>
+        <p class="text-muted small">管理者メニュー</p>
         <form method="POST" action="/admin/maintenance/off">
-            <button type="submit" class="btn btn-success">
-                ? �����e�i���X���[�h����������
-            </button>
+            <button type="submit" class="btn btn-success">✅ メンテナンスモードを解除する</button>
         </form>
         {% endif %}
     </div>
-
     <script>
-        const TOTAL = 30;
-        let remaining = TOTAL;
         let returnUrl = document.referrer || '/';
+        let checkCount = 0;
 
-        function checkNow() {
-            // �T�C�g���������Ă��邩�m�F
-            fetch('/api/health')
-                .then(res => {
-                    if (res.ok) {
-                        // �������Ă����猳�̃y�[�W��
-                        window.location.href = returnUrl;
-                    } else {
-                        // �܂������e�i���X��
-                        remaining = TOTAL;
-                    }
-                })
-                .catch(() => {
-                    remaining = TOTAL;
-                });
+        async function checkStatus() {
+            checkCount++;
+            document.getElementById('status_msg').textContent = `復旧確認中... (${checkCount}回目)`;
+            try {
+                const res = await fetch('/api/health');
+                if (res.ok) {
+                    document.getElementById('status_msg').textContent = '✅ 復旧しました！リダイレクト中...';
+                    setTimeout(() => { window.location.href = returnUrl; }, 500);
+                }
+            } catch (e) {}
         }
 
-        function tick() {
-            remaining--;
-            document.getElementById('countdown').textContent = remaining;
-            const pct = (remaining / TOTAL) * 100;
-            document.getElementById('progress_bar').style.width = pct + '%';
-
-            if (remaining <= 0) {
-                document.getElementById('countdown_msg').textContent = '�m�F��...';
-                checkNow();
-                remaining = TOTAL;
-            }
-        }
-
-        setInterval(tick, 1000);
+        // 0.3秒ごとに確認
+        setInterval(checkStatus, 300);
     </script>
 </body>
 </html>

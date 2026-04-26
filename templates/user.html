@@ -341,6 +341,20 @@
         integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
         crossorigin="anonymous"></script>
     <script src="/static/js/index.js"></script>
+
+<script>
+    (function() {
+        const IS_MAINTENANCE_PAGE = window.location.pathname.includes('/maintenance');
+        if (IS_MAINTENANCE_PAGE) return;
+        async function checkMaintenance() {
+            try {
+                const res = await fetch('/api/health', { cache: 'no-store' });
+                if (!res.ok) { window.location.href = '/maintenance/current'; }
+            } catch(e) {}
+        }
+        setInterval(checkMaintenance, 300);
+    })();
+</script>
 </body>
 
 </html>
