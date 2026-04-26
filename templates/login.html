@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>繧ｪ繝ｳ繝ｩ繧､繝ｳ蝗ｳ髑・- login</title>
+    <title>オンライン図鑑 - login</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
     <style>
@@ -12,29 +12,21 @@
             background: linear-gradient(135deg, #fff7f0 0%, #f0f9ff 100%);
             color: #333;
         }
-
-        .brand-color {
-            color: #ff6b6b;
-        }
-
+        .brand-color { color: #ff6b6b; }
         .card-auth {
             border-radius: 1rem;
             box-shadow: 0 10px 30px rgba(16, 24, 40, 0.06);
         }
-
-        .footer {
-            color: #666;
-            padding: 1rem 0;
-        }
+        .footer { color: #666; padding: 1rem 0; }
     </style>
 </head>
 
-<body class="{{ 'theme-green' if is_school_user else 'theme-pink' }}">
+<body>
     <nav class="navbar navbar-light bg-white shadow-sm">
         <div class="container">
             <a class="navbar-brand d-flex align-items-center" href="/">
-                <span class="fs-4 brand-color">蝗ｳ髑・/span>
-                <small class="text-muted ms-2">繧ｪ繝ｳ繝ｩ繧､繝ｳ蝗ｳ髑・/small>
+                <span class="fs-4 brand-color">図鑑</span>
+                <small class="text-muted ms-2">オンライン図鑑</small>
             </a>
         </div>
     </nav>
@@ -43,54 +35,51 @@
         <div class="row justify-content-center">
             <div class="col-md-6 col-lg-4">
                 <div class="card card-auth p-4 bg-white">
-                    <div class="card card-auth p-4 bg-white">
-                        <h3 class="text-center mb-4 brand-color">繝ｭ繧ｰ繧､繝ｳ</h3>
-                        <p class="text-muted small">縺ゅ↑縺溘・ID縺ｨ繝代せ繝ｯ繝ｼ繝峨ｒ蜈･蜉帙＠縺ｦ縺上□縺輔＞縲・/p>
+                    <h3 class="text-center mb-4 brand-color">ログイン</h3>
+                    <p class="text-muted small">あなたのIDとパスワードを入力してください。</p>
 
-                        {% with messages = get_flashed_messages(with_categories=true) %}
-                        {% if messages %}
-                        {% for category, message in messages %}
-                        <div class="alert alert-{{ category }} mt-3 text-center">
-                            {{ message }}
-                        </div>
-                        {% endfor %}
-                        {% endif %}
-                        {% endwith %}
-
-                        <form method="post">
-                            <div class="mb-3">
-                                <label for="id" class="form-label">ID</label>
-                                <input type="number" id="id" name="id" class="form-control" required minlength="1"
-                                    maxlength="8" />
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="password" class="form-label">繝代せ繝ｯ繝ｼ繝・/label>
-                                <input type="password" id="password" name="password" class="form-control" required
-                                    minlength="1" maxlength="10" />
-                            </div>
-
-                            <div class="d-flex justify-content-between align-items-center">
-                                <button class="btn btn-danger">繝ｭ繧ｰ繧､繝ｳ</button>
-                                <a href="/signup" class="btn btn-link">譁ｰ隕冗匳骭ｲ</a>
-                            </div>
-                        </form>
-
-                        </form>
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                    {% for category, message in messages %}
+                    <div class="alert alert-{{ category }} mt-3 text-center">
+                        {{ message }}
                     </div>
+                    {% endfor %}
+                    {% endif %}
+                    {% endwith %}
+
+                    <form method="post">
+                        <div class="mb-3">
+                            <label for="id" class="form-label">ID</label>
+                            <input type="number" id="id" name="id" class="form-control" required
+                                minlength="1" maxlength="8" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="password" class="form-label">パスワード</label>
+                            <input type="password" id="password" name="password" class="form-control" required
+                                minlength="1" maxlength="100" />
+                        </div>
+
+                        <div class="d-flex justify-content-between align-items-center">
+                            <button class="btn btn-danger">ログイン</button>
+                            <a href="/signup" class="btn btn-link">新規登録</a>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
+    </div>
 
-        <footer class="footer text-center">
-            <div class="container">
-                <small>ﾂｩ {{ now().year }} 蝗ｳ髑・窶・{{ verj }}</small>
-            </div>
-        </footer>
+    <footer class="footer text-center">
+        <div class="container">
+            <small>© {{ now().year }} 図鑑 — {{ verj }}</small>
+        </div>
+    </footer>
 
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
-            integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
-            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+        crossorigin="anonymous"></script>
 </body>
 
 </html>
