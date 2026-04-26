@@ -11,6 +11,7 @@ from werkzeug.utils import secure_filename
 import cloudinary
 import cloudinary.uploader
 from werkzeug.security import generate_password_hash, check_password_hash
+from apscheduler.schedulers.background import BackgroundScheduler
 
 cloudinary.config(
     cloud_name=os.environ.get('CLOUDINARY_CLOUD_NAME'),
@@ -2560,6 +2561,33 @@ def get_assignment_submissions(assignment_id):
         })
     return {'submissions': result}
 
-if __name__ == '__main__':
+def auto_run_tests():
+    with app.app_context():
+        import glob
+        all_ok = True
+        try:
+            User.query.count()
+            Date.query.count()
+            School.query.count()
+        except:
+            all_ok = False
+        try:
+            templates_dir = os.path.join(os.path.dirname(__file__), 'templates')
+            for filepath in glob.glob(os.path.join(templates_dir, '*.html')):
+                with open(filepath, 'rb') as f:
+                    raw = f.read()
+                if '\ufffd' in raw.decode('utf-8', errors='replace'):
+                    all_ok = False
+                    break
+        except:
+            all_ok = False
+        global MAINTENANCE_MODE
+        if all_ok:
+            MAINTENANCE_MODE = False
 
+scheduler = BackgroundScheduler()
+scheduler.add_job(auto_run_tests, 'interval', hours=1)
+scheduler.start()
+
+if __name__ == '__main__':
     app.run(debug=True)
