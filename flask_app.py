@@ -39,7 +39,7 @@ def check_maintenance():
         # APIは503を返す
         if request.path.startswith('/api/'):
             return jsonify({'error': 'maintenance'}), 503
-        return render_template('maintenance.html'), 503
+        return render_template('maintenance.html', is_admin=False), 503
 
 @app.errorhandler(500)
 def internal_error(e):
