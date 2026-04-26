@@ -1,6 +1,7 @@
 import os
 os.makedirs('/app/instance', exist_ok=True)
-from flask import Flask, render_template, request, redirect, session, flash
+from flask import Flask, render_template, request, redirect, session, flash, jsonify
+import traceback
 from models import User, db, Date, Like, Chat, Friend, Feedback, School, SchoolMember, SchoolClass, ClassMember, SchoolMessage, SchoolMessageReply, ClassChat, ClassChatReply, ClassTeacher, Assignment, AssignmentSubmission, AssignmentChat, AssignmentChatReply, AppSetting, Review
 from sqlalchemy import or_
 from datetime import datetime
@@ -23,6 +24,46 @@ os.makedirs(os.path.join(basedir, 'instance'), exist_ok=True)
 app = Flask(__name__)
 app.secret_key='secret_key'
 app.config.from_object('config')
+
+MAINTENANCE_MODE = False
+
+@app.before_request
+def check_maintenance():
+    global MAINTENANCE_MODE
+    if MAINTENANCE_MODE:
+        # 管理者（ID=2）は通過させる
+        user_id = session.get('user_id')
+        if user_id == 2:
+            return None
+        # APIは503を返す
+        if request.path.startswith('/api/'):
+            return jsonify({'error': 'maintenance'}), 503
+        return render_template('maintenance.html'), 503
+
+@app.errorhandler(500)
+def internal_error(e):
+    global MAINTENANCE_MODE
+    MAINTENANCE_MODE = True
+    # エラーログ
+    app.logger.error(f'Server Error: {e}\n{traceback.format_exc()}')
+    return render_template('maintenance.html'), 500
+
+@app.errorhandler(Exception)
+def handle_exception(e):
+    global MAINTENANCE_MODE
+    MAINTENANCE_MODE = True
+    app.logger.error(f'Unhandled Exception: {e}\n{traceback.format_exc()}')
+    return render_template('maintenance.html'), 500
+
+@app.route('/admin/maintenance/off', methods=['POST'])
+def maintenance_off():
+    global MAINTENANCE_MODE
+    user_id = session.get('user_id')
+    if not user_id or user_id != 2:
+        return redirect('/login')
+    MAINTENANCE_MODE = False
+    flash('メンテナンスモードを解除しました！', 'success')
+    return redirect('/user')
 
 # グローバル変数でバージョン情報を管理　
 app_verj = None
@@ -256,23 +297,21 @@ def map_page():
         return redirect('/login')
     
     user = User.query.get(user_id)
+    dates = []
     
-    # 位置情報があるデータのみ取得
     if user.role in ['teacher', 'school_admin', 'student']:
         my_member = SchoolMember.query.filter_by(user_id=user_id).first()
         if my_member:
             school_member_ids = [m.user_id for m in SchoolMember.query.filter_by(school_id=my_member.school_id).all()]
             dates = Date.query.filter(
-            Date.user_id.in_(school_member_ids),
-            Date.ido != None,
-            Date.is_hidden != 1
-        ).all()
-        else:
-            dates = []
+                Date.user_id.in_(school_member_ids),
+                Date.ido != None,
+                Date.is_hidden != 1
+            ).all()
     else:
         school_user_ids = [m.user_id for m in SchoolMember.query.all()]
         dates = Date.query.filter(
-            Date.user_id.in_(school_member_ids),
+            Date.user_id.notin_(school_user_ids),
             Date.ido != None,
             Date.is_hidden != 1
         ).all()

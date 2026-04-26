@@ -116,6 +116,9 @@
                     <a class="btn btn-sm btn-outline-warning" href="/review">⭐ レビュー</a>
                     {%- if user.id == 2 %}
                     <a class="btn btn-sm btn-outline-danger" href="/admin">⚙️ 管理</a>
+                    <form method="POST" action="/admin/maintenance/off" class="d-inline">
+                        <button type="submit" class="btn btn-sm btn-outline-success">🔧 メンテナンス解除</button>
+                    </form>
                     {%- endif %}
                     <a class="btn btn-sm btn-outline-secondary" href="/logout">ログアウト</a>
                 </div>
