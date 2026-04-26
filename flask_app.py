@@ -255,13 +255,29 @@ def user_page():
         user = db_session.query(User).filter_by(id=user_id).first()
         date = db_session.query(Date)
         if search:
+            # ひらがな→カタカナ変換
+            def hira_to_kata(text):
+                return ''.join(chr(ord(c) + 0x60) if 'ぁ' <= c <= 'ん' else c for c in text)
+            # カタカナ→ひらがな変換
+            def kata_to_hira(text):
+                return ''.join(chr(ord(c) - 0x60) if 'ァ' <= c <= 'ン' else c for c in text)
+            
+            search_kata = hira_to_kata(search)
+            search_hira = kata_to_hira(search)
+            
             date = date.filter(
-                    or_(
-                        Date.place.like(search),
-                        Date.subject.like(search),
-                        Date.name.like(search)
-                    )
+                or_(
+                    Date.place.like(f'%{search}%'),
+                    Date.subject.like(f'%{search}%'),
+                    Date.name.like(f'%{search}%'),
+                    Date.place.like(f'%{search_kata}%'),
+                    Date.subject.like(f'%{search_kata}%'),
+                    Date.name.like(f'%{search_kata}%'),
+                    Date.place.like(f'%{search_hira}%'),
+                    Date.subject.like(f'%{search_hira}%'),
+                    Date.name.like(f'%{search_hira}%'),
                 )
+            )
         if Illustrated_ki == 'on' and Illustrated_ev == 'on':
             pass  # 両方チェック→全部表示
         elif Illustrated_ki == 'on':
