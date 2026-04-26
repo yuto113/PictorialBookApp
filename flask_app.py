@@ -169,7 +169,8 @@ def run_tests():
 
 @app.route('/maintenance/current')
 def maintenance_current():
-    return render_template('maintenance.html'), 503
+    is_admin = session.get('user_id') == 2
+    return render_template('maintenance.html', is_admin=is_admin), 503
 
 @app.route('/api/health')
 def health_check():

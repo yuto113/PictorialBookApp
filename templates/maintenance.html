@@ -29,7 +29,7 @@
         <div class="progress mb-3">
             <div class="progress-bar bg-danger progress-bar-striped progress-bar-animated" style="width: 100%"></div>
         </div>
-        {% if session.get('user_id') == 2 %}
+        {% if is_admin %}
         <hr class="mt-4">
         <p class="text-muted small">管理者メニュー</p>
         <form method="POST" action="/admin/maintenance/off">
