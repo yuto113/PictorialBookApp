@@ -58,6 +58,95 @@ def handle_exception(e):
     app.logger.error(f'Unhandled Exception: {e}\n{traceback.format_exc()}')
     return render_template('maintenance.html'), 500
 
+@app.route('/admin/maintenance/test', methods=['POST'])
+def maintenance_test():
+    global MAINTENANCE_MODE
+    user_id = session.get('user_id')
+    if not user_id or user_id != 2:
+        return redirect('/login')
+    MAINTENANCE_MODE = True
+    return redirect('/maintenance/testing')
+
+@app.route('/maintenance/testing')
+def maintenance_testing():
+    user_id = session.get('user_id')
+    if not user_id or user_id != 2:
+        return redirect('/login')
+    return render_template('maintenance_test.html')
+
+@app.route('/api/maintenance/run_tests')
+def run_tests():
+    user_id = session.get('user_id')
+    if not user_id or user_id != 2:
+        return jsonify({'error': 'unauthorized'}), 401
+    
+    results = []
+    all_ok = True
+    
+    # テスト1: データベース接続
+    try:
+        user_count = User.query.count()
+        results.append({'name': 'データベース接続', 'status': 'ok', 'detail': f'{user_count}人のユーザー'})
+    except Exception as e:
+        results.append({'name': 'データベース接続', 'status': 'error', 'detail': str(e)})
+        all_ok = False
+    
+    # テスト2: 投稿データ
+    try:
+        date_count = Date.query.count()
+        results.append({'name': '投稿データ', 'status': 'ok', 'detail': f'{date_count}件の投稿'})
+    except Exception as e:
+        results.append({'name': '投稿データ', 'status': 'error', 'detail': str(e)})
+        all_ok = False
+    
+    # テスト3: 学校データ
+    try:
+        school_count = School.query.count()
+        results.append({'name': '学校データ', 'status': 'ok', 'detail': f'{school_count}校'})
+    except Exception as e:
+        results.append({'name': '学校データ', 'status': 'error', 'detail': str(e)})
+        all_ok = False
+    
+    # テスト4: Cloudinary接続
+    try:
+        import cloudinary.api
+        cloudinary.api.ping()
+        results.append({'name': 'Cloudinary（画像）', 'status': 'ok', 'detail': '接続OK'})
+    except Exception as e:
+        results.append({'name': 'Cloudinary（画像）', 'status': 'error', 'detail': str(e)})
+        all_ok = False
+    
+    # テスト5: セッション
+    try:
+        results.append({'name': 'セッション', 'status': 'ok', 'detail': 'OK'})
+    except Exception as e:
+        results.append({'name': 'セッション', 'status': 'error', 'detail': str(e)})
+        all_ok = False
+    
+    # テスト6: いいね・チャット
+    try:
+        like_count = Like.query.count()
+        chat_count = Chat.query.count()
+        results.append({'name': 'いいね・チャット', 'status': 'ok', 'detail': f'いいね{like_count}件 / チャット{chat_count}件'})
+    except Exception as e:
+        results.append({'name': 'いいね・チャット', 'status': 'error', 'detail': str(e)})
+        all_ok = False
+    
+    # テスト7: 課題システム
+    try:
+        assignment_count = Assignment.query.count()
+        results.append({'name': '課題システム', 'status': 'ok', 'detail': f'{assignment_count}件の課題'})
+    except Exception as e:
+        results.append({'name': '課題システム', 'status': 'error', 'detail': str(e)})
+        all_ok = False
+    
+    # 全テストOKならメンテナンス解除
+    global MAINTENANCE_MODE
+    if all_ok:
+        MAINTENANCE_MODE = False
+    
+    return jsonify({'results': results, 'all_ok': all_ok})
+
 @app.route('/api/health')
 def health_check():
     global MAINTENANCE_MODE

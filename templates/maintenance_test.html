@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>システムテスト中 - 図鑑</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #fff7f0 0%, #f0f9ff 100%);
+            color: #333;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .test-card {
+            background: white;
+            border-radius: 2rem;
+            padding: 3rem;
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+            max-width: 600px;
+            width: 100%;
+        }
+        .test-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            display: inline-block;
+        }
+        .spinning { animation: spin 1s linear infinite; }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .brand-color { color: #ff6b6b; }
+        .test-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem;
+            margin-bottom: 0.5rem;
+            background: #f8f9fa;
+            text-align: left;
+        }
+        .test-item.ok { background: #d4edda; }
+        .test-item.error { background: #f8d7da; }
+        .test-item.pending { background: #fff3cd; }
+        .progress { height: 8px; border-radius: 4px; }
+    </style>
+</head>
+<body>
+    <div class="test-card">
+        <div class="test-icon spinning" id="icon">🔍</div>
+        <h2 class="brand-color fw-bold mb-2" id="title">システムテスト中...</h2>
+        <p class="text-muted mb-3" id="subtitle">全機能を確認しています。しばらくお待ちください。</p>
+
+        <div class="progress mb-4">
+            <div class="progress-bar bg-danger" id="progress_bar"
+                role="progressbar" style="width: 0%"></div>
+        </div>
+
+        <div id="test_results" class="mb-3">
+            <div class="test-item pending">
+                <span>⏳ テスト開始待ち...</span>
+            </div>
+        </div>
+
+        <div id="result_message" class="d-none">
+        </div>
+    </div>
+
+    <script>
+        const returnUrl = document.referrer || '/user';
+        let progress = 0;
+
+        async function runTests() {
+            const res = await fetch('/api/maintenance/run_tests');
+            const data = await res.json();
+
+            const resultsDiv = document.getElementById('test_results');
+            resultsDiv.innerHTML = '';
+
+            let i = 0;
+            for (const result of data.results) {
+                await new Promise(resolve => setTimeout(resolve, 300));
+                
+                const item = document.createElement('div');
+                item.className = `test-item ${result.status}`;
+                item.innerHTML = `
+                    <span>
+                        ${result.status === 'ok' ? '✅' : '❌'}
+                        <strong>${result.name}</strong>
+                    </span>
+                    <small class="text-muted">${result.detail}</small>
+                `;
+                resultsDiv.appendChild(item);
+                
+                i++;
+                progress = Math.round((i / data.results.length) * 100);
+                document.getElementById('progress_bar').style.width = progress + '%';
+            }
+
+            // 結果表示
+            const msgDiv = document.getElementById('result_message');
+            msgDiv.classList.remove('d-none');
+
+            if (data.all_ok) {
+                document.getElementById('icon').textContent = '🎉';
+                document.getElementById('icon').classList.remove('spinning');
+                document.getElementById('title').textContent = '全テスト合格！';
+                document.getElementById('subtitle').textContent = 'システムは正常です。元のページに戻ります...';
+                document.getElementById('progress_bar').classList.remove('bg-danger');
+                document.getElementById('progress_bar').classList.add('bg-success');
+                msgDiv.innerHTML = '<div class="alert alert-success">✅ メンテナンスモードを解除しました！3秒後に元のページへ戻ります。</div>';
+                setTimeout(() => { window.location.href = returnUrl; }, 3000);
+            } else {
+                document.getElementById('icon').textContent = '⚠️';
+                document.getElementById('icon').classList.remove('spinning');
+                document.getElementById('title').textContent = '問題が見つかりました';
+                document.getElementById('subtitle').textContent = 'いくつかのテストに失敗しました。メンテナンスモードを継続します。';
+                msgDiv.innerHTML = `
+                    <div class="alert alert-danger">
+                        ❌ テストに失敗しました。メンテナンスモードを継続します。
+                    </div>
+                    <form method="POST" action="/admin/maintenance/off" class="mt-2">
+                        <button type="submit" class="btn btn-warning">強制的に解除する</button>
+                    </form>
+                `;
+            }
+        }
+
+        // ページ読み込み後すぐテスト開始
+        window.addEventListener('load', () => {
+            setTimeout(runTests, 500);
+        });
+    </script>
+</body>
+</html>

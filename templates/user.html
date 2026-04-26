@@ -119,6 +119,17 @@
                     <form method="POST" action="/admin/maintenance/off" class="d-inline">
                         <button type="submit" class="btn btn-sm btn-outline-success">🔧 メンテナンス解除</button>
                     </form>
+                    <form method="POST" action="/admin/maintenance/test" class="d-inline">
+                        <button type="submit" class="btn btn-sm btn-outline-warning"
+                            onclick="return confirm('システムテストを開始しますか？一時的にメンテナンス中になります。')">
+                            🔧 システムテスト
+                        </button>
+                    </form>
+                    <form method="POST" action="/admin/maintenance/off" class="d-inline">
+                        <button type="submit" class="btn btn-sm btn-outline-success">
+                            ✅ メンテナンスOFF
+                        </button>
+                    </form>
                     {%- endif %}
                     <a class="btn btn-sm btn-outline-secondary" href="/logout">ログアウト</a>
                 </div>
