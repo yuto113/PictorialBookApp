@@ -205,6 +205,16 @@ with app.app_context():
     if not os.path.exists(db_path):
         db.create_all()
 
+@app.route('/admin/maintenance/on', methods=['POST'])
+def maintenance_on():
+    global MAINTENANCE_MODE
+    user_id = session.get('user_id')
+    if not user_id or user_id != 2:
+        return redirect('/login')
+    MAINTENANCE_MODE = True
+    flash('メンテナンスモードをONにしました！', 'warning')
+    return redirect('/admin')
+
 @app.context_processor
 def inject_globals():
     user_id = session.get('user_id')
