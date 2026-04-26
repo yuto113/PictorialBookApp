@@ -262,9 +262,11 @@ def user_page():
                         Date.name.like(search)
                     )
                 )
-        if Illustrated_ki == 'on':
+        if Illustrated_ki == 'on' and Illustrated_ev == 'on':
+            pass  # 両方チェック→全部表示
+        elif Illustrated_ki == 'on':
             date = date.filter(Date.user_id == 2)
-        if Illustrated_ev == 'on':
+        elif Illustrated_ev == 'on':
             date = date.filter(Date.user_id != 2)
         if Illustrated_friend:
             date = date.filter(Date.user_id == int(Illustrated_friend))

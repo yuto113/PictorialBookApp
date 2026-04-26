@@ -136,11 +136,12 @@
 
         <div class="row mb-3 align-items-center">
             <div class="col-md-6">
-                <form class="d-flex" method="get">
+                <form class="d-flex gap-2" method="get">
                     <input class="form-control me-2 search-input" type="search" placeholder="名前で検索" aria-label="Search"
-                        id="queryname" name="search" required>
+                        id="queryname" name="search">
                     <button class="btn {{ 'btn-success' if is_school_user else 'btn-danger' }}"
                         type="submit">検索</button>
+                    <a href="/user" class="btn btn-outline-secondary">クリア</a>
                 </form>
             </div>
             {% if not is_school_user %}
