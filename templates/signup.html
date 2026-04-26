@@ -1,10 +1,10 @@
-﻿<!doctype html>
+?<!doctype html>
 <html lang="ja">
 
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>繧ｪ繝ｳ繝ｩ繧､繝ｳ蝗ｳ髑・- signup</title>
+    <title>オンライン図鑁E- signup</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
     <style>
@@ -33,8 +33,8 @@
     <nav class="navbar navbar-light bg-white shadow-sm">
         <div class="container">
             <a class="navbar-brand d-flex align-items-center" href="/">
-                <span class="fs-4 brand-color">蝗ｳ髑・/span>
-                <small class="text-muted ms-2">繧ｪ繝ｳ繝ｩ繧､繝ｳ蝗ｳ髑・/small>
+                <span class="fs-4 brand-color">図鑁E/span>
+                <small class="text-muted ms-2">オンライン図鑁E/small>
             </a>
         </div>
     </nav>
@@ -43,39 +43,39 @@
         <div class="row justify-content-center">
             <div class="col-md-6 col-lg-5">
                 <div class="card card-auth p-4 bg-white">
-                    <h3 class="mb-2">譁ｰ隕冗匳骭ｲ</h3>
-                    <p class="text-muted small">逋ｻ骭ｲ蜷阪→繝代せ繝ｯ繝ｼ繝峨ｒ蜈･蜉帙＠縺ｦ繧｢繧ｫ繧ｦ繝ｳ繝医ｒ菴懈・縺励※縺上□縺輔＞縲・/p>
+                    <h3 class="mb-2">新規登録</h3>
+                    <p class="text-muted small">登録名とパスワードを入力してアカウントを作�Eしてください、E/p>
 
                     <form method="post">
                         <div class="mb-3">
-                            <label for="name" class="form-label">逋ｻ骭ｲ蜷・/label>
+                            <label for="name" class="form-label">登録吁E/label>
                             <input type="text" id="name" name="name" class="form-control" required value="{{ saved_name if saved_name else '' }}" />
                         </div>
 
                         <div class="mb-3">
-                            <label for="password_s" class="form-label">繝代せ繝ｯ繝ｼ繝・/label>
+                            <label for="password_s" class="form-label">パスワーチE/label>
                             <input type="password" id="password_s" name="password_s" class="form-control" required
                                 minlength="1" maxlength="10" />
                         </div>
 
                         <div class="mb-3">
-                            <label for="password_s2" class="form-label">繝代せ繝ｯ繝ｼ繝会ｼ育｢ｺ隱搾ｼ・/label>
+                            <label for="password_s2" class="form-label">パスワード（確認！E/label>
                             <input type="password" id="password_s2" name="password_s2" class="form-control" required
                                 minlength="1" maxlength="10" />
                         </div>
 
                         <div class="mb-3">
-                            <label class="form-label fw-bold">繧｢繧､繧ｳ繝ｳ繧帝∈謚・/label>
+                            <label class="form-label fw-bold">アイコンを選抁E/label>
                             <div class="d-flex gap-3 mb-3">
                                 <div class="form-check">
                                     <input class="form-check-input" type="radio" name="icon_type" id="icon_default"
                                         value="default" checked onchange="toggleIconUpload()">
-                                    <label class="form-check-label" for="icon_default">繝・ヵ繧ｩ繝ｫ繝医い繧､繧ｳ繝ｳ</label>
+                                    <label class="form-check-label" for="icon_default">チE��ォルトアイコン</label>
                                 </div>
                                 <div class="form-check">
                                     <input class="form-check-input" type="radio" name="icon_type" id="icon_upload"
                                         value="upload" onchange="toggleIconUpload()">
-                                    <label class="form-check-label" for="icon_upload">逕ｻ蜒上ｒ繧｢繝・・繝ｭ繝ｼ繝・/label>
+                                    <label class="form-check-label" for="icon_upload">画像をアチE�EローチE/label>
                                 </div>
                             </div>
 
@@ -94,86 +94,86 @@
                             </div>
                         </div>
 
-                        <!-- 竊凪・竊薙％縺薙°繧俄・竊凪・ -->
+                        <!-- ↓�E↓ここから�E↓�E -->
                         <div class="mb-3">
                             <div class="border rounded p-3 bg-light" id="terms_box"
                                 style="max-height: 150px; overflow-y: scroll; font-size: 0.85rem;">
-                                <h6 class="fw-bold">蝗ｳ髑・蛻ｩ逕ｨ隕冗ｴ・/h6>
-                                <p>譛ｬ繧ｵ繝ｼ繝薙せ縲悟峙髑代搾ｼ井ｻ･荳九梧悽繧ｵ繝ｼ繝薙せ縲搾ｼ峨ｒ縺泌茜逕ｨ縺・◆縺縺上↓縺ゅ◆繧翫∽ｻ･荳九・蛻ｩ逕ｨ隕冗ｴ・ｼ井ｻ･荳九梧悽隕冗ｴ・搾ｼ峨ｒ蠢・★縺願ｪｭ縺ｿ縺上□縺輔＞縲よ悽隕冗ｴ・↓蜷梧э縺・◆縺縺代↑縺・ｴ蜷医・縲∵悽繧ｵ繝ｼ繝薙せ繧偵＃蛻ｩ逕ｨ縺・◆縺縺代∪縺帙ｓ縲・
+                                <h6 class="fw-bold">図鑁E利用規紁E/h6>
+                                <p>本サービス「図鑑」（以下「本サービス」）をご利用ぁE��だくにあたり、以下�E利用規紁E��以下「本規紁E��）を忁E��お読みください。本規紁E��同意ぁE��だけなぁE��合�E、本サービスをご利用ぁE��だけません、E
                                 </p>
 
-                                <p><strong>隨ｬ1譚｡・郁送菴懈ｨｩ豕輔↓縺､縺・※・・/strong><br>
-                                    譛ｬ繧ｵ繝ｼ繝薙せ縺ｫ謚慕ｨｿ縺吶ｋ繧ｳ繝ｳ繝・Φ繝・ｼ育判蜒上・譁・ｫ繝ｻ蜍慕判遲会ｼ峨・縲∬送菴懈ｨｩ豕包ｼ域亊蜥・5蟷ｴ豕募ｾ狗ｬｬ48蜿ｷ・峨↓繧医ｊ菫晁ｭｷ縺輔ｌ縺ｦ縺・∪縺吶ゆｻ･荳九・陦檎ぜ繧貞崋縺冗ｦ∵ｭ｢縺励∪縺吶・br>
-                                    繝ｻ莉冶・′謦ｮ蠖ｱ縺励◆蜀咏悄繧・ｽ懈・縺励◆譁・ｫ繧堤┌譁ｭ縺ｧ謚慕ｨｿ縺吶ｋ縺薙→<br>
-                                    繝ｻ繧､繝ｳ繧ｿ繝ｼ繝阪ャ繝井ｸ翫・逕ｻ蜒上ｒ闡嶺ｽ懈ｨｩ閠・・險ｱ蜿ｯ縺ｪ縺剰ｻ｢霈峨☆繧九％縺ｨ<br>
-                                    繝ｻ譖ｸ邀阪・髮題ｪ後・繝・Ξ繝鍋ｭ峨・繧ｳ繝ｳ繝・Φ繝・ｒ辟｡譁ｭ縺ｧ隍・｣ｽ繝ｻ謚慕ｨｿ縺吶ｋ縺薙→<br>
-                                    驕募渚縺励◆蝣ｴ蜷医∬送菴懈ｨｩ豕慕ｬｬ119譚｡縺ｫ蝓ｺ縺･縺阪・0蟷ｴ莉･荳九・諛ｲ蠖ｹ縺ｾ縺溘・1000荳・・莉･荳九・鄂ｰ驥代√ｂ縺励￥縺ｯ縺昴・荳｡譁ｹ縺檎ｧ代○繧峨ｌ繧句庄閭ｽ諤ｧ縺後≠繧翫∪縺吶・/p>
+                                <p><strong>第1条�E�著作権法につぁE���E�E/strong><br>
+                                    本サービスに投稿するコンチE��チE��画像�E斁E��・動画等）�E、著作権法（昭咁E5年法律第48号�E�により保護されてぁE��す。以下�E行為を固く禁止します、Ebr>
+                                    ・他老E��撮影した写真めE���Eした斁E��を無断で投稿すること<br>
+                                    ・インターネット上�E画像を著作権老E�E許可なく転載すること<br>
+                                    ・書籍�E雑誌�EチE��ビ等�EコンチE��チE��無断で褁E��・投稿すること<br>
+                                    違反した場合、著作権法第119条に基づき、E0年以下�E懲役また�E1000丁E�E以下�E罰金、もしくはそ�E両方が科せられる可能性があります、E/p>
 
-                                <p><strong>隨ｬ2譚｡・亥倶ｺｺ諠・ｱ菫晁ｭｷ豕輔↓縺､縺・※・・/strong><br>
-                                    蛟倶ｺｺ諠・ｱ縺ｮ菫晁ｭｷ縺ｫ髢｢縺吶ｋ豕募ｾ具ｼ亥ｹｳ謌・5蟷ｴ豕募ｾ狗ｬｬ57蜿ｷ・峨↓蝓ｺ縺･縺阪∵悽繧ｵ繝ｼ繝薙せ縺ｯ莉･荳九ｒ驕ｵ螳医＠縺ｾ縺吶・br>
-                                    繝ｻ蜿門ｾ励＠縺溷倶ｺｺ諠・ｱ縺ｯ繧ｵ繝ｼ繝薙せ驕句霧縺ｮ逶ｮ逧・ｻ･螟悶↓縺ｯ菴ｿ逕ｨ縺励∪縺帙ｓ<br>
-                                    繝ｻ隨ｬ荳芽・∈縺ｮ蛟倶ｺｺ諠・ｱ縺ｮ辟｡譁ｭ謠蝉ｾ帙・陦後＞縺ｾ縺帙ｓ<br>
-                                    繝ｻ繝ｦ繝ｼ繧ｶ繝ｼ縺ｯ閾ｪ霄ｫ縺ｮ蛟倶ｺｺ諠・ｱ縺ｮ髢狗､ｺ繝ｻ險よｭ｣繝ｻ蜑企勁繧定ｫ区ｱゅ☆繧区ｨｩ蛻ｩ繧呈怏縺励∪縺・br>
-                                    縺ｾ縺溘∽ｻ悶・繝ｦ繝ｼ繧ｶ繝ｼ縺ｮ蛟倶ｺｺ諠・ｱ・域ｰ丞錐繝ｻ菴乗園繝ｻ髮ｻ隧ｱ逡ｪ蜿ｷ遲会ｼ峨ｒ辟｡譁ｭ縺ｧ謚慕ｨｿ縺吶ｋ陦檎ぜ縺ｯ縲∝倶ｺｺ諠・ｱ菫晁ｭｷ豕暮＆蜿阪→縺ｪ繧句ｴ蜷医′縺ゅｊ縺ｾ縺吶・/p>
+                                <p><strong>第2条�E�個人惁E��保護法につぁE���E�E/strong><br>
+                                    個人惁E��の保護に関する法律（平戁E5年法律第57号�E�に基づき、本サービスは以下を遵守します、Ebr>
+                                    ・取得した個人惁E��はサービス運営の目皁E��外には使用しません<br>
+                                    ・第三老E��の個人惁E��の無断提供�E行いません<br>
+                                    ・ユーザーは自身の個人惁E��の開示・訂正・削除を請求する権利を有しまぁEbr>
+                                    また、他�Eユーザーの個人惁E���E�氏名・住所・電話番号等）を無断で投稿する行為は、個人惁E��保護法違反となる場合があります、E/p>
 
-                                <p><strong>隨ｬ3譚｡・井ｸ肴ｭ｣繧｢繧ｯ繧ｻ繧ｹ遖∵ｭ｢豕輔↓縺､縺・※・・/strong><br>
-                                    荳肴ｭ｣繧｢繧ｯ繧ｻ繧ｹ陦檎ぜ縺ｮ遖∵ｭ｢遲峨↓髢｢縺吶ｋ豕募ｾ具ｼ亥ｹｳ謌・1蟷ｴ豕募ｾ狗ｬｬ128蜿ｷ・峨↓繧医ｊ縲∽ｻ･荳九・陦檎ぜ繧堤ｦ∵ｭ｢縺励∪縺吶・br>
-                                    繝ｻ莉悶・繝ｦ繝ｼ繧ｶ繝ｼ縺ｮ繧｢繧ｫ繧ｦ繝ｳ繝医∈縺ｮ荳肴ｭ｣繝ｭ繧ｰ繧､繝ｳ<br>
-                                    繝ｻ繧ｷ繧ｹ繝・Β縺ｸ縺ｮ荳肴ｭ｣繧｢繧ｯ繧ｻ繧ｹ繧・判謦・｡檎ぜ<br>
-                                    繝ｻ莉悶・繝ｦ繝ｼ繧ｶ繝ｼ縺ｮ繝代せ繝ｯ繝ｼ繝峨ｒ荳肴ｭ｣縺ｫ蜿門ｾ励・菴ｿ逕ｨ縺吶ｋ陦檎ぜ<br>
-                                    驕募渚縺励◆蝣ｴ蜷医∝酔豕慕ｬｬ11譚｡縺ｫ蝓ｺ縺･縺阪・蟷ｴ莉･荳九・諛ｲ蠖ｹ縺ｾ縺溘・100荳・・莉･荳九・鄂ｰ驥代′遘代○繧峨ｌ繧句庄閭ｽ諤ｧ縺後≠繧翫∪縺吶・/p>
+                                <p><strong>第3条�E�不正アクセス禁止法につぁE���E�E/strong><br>
+                                    不正アクセス行為の禁止等に関する法律（平戁E1年法律第128号�E�により、以下�E行為を禁止します、Ebr>
+                                    ・他�Eユーザーのアカウントへの不正ログイン<br>
+                                    ・シスチE��への不正アクセスめE��撁E��為<br>
+                                    ・他�Eユーザーのパスワードを不正に取得�E使用する行為<br>
+                                    違反した場合、同法第11条に基づき、E年以下�E懲役また�E100丁E�E以下�E罰金が科せられる可能性があります、E/p>
 
-                                <p><strong>隨ｬ4譚｡・亥錐隱画ｯ謳阪・萓ｮ霎ｱ鄂ｪ縺ｫ縺､縺・※・・/strong><br>
-                                    蛻第ｳ包ｼ域・豐ｻ40蟷ｴ豕募ｾ狗ｬｬ45蜿ｷ・臥ｬｬ230譚｡・亥錐隱画ｯ謳咲ｽｪ・峨♀繧医・隨ｬ231譚｡・井ｾｮ霎ｱ鄂ｪ・峨↓蝓ｺ縺･縺阪∽ｻ･荳九・陦檎ぜ繧堤ｦ∵ｭ｢縺励∪縺吶・br>
-                                    繝ｻ莉悶・繝ｦ繝ｼ繧ｶ繝ｼ繧・ｬｬ荳芽・ｒ隱ｹ隰嶺ｸｭ蛯ｷ縺吶ｋ謚慕ｨｿ<br>
-                                    繝ｻ陌壼⊃縺ｮ莠句ｮ溘ｒ鞫倡､ｺ縺励※莉冶・・蜷崎ｪ峨ｒ蛯ｷ縺､縺代ｋ陦檎ぜ<br>
-                                    繝ｻ萓ｮ霎ｱ逧・↑險闡峨〒莉冶・ｒ雋ｶ繧√ｋ陦檎ぜ<br>
-                                    蜷崎ｪ画ｯ謳咲ｽｪ縺ｯ3蟷ｴ莉･荳九・諛ｲ蠖ｹ繝ｻ遖・鍵縺ｾ縺溘・50荳・・莉･荳九・鄂ｰ驥代∽ｾｮ霎ｱ鄂ｪ縺ｯ1蟷ｴ莉･荳九・諛ｲ蠖ｹ繝ｻ遖・鍵縺ｾ縺溘・30荳・・莉･荳九・鄂ｰ驥代′遘代○繧峨ｌ繧句庄閭ｽ諤ｧ縺後≠繧翫∪縺吶・/p>
+                                <p><strong>第4条�E�名誉毀損�E侮辱罪につぁE���E�E/strong><br>
+                                    刑法（�E治40年法律第45号�E�第230条�E�名誉毀損罪�E�およ�E第231条�E�侮辱罪�E�に基づき、以下�E行為を禁止します、Ebr>
+                                    ・他�EユーザーめE��三老E��誹謗中傷する投稿<br>
+                                    ・虚偽の事実を摘示して他老E�E名誉を傷つける行為<br>
+                                    ・侮辱皁E��言葉で他老E��貶める行為<br>
+                                    名誉毀損罪は3年以下�E懲役・禁E��また�E50丁E�E以下�E罰金、侮辱罪は1年以下�E懲役・禁E��また�E30丁E�E以下�E罰金が科せられる可能性があります、E/p>
 
-                                <p><strong>隨ｬ5譚｡・医・繝ｭ繝舌う繝雋ｬ莉ｻ蛻ｶ髯先ｳ輔↓縺､縺・※・・/strong><br>
-                                    迚ｹ螳夐崕豌鈴壻ｿ｡蠖ｹ蜍呎署萓幄・・謳榊ｮｳ雉蜆溯ｲｬ莉ｻ縺ｮ蛻ｶ髯仙所縺ｳ逋ｺ菫｡閠・ュ蝣ｱ縺ｮ髢狗､ｺ縺ｫ髢｢縺吶ｋ豕募ｾ具ｼ亥ｹｳ謌・3蟷ｴ豕募ｾ狗ｬｬ137蜿ｷ・峨↓蝓ｺ縺･縺阪∵悽繧ｵ繝ｼ繝薙せ縺ｯ驕墓ｳ輔↑繧ｳ繝ｳ繝・Φ繝・・蜑企勁縺翫ｈ縺ｳ逋ｺ菫｡閠・ュ蝣ｱ縺ｮ髢狗､ｺ縺ｫ蠢懊§繧句ｴ蜷医′縺ゅｊ縺ｾ縺吶よｨｩ蛻ｩ萓ｵ螳ｳ縺ｮ逕ｳ蜻翫′縺ゅ▲縺溷ｴ蜷医・°蝟ｶ閠・・隧ｲ蠖薙さ繝ｳ繝・Φ繝・ｒ蜑企勁縺吶ｋ讓ｩ髯舌ｒ譛峨＠縺ｾ縺吶・
+                                <p><strong>第5条�E��Eロバイダ責任制限法につぁE���E�E/strong><br>
+                                    特定電気通信役務提供老E�E損害賠償責任の制限及び発信老E��報の開示に関する法律（平戁E3年法律第137号�E�に基づき、本サービスは違法なコンチE��チE�E削除および発信老E��報の開示に応じる場合があります。権利侵害の申告があった場合、E��営老E�E該当コンチE��チE��削除する権限を有します、E
                                 </p>
 
-                                <p><strong>隨ｬ6譚｡・亥・遶･繝昴Ν繝守ｦ∵ｭ｢豕輔↓縺､縺・※・・/strong><br>
-                                    蜈千ｫ･雋ｷ譏･縲∝・遶･繝昴Ν繝弱↓菫ゅｋ陦檎ぜ遲峨・隕丞宛蜿翫・蜃ｦ鄂ｰ荳ｦ縺ｳ縺ｫ蜈千ｫ･縺ｮ菫晁ｭｷ遲峨↓髢｢縺吶ｋ豕募ｾ具ｼ亥ｹｳ謌・1蟷ｴ豕募ｾ狗ｬｬ52蜿ｷ・峨↓蝓ｺ縺･縺阪・8豁ｳ譛ｪ貅縺ｮ蜈千ｫ･縺ｫ菫ゅｋ諤ｧ逧・↑繧ｳ繝ｳ繝・Φ繝・・謚慕ｨｿ繧貞崋縺冗ｦ∵ｭ｢縺励∪縺吶る＆蜿阪＠縺溷ｴ蜷医∝酔豕輔↓蝓ｺ縺･縺榊宍縺励＞蛻台ｺ狗ｽｰ縺ｮ蟇ｾ雎｡縺ｨ縺ｪ繧翫∪縺吶・
+                                <p><strong>第6条�E��E童ポルノ禁止法につぁE���E�E/strong><br>
+                                    児童買春、�E童ポルノに係る行為等�E規制及�E処罰並びに児童の保護等に関する法律（平戁E1年法律第52号�E�に基づき、E8歳未満の児童に係る性皁E��コンチE��チE�E投稿を固く禁止します。違反した場合、同法に基づき厳しい刑事罰の対象となります、E
                                 </p>
 
-                                <p><strong>隨ｬ7譚｡・育ｦ∵ｭ｢莠矩・ｼ・/strong><br>
-                                    荳願ｨ倥↓蜉縺医∽ｻ･荳九・陦檎ぜ繧堤ｦ∵ｭ｢縺励∪縺吶・br>
-                                    繝ｻ繧ｹ繝代Β陦檎ぜ繧・ｺ・相逶ｮ逧・・謚慕ｨｿ<br>
-                                    繝ｻ繝槭Ν繧ｦ繧ｧ繧｢繧・え繧､繝ｫ繧ｹ縺ｮ驟榊ｸ・br>
-                                    繝ｻ譛ｬ繧ｵ繝ｼ繝薙せ縺ｮ驕句霧繧貞ｦｨ螳ｳ縺吶ｋ陦檎ぜ<br>
-                                    繝ｻ陌壼⊃縺ｮ諠・ｱ繧堤匳骭ｲ縺吶ｋ陦檎ぜ<br>
-                                    繝ｻ縺昴・莉悶∵ｳ穂ｻ､縺ｾ縺溘・蜈ｬ蠎剰憶菫励↓蜿阪☆繧玖｡檎ぜ</p>
+                                <p><strong>第7条�E�禁止事頁E��E/strong><br>
+                                    上記に加え、以下�E行為を禁止します、Ebr>
+                                    ・スパム行為めE��E��目皁E�E投稿<br>
+                                    ・マルウェアめE��イルスの配币Ebr>
+                                    ・本サービスの運営を妨害する行為<br>
+                                    ・虚偽の惁E��を登録する行為<br>
+                                    ・そ�E他、法令また�E公序良俗に反する行為</p>
 
-                                <p><strong>隨ｬ8譚｡・亥・雋ｬ莠矩・ｼ・/strong><br>
-                                    譛ｬ繧ｵ繝ｼ繝薙せ縺ｮ蛻ｩ逕ｨ縺ｫ繧医ｊ逕溘§縺滓錐螳ｳ縺ｫ縺､縺・※縲・°蝟ｶ閠・・謨・э縺ｾ縺溘・驥榊､ｧ縺ｪ驕主､ｱ縺後≠繧句ｴ蜷医ｒ髯､縺阪∬ｲｬ莉ｻ繧定ｲ縺・∪縺帙ｓ縲ゅ∪縺溘√Θ繝ｼ繧ｶ繝ｼ髢薙・繝医Λ繝悶Ν縺ｫ縺､縺・※縺ｯ縲∝ｽ謎ｺ玖・俣縺ｧ隗｣豎ｺ縺吶ｋ繧ゅ・縺ｨ縺励∪縺吶・
+                                <p><strong>第8条�E��E責事頁E��E/strong><br>
+                                    本サービスの利用により生じた損害につぁE��、E��営老E�E敁E��また�E重大な過失がある場合を除き、責任を負ぁE��せん。また、ユーザー間�EトラブルにつぁE��は、当事老E��で解決するも�Eとします、E
                                 </p>
 
-                                <p><strong>隨ｬ9譚｡・郁ｦ冗ｴ・・螟画峩・・/strong><br>
-                                    譛ｬ隕冗ｴ・・莠亥相縺ｪ縺丞､画峩縺輔ｌ繧句ｴ蜷医′縺ゅｊ縺ｾ縺吶ょ､画峩蠕後ｂ譛ｬ繧ｵ繝ｼ繝薙せ繧堤ｶ咏ｶ壹＠縺ｦ蛻ｩ逕ｨ縺励◆蝣ｴ蜷医∝､画峩蠕後・隕冗ｴ・↓蜷梧э縺励◆繧ゅ・縺ｨ縺ｿ縺ｪ縺励∪縺吶・/p>
+                                <p><strong>第9条�E�規紁E�E変更�E�E/strong><br>
+                                    本規紁E�E予告なく変更される場合があります。変更後も本サービスを継続して利用した場合、変更後�E規紁E��同意したも�Eとみなします、E/p>
 
-                                <p class="text-muted">蛻ｶ螳壽律・・026蟷ｴ4譛・4譌･</p>
+                                <p class="text-muted">制定日�E�E026年4朁E4日</p>
                             </div>
                             <div class="form-check mt-2">
                                 <input class="form-check-input" type="checkbox" id="agree" name="agree" required
                                     disabled>
                                 <label class="form-check-label text-muted" for="agree" id="agree_label">
-                                    蛻ｩ逕ｨ隕冗ｴ・ｒ譛蠕後∪縺ｧ隱ｭ繧縺ｨ繝√ぉ繝・け縺ｧ縺阪∪縺・
+                                    利用規紁E��最後まで読むとチェチE��できまぁE
                                 </label>
                             </div>
                             <div class="mt-2 small">
-                                <a href="/terms" target="_blank" style="color:#007bff; text-decoration:underline;">糖
-                                    蛻ｩ逕ｨ隕冗ｴ・・譁・/a>
-                                繝ｻ
-                                <a href="/privacy" target="_blank" style="color:#007bff; text-decoration:underline;">柏
-                                    繝励Λ繧､繝舌す繝ｼ繝昴Μ繧ｷ繝ｼ</a>
+                                <a href="/terms" target="_blank" style="color:#007bff; text-decoration:underline;">📜
+                                    利用規紁E�E斁E/a>
+                                ・
+                                <a href="/privacy" target="_blank" style="color:#007bff; text-decoration:underline;">🔐
+                                    プライバシーポリシー</a>
                             </div>
                         </div>
 
                         <div class="d-flex justify-content-between align-items-center">
-                            <button type="submit" class="btn btn-danger">逋ｻ骭ｲ</button>
-                            <a href="/login" class="btn btn-link">繝ｭ繧ｰ繧､繝ｳ逕ｻ髱｢縺ｸ</a>
+                            <button type="submit" class="btn btn-danger">登録</button>
+                            <a href="/login" class="btn btn-link">ログイン画面へ</a>
                         </div>
                         <div class="mt-3">
                             {% if messege %}
@@ -188,7 +188,7 @@
 
     <footer class="footer text-center">
         <div class="container">
-            <small>ﾂｩ {{ now().year }} 蝗ｳ髑・窶・{{ verj }}</small>
+            <small>© {{ now().year }} 図鑁E E{{ verj }}</small>
         </div>
     </footer>
 
@@ -197,17 +197,17 @@
         crossorigin="anonymous"></script>
 
     <script>
-        // 繝輔か繝ｼ繝騾∽ｿ｡譎ゅ↓蜷梧э繝√ぉ繝・け繧堤｢ｺ隱・
+        // フォーム送信時に同意チェチE��を確誁E
         document.querySelector('form').addEventListener('submit', function(e) {
             const agree = document.getElementById('agree');
             if (!agree.checked) {
                 e.preventDefault();
-                alert('蛻ｩ逕ｨ隕冗ｴ・ｒ譛蠕後∪縺ｧ隱ｭ繧薙〒縲∝酔諢上＠縺ｦ縺上□縺輔＞');
-                // 隕冗ｴ・・繝・け繧ｹ縺ｾ縺ｧ繧ｹ繧ｯ繝ｭ繝ｼ繝ｫ
+                alert('利用規紁E��最後まで読んで、同意してください');
+                // 規紁E�EチE��スまでスクロール
                 document.getElementById('terms_box').scrollIntoView({ behavior: 'smooth', block: 'center' });
             }
         });
-        // 蛻ｩ逕ｨ隕冗ｴ・ｒ譛蠕後∪縺ｧ隱ｭ繧薙□繧峨メ繧ｧ繝・け繝懊ャ繧ｯ繧ｹ繧呈怏蜉ｹ縺ｫ縺吶ｋ
+        // 利用規紁E��最後まで読んだらチェチE��ボックスを有効にする
         const termsBox = document.getElementById('terms_box');
         const agreeCheckbox = document.getElementById('agree');
         const agreeLabel = document.getElementById('agree_label');
@@ -215,16 +215,16 @@
         function checkScroll() {
             const scrolled = termsBox.scrollTop + termsBox.clientHeight;
             const total = termsBox.scrollHeight;
-            console.log(scrolled, total); // 繝・ヰ繝・げ逕ｨ
+            console.log(scrolled, total); // チE��チE��用
             if (scrolled >= total - 20) {
                 agreeCheckbox.disabled = false;
-                agreeLabel.textContent = '蛻ｩ逕ｨ隕冗ｴ・↓蜷梧э縺励∪縺・;
+                agreeLabel.textContent = '利用規紁E��同意しまぁE;
                 agreeLabel.classList.remove('text-muted');
             }
         }
 
         termsBox.addEventListener('scroll', checkScroll);
-        // 繝壹・繧ｸ隱ｭ縺ｿ霎ｼ縺ｿ譎ゅ↓繧ら｢ｺ隱搾ｼ亥・螳ｹ縺檎洒縺・ｴ蜷茨ｼ・
+        // ペ�Eジ読み込み時にも確認（�E容が短ぁE��合！E
         window.addEventListener('load', checkScroll);
 
         function toggleIconUpload() {

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>マイページ</title>
+    <title>�}�C�y�[�W</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body { background: linear-gradient(135deg, #f0fff4 0%, #e8f5e9 100%); color: #333; }
@@ -15,10 +15,10 @@
     <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
         <div class="container">
             <a class="navbar-brand d-flex align-items-center" href="/user">
-                <span class="fs-4 brand-color">図鑑</span>
-                <small class="text-muted ms-2">{{ my_school.name if my_school else 'オンライン図鑑' }}</small>
+                <span class="fs-4 brand-color">�}��</span>
+                <small class="text-muted ms-2">{{ my_school.name if my_school else '�I�����C���}��' }}</small>
             </a>
-            <a class="btn btn-sm btn-outline-secondary" href="/user">ホームへ</a>
+            <a class="btn btn-sm btn-outline-secondary" href="/user">�z�[����</a>
         </div>
     </nav>
 
@@ -31,46 +31,46 @@
         {% endif %}
         {% endwith %}
 
-        <h2 class="mb-4 brand-color">マイページ</h2>
+        <h2 class="mb-4 brand-color">�}�C�y�[�W</h2>
 
         <div class="row g-4">
-            <!-- プロフィール情報 -->
+            <!-- �v���t�B�[����� -->
             <div class="col-md-6">
                 <div class="card shadow-sm border-0 p-4">
-                    <h5 class="fw-bold mb-3">👤 プロフィール</h5>
-                    <p><strong>名前：</strong>{{ user.name }}</p>
-                    <p><strong>ID：</strong>{{ user.id }}</p>
-                    <p><strong>役割：</strong>
+                    <h5 class="fw-bold mb-3">? �v���t�B�[��</h5>
+                    <p><strong>���O�F</strong>{{ user.name }}</p>
+                    <p><strong>ID�F</strong>{{ user.id }}</p>
+                    <p><strong>�����F</strong>
                         {% if user.role == 'student' %}
-                        <span class="badge bg-success">学生</span>
+                        <span class="badge bg-success">�w��</span>
                         {% elif user.role == 'teacher' %}
-                        <span class="badge bg-primary">教師</span>
+                        <span class="badge bg-primary">���t</span>
                         {% elif user.role == 'school_admin' %}
-                        <span class="badge bg-warning text-dark">学校管理者</span>
+                        <span class="badge bg-warning text-dark">�w�Z�Ǘ���</span>
                         {% endif %}
                     </p>
-                    <p><strong>学校：</strong>{{ my_school.name if my_school else '未参加' }}</p>
+                    <p><strong>�w�Z�F</strong>{{ my_school.name if my_school else '���Q��' }}</p>
                 </div>
             </div>
 
-            <!-- 所属クラス -->
+            <!-- �����N���X -->
             <div class="col-md-6">
                 <div class="card shadow-sm border-0 p-4">
-                    <h5 class="fw-bold mb-3">📚 所属クラス</h5>
+                    <h5 class="fw-bold mb-3">? �����N���X</h5>
                     {% for cls in my_classes %}
                     <div class="border rounded p-2 mb-2">
                         <strong>{{ cls.name }}</strong>
                     </div>
                     {% else %}
-                    <p class="text-muted small">まだクラスに登録されていません。</p>
+                    <p class="text-muted small">�܂��N���X�ɓo�^����Ă��܂���B</p>
                     {% endfor %}
                 </div>
             </div>
 
-            <!-- パスワード変更 -->
+            <!-- �p�X���[�h�ύX -->
             <div class="col-md-6">
                 <div class="card shadow-sm border-0 p-4">
-                    <h5 class="fw-bold mb-3">🔑 パスワード変更</h5>
+                    <h5 class="fw-bold mb-3">? �p�X���[�h�ύX</h5>
 
                     {% if message %}
                     <div class="alert alert-danger">{{ message }}</div>
@@ -78,18 +78,18 @@
 
                     <form method="POST">
                         <div class="mb-3">
-                            <label class="form-label small fw-bold">現在のパスワード</label>
+                            <label class="form-label small fw-bold">���݂̃p�X���[�h</label>
                             <input type="password" name="current_password" class="form-control" required>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label small fw-bold">新しいパスワード</label>
+                            <label class="form-label small fw-bold">�V�����p�X���[�h</label>
                             <input type="password" name="new_password" class="form-control" required>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label small fw-bold">新しいパスワード（確認）</label>
+                            <label class="form-label small fw-bold">�V�����p�X���[�h�i�m�F�j</label>
                             <input type="password" name="new_password2" class="form-control" required>
                         </div>
-                        <button type="submit" class="btn btn-success w-100">変更する</button>
+                        <button type="submit" class="btn btn-success w-100">�ύX����</button>
                     </form>
                 </div>
             </div>
@@ -98,7 +98,7 @@
 
     <footer class="footer text-center mt-4">
         <div class="container">
-            <small>© {{ now().year }} 図鑑 — {{ verj }}</small>
+            <small>? {{ now().year }} �}�� ? {{ verj }}</small>
         </div>
     </footer>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

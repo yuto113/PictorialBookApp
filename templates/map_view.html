@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>図鑑 - 地図一覧</title>
+    <title>�}�� - �n�}�ꗗ</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <style>
@@ -55,10 +55,10 @@
     <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
         <div class="container">
             <a class="navbar-brand d-flex align-items-center" href="/">
-                <span class="fs-4 brand-color">図鑑</span>
-                <small class="text-muted ms-2">地図一覧</small>
+                <span class="fs-4 brand-color">�}��</span>
+                <small class="text-muted ms-2">�n�}�ꗗ</small>
             </a>
-            <a class="btn btn-sm btn-outline-secondary" href="/user">ホームへ</a>
+            <a class="btn btn-sm btn-outline-secondary" href="/user">�z�[����</a>
         </div>
     </nav>
 
@@ -71,7 +71,7 @@
         const map = L.map('map').setView([36.0, 138.0], 6);
 
         L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png', {
-            attribution: "<a href='https://maps.gsi.go.jp/development/ichiran.html' target='_blank'>地理院タイル</a>"
+            attribution: "<a href='https://maps.gsi.go.jp/development/ichiran.html' target='_blank'>�n���@�^�C��</a>"
         }).addTo(map);
 
         const mapData = {{ map_data| safe }};
@@ -81,24 +81,24 @@
             marker.bindPopup(`
                 ${d.image ? `<img src="${d.image}" alt="${d.name}">` : ''}
                 <strong>${d.name}</strong><br>
-                <small>📍 ${d.place}</small><br>
-                <small>👤 ${d.user}</small>
-                <a href="/date/${d.id}" class="btn btn-sm btn-outline-primary mt-1">詳細を見る</a>
+                <small>? ${d.place}</small><br>
+                <small>? ${d.user}</small>
+                <a href="/date/${d.id}" class="btn btn-sm btn-outline-primary mt-1">�ڍׂ�����</a>
             `);
         });
 
-        // マーカーが0件のとき
+        // �}�[�J�[��0���̂Ƃ�
         if (mapData.length === 0) {
             const info = L.control();
             info.onAdd = function () {
                 const div = L.DomUtil.create('div', 'leaflet-bar');
-                div.innerHTML = '<div style="background:white;padding:8px;border-radius:4px;">位置情報のある投稿がありません</div>';
+                div.innerHTML = '<div style="background:white;padding:8px;border-radius:4px;">�ʒu���̂��铊�e������܂���</div>';
                 return div;
             };
             info.addTo(map);
         }
 
-        // 全マーカーが見えるようにズーム
+        // �S�}�[�J�[��������悤�ɃY�[��
         if (mapData.length > 0) {
             const bounds = L.latLngBounds(mapData.map(d => [d.lat, d.lng]));
             map.fitBounds(bounds, { padding: [30, 30] });

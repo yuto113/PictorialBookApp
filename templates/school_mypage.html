@@ -1,9 +1,9 @@
-﻿<!DOCTYPE html>
+?<!DOCTYPE html>
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>繝槭う繝壹・繧ｸ</title>
+    <title>マイペ�Eジ</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body { background: linear-gradient(135deg, #f0fff4 0%, #e8f5e9 100%); color: #333; }
@@ -15,10 +15,10 @@
     <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
         <div class="container">
             <a class="navbar-brand d-flex align-items-center" href="/">
-                <span class="fs-4 brand-color">蝗ｳ髑・/span>
-                <small class="text-muted ms-2">{{ my_school.name if my_school else '繧ｪ繝ｳ繝ｩ繧､繝ｳ蝗ｳ髑・ }}</small>
+                <span class="fs-4 brand-color">図鑁E/span>
+                <small class="text-muted ms-2">{{ my_school.name if my_school else 'オンライン図鑁E }}</small>
             </a>
-            <a class="btn btn-sm btn-outline-secondary" href="/user">繝帙・繝縺ｸ</a>
+            <a class="btn btn-sm btn-outline-secondary" href="/user">ホ�Eムへ</a>
         </div>
     </nav>
 
@@ -31,46 +31,46 @@
         {% endif %}
         {% endwith %}
 
-        <h2 class="mb-4 brand-color">繝槭う繝壹・繧ｸ</h2>
+        <h2 class="mb-4 brand-color">マイペ�Eジ</h2>
 
         <div class="row g-4">
-            <!-- 繝励Ο繝輔ぅ繝ｼ繝ｫ諠・ｱ -->
+            <!-- プロフィール惁E�� -->
             <div class="col-md-6">
                 <div class="card shadow-sm border-0 p-4" style="border-radius:1rem;">
-                    <h5 class="fw-bold mb-3">側 繝励Ο繝輔ぅ繝ｼ繝ｫ</h5>
-                    <p><strong>蜷榊燕・・/strong>{{ user.name }}</p>
-                    <p><strong>ID・・/strong>{{ user.id }}</p>
-                    <p><strong>蠖ｹ蜑ｲ・・/strong>
+                    <h5 class="fw-bold mb-3">👤 プロフィール</h5>
+                    <p><strong>名前�E�E/strong>{{ user.name }}</p>
+                    <p><strong>ID�E�E/strong>{{ user.id }}</p>
+                    <p><strong>役割�E�E/strong>
                         {% if user.role == 'student' %}
-                        <span class="badge bg-success">蟄ｦ逕・/span>
+                        <span class="badge bg-success">学甁E/span>
                         {% elif user.role == 'teacher' %}
-                        <span class="badge bg-primary">謨吝ｸｫ</span>
+                        <span class="badge bg-primary">教師</span>
                         {% elif user.role == 'school_admin' %}
-                        <span class="badge bg-warning text-dark">蟄ｦ譬｡邂｡逅・・/span>
+                        <span class="badge bg-warning text-dark">学校管琁E��E/span>
                         {% endif %}
                     </p>
-                    <p><strong>蟄ｦ譬｡・・/strong>{{ my_school.name if my_school else '譛ｪ蜿ょ刈' }}</p>
+                    <p><strong>学校�E�E/strong>{{ my_school.name if my_school else '未参加' }}</p>
                 </div>
             </div>
 
-            <!-- 謇螻槭け繝ｩ繧ｹ -->
+            <!-- 所属クラス -->
             <div class="col-md-6">
                 <div class="card shadow-sm border-0 p-4" style="border-radius:1rem;">
-                    <h5 class="fw-bold mb-3">答 謇螻槭け繝ｩ繧ｹ</h5>
+                    <h5 class="fw-bold mb-3">📚 所属クラス</h5>
                     {% for cls in my_classes %}
                     <div class="border rounded p-2 mb-2">
                         <strong>{{ cls.name }}</strong>
                     </div>
                     {% else %}
-                    <p class="text-muted small">縺ｾ縺繧ｯ繝ｩ繧ｹ縺ｫ逋ｻ骭ｲ縺輔ｌ縺ｦ縺・∪縺帙ｓ縲・/p>
+                    <p class="text-muted small">まだクラスに登録されてぁE��せん、E/p>
                     {% endfor %}
                 </div>
             </div>
 
-            <!-- 繝代せ繝ｯ繝ｼ繝牙､画峩 -->
+            <!-- パスワード変更 -->
             <div class="col-md-6">
                 <div class="card shadow-sm border-0 p-4" style="border-radius:1rem;">
-                    <h5 class="fw-bold mb-3">泊 繝代せ繝ｯ繝ｼ繝牙､画峩</h5>
+                    <h5 class="fw-bold mb-3">🔑 パスワード変更</h5>
 
                     {% if message %}
                     <div class="alert alert-danger">{{ message }}</div>
@@ -78,18 +78,18 @@
 
                     <form method="POST">
                         <div class="mb-3">
-                            <label class="form-label small fw-bold">迴ｾ蝨ｨ縺ｮ繝代せ繝ｯ繝ｼ繝・/label>
+                            <label class="form-label small fw-bold">現在のパスワーチE/label>
                             <input type="password" name="current_password" class="form-control" required>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label small fw-bold">譁ｰ縺励＞繝代せ繝ｯ繝ｼ繝・/label>
+                            <label class="form-label small fw-bold">新しいパスワーチE/label>
                             <input type="password" name="new_password" class="form-control" required>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label small fw-bold">譁ｰ縺励＞繝代せ繝ｯ繝ｼ繝会ｼ育｢ｺ隱搾ｼ・/label>
+                            <label class="form-label small fw-bold">新しいパスワード（確認！E/label>
                             <input type="password" name="new_password2" class="form-control" required>
                         </div>
-                        <button type="submit" class="btn btn-success w-100">螟画峩縺吶ｋ</button>
+                        <button type="submit" class="btn btn-success w-100">変更する</button>
                     </form>
                 </div>
             </div>
@@ -98,7 +98,7 @@
 
     <footer class="footer text-center mt-4">
         <div class="container">
-            <small>ﾂｩ {{ now().year }} 蝗ｳ髑・窶・{{ verj }}</small>
+            <small>© {{ now().year }} 図鑁E E{{ verj }}</small>
         </div>
     </footer>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>メンテナンス中 - 図鑑</title>
+    <title>�����e�i���X�� - �}��</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
@@ -40,13 +40,13 @@
 </head>
 <body>
     <div class="maintenance-card">
-        <div class="maintenance-icon">🔧</div>
-        <h1 class="brand-color fw-bold mb-3">メンテナンス中</h1>
-        <p class="text-muted fs-5 mb-2">ただいまシステムのメンテナンスを行っています。</p>
-        <p class="text-muted mb-3">しばらくお待ちください。</p>
+        <div class="maintenance-icon">?</div>
+        <h1 class="brand-color fw-bold mb-3">�����e�i���X��</h1>
+        <p class="text-muted fs-5 mb-2">�������܃V�X�e���̃����e�i���X���s���Ă��܂��B</p>
+        <p class="text-muted mb-3">���΂炭���҂����������B</p>
 
         <div class="alert alert-info mb-3">
-            <small>⏰ <span id="countdown_msg">30秒後に自動で再確認します</span></small>
+            <small>? <span id="countdown_msg">30�b��Ɏ����ōĊm�F���܂�</span></small>
         </div>
 
         <div class="progress mb-3">
@@ -57,15 +57,15 @@
         <p class="countdown" id="countdown">30</p>
 
         <button onclick="checkNow()" class="btn btn-danger mt-2">
-            🔄 今すぐ確認する
+            ? �������m�F����
         </button>
 
         {% if session.get('user_id') == 2 %}
         <hr class="mt-4">
-        <p class="text-muted small">管理者メニュー</p>
+        <p class="text-muted small">�Ǘ��҃��j���[</p>
         <form method="POST" action="/admin/maintenance/off">
             <button type="submit" class="btn btn-success">
-                ✅ メンテナンスモードを解除する
+                ? �����e�i���X���[�h����������
             </button>
         </form>
         {% endif %}
@@ -77,14 +77,14 @@
         let returnUrl = document.referrer || '/';
 
         function checkNow() {
-            // サイトが復旧しているか確認
+            // �T�C�g���������Ă��邩�m�F
             fetch('/api/health')
                 .then(res => {
                     if (res.ok) {
-                        // 復旧していたら元のページへ
+                        // �������Ă����猳�̃y�[�W��
                         window.location.href = returnUrl;
                     } else {
-                        // まだメンテナンス中
+                        // �܂������e�i���X��
                         remaining = TOTAL;
                     }
                 })
@@ -100,7 +100,7 @@
             document.getElementById('progress_bar').style.width = pct + '%';
 
             if (remaining <= 0) {
-                document.getElementById('countdown_msg').textContent = '確認中...';
+                document.getElementById('countdown_msg').textContent = '�m�F��...';
                 checkNow();
                 remaining = TOTAL;
             }
