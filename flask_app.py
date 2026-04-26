@@ -139,6 +139,26 @@ def run_tests():
     except Exception as e:
         results.append({'name': '課題システム', 'status': 'error', 'detail': str(e)})
         all_ok = False
+    try:
+        import os, glob
+        mojibake_patterns = ['縺', '繧', '蜈', '髑', '鑁E', 'チE', '戻めE']
+        templates_dir = os.path.join(os.path.dirname(__file__), 'templates')
+        mojibake_files = []
+        for filepath in glob.glob(os.path.join(templates_dir, '*.html')):
+            with open(filepath, 'r', encoding='utf-8', errors='ignore') as f:
+                content = f.read()
+            for pattern in mojibake_patterns:
+                if pattern in content:
+                    mojibake_files.append(os.path.basename(filepath))
+                    break
+        if mojibake_files:
+            results.append({'name': '文字化けチェック', 'status': 'error', 'detail': f'文字化けあり: {", ".join(mojibake_files[:3])}...'})
+            all_ok = False
+        else:
+            results.append({'name': '文字化けチェック', 'status': 'ok', 'detail': '全テンプレート正常'})
+    except Exception as e:
+        results.append({'name': '文字化けチェック', 'status': 'error', 'detail': str(e)})
+        all_ok = False
     
     # 全テストOKならメンテナンス解除
     global MAINTENANCE_MODE
@@ -146,6 +166,10 @@ def run_tests():
         MAINTENANCE_MODE = False
     
     return jsonify({'results': results, 'all_ok': all_ok})
+
+@app.route('/maintenance/current')
+def maintenance_current():
+    return render_template('maintenance.html'), 503
 
 @app.route('/api/health')
 def health_check():
