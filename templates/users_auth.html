@@ -4,27 +4,27 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>ユーザ一覧 - パスワード認証</title>
+    <title>繝ｦ繝ｼ繧ｶ荳隕ｧ - 繝代せ繝ｯ繝ｼ繝芽ｪ崎ｨｼ</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
 </head>
 
 <body class="{{ 'theme-green' if is_school_user else 'theme-pink' }}">
     <div class="container py-4">
-        <a href="/user" class="btn btn-sm btn-outline-secondary mb-3">← 戻る/a>
+        <a href="/user" class="btn btn-sm btn-outline-secondary mb-3">竊・謌ｻ繧・a>
 
         <div class="card p-3 mb-3">
-            <h4 class="card-title">ユーザ一覧にアクセスするには管理��E�Eパスワードが必要��でい/h4>
+            <h4 class="card-title">繝ｦ繝ｼ繧ｶ荳隕ｧ縺ｫ繧｢繧ｯ繧ｻ繧ｹ縺吶ｋ縺ｫ縺ｯ邂｡逅・ｿｽ・ｽE・ｽE繝代せ繝ｯ繝ｼ繝峨′蠢・ｦ・ｿｽ・ｽ縺ｧ縺・h4>
             {% if message %}
             <div class="alert alert-danger">{{ message }}</div>
             {% endif %}
 
             <form method="post">
                 <div class="mb-3">
-                    <label for="password" class="form-label">管理��E�Eパスワード/label>
+                    <label for="password" class="form-label">邂｡逅・ｿｽ・ｽE・ｽE繝代せ繝ｯ繝ｼ繝・label>
                     <input type="password" class="form-control" id="password" name="password" required>
                 </div>
-                <button type="submit" class="btn btn-primary">認証して表示</button>
+                <button type="submit" class="btn btn-primary">隱崎ｨｼ縺励※陦ｨ遉ｺ</button>
             </form>
         </div>
     </div>
@@ -35,11 +35,11 @@
 
 <div id="maintenance_overlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(255,247,240,0.97); z-index:99999; display:none; align-items:center; justify-content:center; flex-direction:column;">
     <div style="text-align:center; background:white; border-radius:2rem; padding:3rem; box-shadow:0 10px 40px rgba(0,0,0,0.1); max-width:400px;">
-        <div style="font-size:4rem; animation:spin 2s linear infinite; display:inline-block;">🔧</div>
-        <h2 style="color:#ff6b6b; margin-top:1rem;">メンテナンス中</h2>
-        <p style="color:#666;">ただいまシステムのメンテナンスを行っています。</p>
+        <div style="font-size:4rem; animation:spin 2s linear infinite; display:inline-block;">肌</div>
+        <h2 style="color:#ff6b6b; margin-top:1rem;">繝｡繝ｳ繝・リ繝ｳ繧ｹ荳ｭ</h2>
+        <p style="color:#666;">縺溘□縺・∪繧ｷ繧ｹ繝・Β縺ｮ繝｡繝ｳ繝・リ繝ｳ繧ｹ繧定｡後▲縺ｦ縺・∪縺吶・/p>
         <div style="background:#fff3cd; border-radius:0.5rem; padding:0.5rem 1rem; font-size:0.85rem;">
-            <span id="maintenance_check_count">復旧確認中...</span>
+            <span id="maintenance_check_count">蠕ｩ譌ｧ遒ｺ隱堺ｸｭ...</span>
         </div>
     </div>
 </div>
@@ -59,15 +59,15 @@
         try {
             const res = await fetch('/api/health', { cache: 'no-store' });
             if (!res.ok) {
-                // メンテナンス中 → オーバーレイ表示
+                // 繝｡繝ｳ繝・リ繝ｳ繧ｹ荳ｭ 竊・繧ｪ繝ｼ繝舌・繝ｬ繧､陦ｨ遉ｺ
                 if (!isMaintenance) {
                     isMaintenance = true;
                     overlay.style.display = 'flex';
                 }
                 checkCount++;
-                document.getElementById('maintenance_check_count').textContent = `復旧確認中... (${checkCount}回目)`;
+                document.getElementById('maintenance_check_count').textContent = `蠕ｩ譌ｧ遒ｺ隱堺ｸｭ... (${checkCount}蝗樒岼)`;
             } else {
-                // 復旧 → オーバーレイ非表示
+                // 蠕ｩ譌ｧ 竊・繧ｪ繝ｼ繝舌・繝ｬ繧､髱櫁｡ｨ遉ｺ
                 if (isMaintenance) {
                     isMaintenance = false;
                     overlay.style.display = 'none';

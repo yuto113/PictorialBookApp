@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>�}�� - {{ date.name }}</title>
+    <title>・ｽ}・ｽ・ｽ - {{ date.name }}</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <style>
@@ -72,7 +72,7 @@
 
 <body class="{{ 'theme-green' if is_school_user else 'theme-pink' }}">
     <div class="container py-4">
-        <a href="/user" class="btn btn-sm btn-outline-secondary mb-3">�� �߂�</a>
+        <a href="/user" class="btn btn-sm btn-outline-secondary mb-3">・ｽ・ｽ ・ｽﾟゑｿｽ</a>
 
         <div class="card mb-4">
             <div class="row g-0">
@@ -86,7 +86,7 @@
                         <div class="mb-2">
                             <a href="/toggle_hide/{{ date.id }}"
                                 class="btn btn-sm {{ 'btn-warning' if date.is_hidden == 1 else 'btn-outline-warning' }}">
-                                {{ '?? ���J��' if date.is_hidden == 0 else '? ��\����' }}
+                                {{ '?? ・ｽ・ｽ・ｽJ・ｽ・ｽ' if date.is_hidden == 0 else '? ・ｽ・ｽ\・ｽ・ｽ・ｽ・ｽ' }}
                             </a>
                         </div>
                         {% endif %}
@@ -95,9 +95,9 @@
 
                         {% if is_owner %}
                         <div class="mb-2">
-                            <span class="badge bg-success">?? �ҏW�\</span>
-                            <span class="saved-indicator ms-2" id="saved_msg">? �ۑ����܂���</span>
-                            <div class="edit-hint">�t�B�[���h���N���b�N���ĕҏW�ł��܂�</div>
+                            <span class="badge bg-success">?? ・ｽﾒ集・ｽﾂ能</span>
+                            <span class="saved-indicator ms-2" id="saved_msg">? ・ｽﾛ托ｿｽ・ｽ・ｽ・ｽﾜゑｿｽ・ｽ・ｽ</span>
+                            <div class="edit-hint">・ｽt・ｽB・ｽ[・ｽ・ｽ・ｽh・ｽ・ｽ・ｽN・ｽ・ｽ・ｽb・ｽN・ｽ・ｽ・ｽﾄ編集・ｽﾅゑｿｽ・ｽﾜゑｿｽ</div>
                         </div>
                         {% endif %}
 
@@ -114,10 +114,10 @@
                             <div class="col-sm-7">
                                 {% if date.subject or is_owner %}
                                 <p class="card-text text-muted">
-                                    ��ށF
+                                    ・ｽ・ｽﾞ：
                                     {% if is_owner %}
                                     <input type="text" class="edit-field" id="field_subject"
-                                        value="{{ date.subject or '' }}" data-field="subject" placeholder="��ނ����...">
+                                        value="{{ date.subject or '' }}" data-field="subject" placeholder="・ｽ・ｽﾞゑｿｽ・ｽ・ｽ・ｽ...">
                                     {% else %}
                                     {{ date.subject }}
                                     {% endif %}
@@ -126,10 +126,10 @@
 
                                 {% if date.place or is_owner %}
                                 <p class="card-text text-muted">
-                                    �������ꏊ�F
+                                    ・ｽ・ｽ・ｽﾂゑｿｽ・ｽ・ｽ・ｽ齒奇ｿｽF
                                     {% if is_owner %}
                                     <input type="text" class="edit-field" id="field_place"
-                                        value="{{ date.place or '' }}" data-field="place" placeholder="�ꏊ�����...">
+                                        value="{{ date.place or '' }}" data-field="place" placeholder="・ｽ齒奇ｿｽ・ｽ・ｽ・ｽ・ｽ...">
                                     {% else %}
                                     {{ date.place }}
                                     {% endif %}
@@ -143,10 +143,10 @@
 
                         {% if date.explanatorytext or is_owner %}
                         <p class="card-text">
-                            <strong>�����F</strong>
+                            <strong>・ｽ・ｽ・ｽ・ｽ・ｽF</strong>
                             {% if is_owner %}
                             <textarea class="edit-field" id="field_explanatorytext" data-field="explanatorytext"
-                                rows="3" placeholder="���������...">{{ date.explanatorytext or '' }}</textarea>
+                                rows="3" placeholder="・ｽ・ｽ・ｽ・ｽ・ｽ・ｽ・ｽ・ｽ・ｽ...">{{ date.explanatorytext or '' }}</textarea>
                             {% else %}
                             {{ date.explanatorytext }}
                             {% endif %}
@@ -155,33 +155,33 @@
 
                         {% if is_school_user and (date.knowledge or is_owner) %}
                         <p class="card-text">
-                            <strong>�m���Ă��邱�ƁF</strong>
+                            <strong>・ｽm・ｽ・ｽ・ｽﾄゑｿｽ・ｽ驍ｱ・ｽﾆ：</strong>
                             {% if is_owner %}
                             <textarea class="edit-field" id="field_knowledge" data-field="knowledge" rows="3"
-                                placeholder="�m���Ă��邱�Ƃ����...">{{ date.knowledge or '' }}</textarea>
+                                placeholder="・ｽm・ｽ・ｽ・ｽﾄゑｿｽ・ｽ驍ｱ・ｽﾆゑｿｽ・ｽ・ｽ・ｽ...">{{ date.knowledge or '' }}</textarea>
                             {% else %}
                             {{ date.knowledge }}
                             {% endif %}
                         </p>
                         {% endif %}
 
-                        <p>���e��: {{ date.user.name }}</p>
-                        <p>������: {{ date.goodpoint }}</p>
+                        <p>・ｽ・ｽ・ｽe・ｽ・ｽ: {{ date.user.name }}</p>
+                        <p>・ｽ・ｽ・ｽ・ｽ・ｽ・ｽ: {{ date.goodpoint }}</p>
                     </div>
                 </div>
             </div>
         </div>
 
-        <h4>�`���b�g</h4>
+        <h4>・ｽ`・ｽ・ｽ・ｽb・ｽg</h4>
         <div id="chat_list" class="mb-3">
-            <div class="text-muted">�ǂݍ��ݒ�...</div>
+            <div class="text-muted">・ｽﾇみ搾ｿｽ・ｽﾝ抵ｿｽ...</div>
         </div>
 
         <div class="mb-3">
-            <label for="message" class="form-label">���b�Z�[�W</label>
+            <label for="message" class="form-label">・ｽ・ｽ・ｽb・ｽZ・ｽ[・ｽW</label>
             <textarea class="form-control" id="message" rows="3"></textarea>
         </div>
-        <button class="btn btn-primary" onclick="sendChat()">���M</button>
+        <button class="btn btn-primary" onclick="sendChat()">・ｽ・ｽ・ｽM</button>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -191,14 +191,14 @@
         const CURRENT_USER_ID = {{ current_user.id }};
         const IS_OWNER = {{ 'true' if is_owner else 'false' }};
 
-        // �`���b�g�ǂݍ���
+        // ・ｽ`・ｽ・ｽ・ｽb・ｽg・ｽﾇみ搾ｿｽ・ｽ・ｽ
         async function loadChats() {
             const res = await fetch(`/api/chats/${DATE_ID}`);
             const data = await res.json();
             const list = document.getElementById('chat_list');
 
             if (data.chats.length === 0) {
-                list.innerHTML = '<div class="text-muted">�܂��R�����g������܂���B���e���Ă݂܂��傤�I</div>';
+                list.innerHTML = '<div class="text-muted">・ｽﾜゑｿｽ・ｽR・ｽ・ｽ・ｽ・ｽ・ｽg・ｽ・ｽ・ｽ・ｽ・ｽ・ｽﾜゑｿｽ・ｽ・ｽB・ｽ・ｽ・ｽe・ｽ・ｽ・ｽﾄみまゑｿｽ・ｽ蛯､・ｽI</div>';
                 return;
             }
 
@@ -210,7 +210,7 @@
                             <small class="text-muted">${chat.created_at}</small>
                             ${chat.can_delete ? `
                             <button class="btn btn-sm btn-outline-danger ms-2"
-                                onclick="deleteChat(${chat.id}, '${chat.user_name}')">�폜</button>
+                                onclick="deleteChat(${chat.id}, '${chat.user_name}')">・ｽ尞・/button>
                             ` : ''}
                         </div>
                     </div>
@@ -219,7 +219,7 @@
             `).join('');
         }
 
-        // �`���b�g���M
+        // ・ｽ`・ｽ・ｽ・ｽb・ｽg・ｽ・ｽ・ｽM
         async function sendChat() {
             const message = document.getElementById('message').value.trim();
             if (!message) return;
@@ -236,15 +236,14 @@
             }
         }
 
-        // �`���b�g�폜
-        async function deleteChat(chatId, userName) {
-            if (!confirm(`${userName}�̃R�����g��{���ɏ����܂����H`)) return;
+        // ・ｽ`・ｽ・ｽ・ｽb・ｽg・ｽ尞・        async function deleteChat(chatId, userName) {
+            if (!confirm(`${userName}・ｽﾌコ・ｽ・ｽ・ｽ・ｽ・ｽg・ｽ・ｽ{・ｽ・ｽ・ｽﾉ擾ｿｽ・ｽ・ｽ・ｽﾜゑｿｽ・ｽ・ｽ・ｽH`)) return;
             const res = await fetch(`/api/chats/delete/${chatId}`, { method: 'DELETE' });
             const data = await res.json();
             if (data.success) loadChats();
         }
 
-        // nter�ő��M
+        // nter・ｽﾅ托ｿｽ・ｽM
         document.getElementById('message').addEventListener('keydown', function (e) {
             if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();
@@ -252,7 +251,7 @@
             }
         });
 
-        // ���A���^�C���ҏW
+        // ・ｽ・ｽ・ｽA・ｽ・ｽ・ｽ^・ｽC・ｽ・ｽ・ｽﾒ集
         if (IS_OWNER) {
             let saveTimer = null;
 
@@ -282,7 +281,7 @@
             });
         }
 
-        // �n�}
+        // ・ｽn・ｽ}
         window.addEventListener('load', () => {
             const mapEl = document.getElementById('map');
             if (mapEl) {
@@ -296,7 +295,7 @@
                 const centerLng = parseFloat(lng);
                 const map = L.map(mapEl).setView([centerLat, centerLng], 15);
                 L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png', {
-                    attribution: "<a href='https://maps.gsi.go.jp/development/ichiran.html' target='_blank'>�n���@�^�C��</a>"
+                    attribution: "<a href='https://maps.gsi.go.jp/development/ichiran.html' target='_blank'>・ｽn・ｽ・ｽ・ｽ@・ｽ^・ｽC・ｽ・ｽ</a>"
                 }).addTo(map);
                 L.marker([centerLat, centerLng]).addTo(map);
                 map.invalidateSize();
@@ -308,8 +307,7 @@
     </script>
 
 <script>
-    // メンテナンスモード監視（0.3秒ごと）
-    (function() {
+    // 繝｡繝ｳ繝・リ繝ｳ繧ｹ繝｢繝ｼ繝臥屮隕厄ｼ・.3遘偵＃縺ｨ・・    (function() {
         const IS_MAINTENANCE_PAGE = window.location.pathname.includes('/maintenance');
         if (IS_MAINTENANCE_PAGE) return;
         

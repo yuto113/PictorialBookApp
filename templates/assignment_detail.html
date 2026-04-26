@@ -41,10 +41,10 @@
     <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
         <div class="container">
             <a class="navbar-brand d-flex align-items-center" href="/">
-                <span class="fs-4 brand-color">図鑑/span>
-                <small class="text-muted ms-2">{{ school.name if school else '' }} / 課題/small>
+                <span class="fs-4 brand-color">蝗ｳ髑・span>
+                <small class="text-muted ms-2">{{ school.name if school else '' }} / 隱ｲ鬘・small>
             </a>
-            <a class="btn btn-sm btn-outline-secondary" href="/assignments">戻る/a>
+            <a class="btn btn-sm btn-outline-secondary" href="/assignments">謌ｻ繧・a>
         </div>
     </nav>
 
@@ -57,12 +57,12 @@
         {% endif %}
         {% endwith %}
 
-        <!-- 課題�Eット��ー -->
+        <!-- 隱ｲ鬘鯉ｿｽE繝・ヨ・ｽ・ｽ繝ｼ -->
         <div class="card shadow-sm border-0 p-4 mb-4" style="border-radius:1rem;">
             <div class="d-flex justify-content-between align-items-start">
                 <div>
-                    <h2 class="brand-color mb-1">📝 {{ assignment.title }}</h2>
-                    <p class="text-muted small mb-1">{{ assignment.school_class.name }} | 作成者 {{
+                    <h2 class="brand-color mb-1">統 {{ assignment.title }}</h2>
+                    <p class="text-muted small mb-1">{{ assignment.school_class.name }} | 菴懈・閠・{{
                         assignment.creator.name }}</p>
                     {% if assignment.description %}
                     <p class="mt-2">{{ assignment.description }}</p>
@@ -70,38 +70,38 @@
                 </div>
                 <div class="text-end">
                     {% if is_closed %}
-                    <span class="badge bg-dark fs-6">締め切り済み</span>
+                    <span class="badge bg-dark fs-6">邱繧∝・繧頑ｸ医∩</span>
                     {% elif is_passed %}
-                    <span class="badge bg-secondary fs-6">期限切れ��</span>
+                    <span class="badge bg-secondary fs-6">譛滄剞蛻・ｌ・ｽ・ｽ</span>
                     {% else %}
-                    <span class="badge bg-success fs-6">受付中</span>
+                    <span class="badge bg-success fs-6">蜿嶺ｻ倅ｸｭ</span>
                     {% endif %}
-                    <div class="text-muted small mt-1">締切 {{ assignment.deadline.strftime('%Y/%m/%d %H:%M') }}</div>
+                    <div class="text-muted small mt-1">邱蛻・{{ assignment.deadline.strftime('%Y/%m/%d %H:%M') }}</div>
                 </div>
             </div>
 
-            <!-- 管理�Eタン�E�担任・school_adminのみ�E�E-->
+            <!-- 邂｡逅・ｿｽE繧ｿ繝ｳ・ｽE・ｽ諡・ｻｻ繝ｻschool_admin縺ｮ縺ｿ・ｽE・ｽE-->
             {% if can_manage %}
             <hr>
             <div class="d-flex gap-2 flex-wrap">
                 {% if not is_closed %}
                 <form method="POST" action="/assignments/{{ assignment.id }}/close"
-                    onsubmit="return confirm('今すぐ締め切りますか�E�E)">
-                    <button type="submit" class="btn btn-sm btn-outline-danger">今すぐ締め切めE/button>
+                    onsubmit="return confirm('莉翫☆縺千ｷ繧∝・繧翫∪縺吶°・ｽE・ｽE)">
+                    <button type="submit" class="btn btn-sm btn-outline-danger">莉翫☆縺千ｷ繧∝・繧・/button>
                 </form>
                 {% endif %}
                 <form method="POST" action="/assignments/{{ assignment.id }}/extend" class="d-flex gap-2">
                     <input type="datetime-local" name="deadline" class="form-control form-control-sm" required>
-                    <button type="submit" class="btn btn-sm btn-outline-success">期間延長</button>
+                    <button type="submit" class="btn btn-sm btn-outline-success">譛滄俣蟒ｶ髟ｷ</button>
                 </form>
             </div>
             {% endif %}
         </div>
 
         <div class="row g-4">
-            <!-- 提�Eット�Eタ一覧 -->
+            <!-- 謠撰ｿｽE繝・ヨ・ｽE繧ｿ荳隕ｧ -->
             <div class="col-md-7">
-                <h4 class="brand-color mb-3">📷 提�Eット�Eタ�E�Espan id="submission_count">{{ submissions|length }}</span>件�E�E/h4>
+                <h4 class="brand-color mb-3">胴 謠撰ｿｽE繝・ヨ・ｽE繧ｿ・ｽE・ｽEspan id="submission_count">{{ submissions|length }}</span>莉ｶ・ｽE・ｽE/h4>
                 <div id="submission_list" class="row row-cols-1 row-cols-md-2 g-3">
                     {% for sub in submissions %}
                     <div class="col">
@@ -112,38 +112,38 @@
                             {% endif %}
                             <div class="card-body p-2">
                                 <p class="fw-bold mb-1 small">{{ sub.date.name }}</p>
-                                <p class="text-muted small mb-1">投稿者 {{ sub.user.name }}</p>
-                                <a href="/date/{{ sub.date_id }}" class="btn btn-sm btn-outline-success w-100">詳細</a>
+                                <p class="text-muted small mb-1">謚慕ｨｿ閠・{{ sub.user.name }}</p>
+                                <a href="/date/{{ sub.date_id }}" class="btn btn-sm btn-outline-success w-100">隧ｳ邏ｰ</a>
                             </div>
                         </div>
                     </div>
                     {% else %}
                     <div class="col-12">
-                        <p class="text-muted">まだ提�Eがありません、/p>
+                        <p class="text-muted">縺ｾ縺謠撰ｿｽE縺後≠繧翫∪縺帙ｓ縲・p>
                     </div>
                     {% endfor %}
                 </div>
             </div>
 
-            <!-- チャット�� -->
+            <!-- 繝√Ε繝・ヨ・ｽ・ｽ -->
             <div class="col-md-5">
-                <h4 class="brand-color mb-3">💬 チャット��</h4>
+                <h4 class="brand-color mb-3">町 繝√Ε繝・ヨ・ｽ・ｽ</h4>
                 <div id="chat_list" style="max-height:400px; overflow-y:auto;" class="mb-3">
-                    <div class="text-muted small">読み込み中...</div>
+                    <div class="text-muted small">隱ｭ縺ｿ霎ｼ縺ｿ荳ｭ...</div>
                 </div>
 
                 <div class="mb-2">
                     <textarea class="form-control form-control-sm" id="chat_message" rows="2"
-                        placeholder="メット��ージを�E劁E.."></textarea>
+                        placeholder="繝｡繝・ヨ・ｽ・ｽ繝ｼ繧ｸ繧抵ｿｽE蜉・.."></textarea>
                 </div>
-                <button class="btn btn-success btn-sm w-100" onclick="sendChat()">送信</button>
+                <button class="btn btn-success btn-sm w-100" onclick="sendChat()">騾∽ｿ｡</button>
             </div>
         </div>
     </div>
 
     <footer class="footer text-center mt-4">
         <div class="container">
-            <small>© {{ now.year }} 図鑑 E{{ verj }}</small>
+            <small>ﾂｩ {{ now.year }} 蝗ｳ髑鯛・{{ verj }}</small>
         </div>
     </footer>
 
@@ -152,14 +152,14 @@
         const ASSIGNMENT_ID = {{ assignment.id }};
         const CURRENT_USER_ID = {{ user.id }};
 
-        // チャット��読み込み
+        // 繝√Ε繝・ヨ・ｽ・ｽ隱ｭ縺ｿ霎ｼ縺ｿ
         async function loadChats() {
             const res = await fetch(`/api/assignments/${ASSIGNMENT_ID}/chats`);
             const data = await res.json();
             const list = document.getElementById('chat_list');
 
             if (data.chats.length === 0) {
-                list.innerHTML = '<div class="text-muted small">まだメット��ージがありません、/div>';
+                list.innerHTML = '<div class="text-muted small">縺ｾ縺繝｡繝・ヨ・ｽ・ｽ繝ｼ繧ｸ縺後≠繧翫∪縺帙ｓ縲・div>';
                 return;
             }
 
@@ -169,7 +169,7 @@
                         <strong class="small">${chat.user_name}</strong>
                         <div>
                             <small class="text-muted">${chat.created_at}</small>
-                            ${chat.can_delete ? `<button class="btn btn-sm btn-outline-danger ms-1 py-0" onclick="deleteChat(${chat.id})">削除</button>` : ''}
+                            ${chat.can_delete ? `<button class="btn btn-sm btn-outline-danger ms-1 py-0" onclick="deleteChat(${chat.id})">蜑企勁</button>` : ''}
                         </div>
                     </div>
                     <div class="mt-1 small">${chat.message}</div>
@@ -180,8 +180,8 @@
                         </div>
                     `).join('')}
                     <div class="mt-1 ms-2 d-flex gap-1">
-                        <input type="text" class="form-control form-control-sm" id="reply_${chat.id}" placeholder="返信...">
-                        <button class="btn btn-sm btn-outline-success" onclick="sendReply(${chat.id})">返信</button>
+                        <input type="text" class="form-control form-control-sm" id="reply_${chat.id}" placeholder="霑比ｿ｡...">
+                        <button class="btn btn-sm btn-outline-success" onclick="sendReply(${chat.id})">霑比ｿ｡</button>
                     </div>
                 </div>
             `).join('');
@@ -189,7 +189,7 @@
             list.scrollTop = list.scrollHeight;
         }
 
-        // チャット��送信
+        // 繝√Ε繝・ヨ・ｽ・ｽ騾∽ｿ｡
         async function sendChat() {
             const message = document.getElementById('chat_message').value.trim();
             if (!message) return;
@@ -206,7 +206,7 @@
             }
         }
 
-        // 返信送信
+        // 霑比ｿ｡騾∽ｿ｡
         async function sendReply(chatId) {
             const reply = document.getElementById(`reply_${chatId}`).value.trim();
             if (!reply) return;
@@ -223,15 +223,15 @@
             }
         }
 
-        // チャット��削除
+        // 繝√Ε繝・ヨ・ｽ・ｽ蜑企勁
         async function deleteChat(chatId) {
-            if (!confirm('削除しますか�E�E)) return;
+            if (!confirm('蜑企勁縺励∪縺吶°・ｽE・ｽE)) return;
             const res = await fetch(`/api/assignments/chats/${chatId}/delete`, { method: 'DELETE' });
             const data = await res.json();
             if (data.success) loadChats();
         }
 
-        // nterで送信
+        // nter縺ｧ騾∽ｿ｡
         document.getElementById('chat_message').addEventListener('keydown', function (e) {
             if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();
@@ -239,7 +239,7 @@
             }
         });
 
-        // 提�Eット�Eタの部分��新
+        // 謠撰ｿｽE繝・ヨ・ｽE繧ｿ縺ｮ驛ｨ蛻・ｿｽ・ｽ譁ｰ
         async function loadSubmissions() {
             const res = await fetch(`/api/assignments/${ASSIGNMENT_ID}/submissions`);
             const data = await res.json();
@@ -247,7 +247,7 @@
             document.getElementById('submission_count').textContent = data.submissions.length;
 
             if (data.submissions.length === 0) {
-                list.innerHTML = '<div class="col-12"><p class="text-muted">まだ提�Eがありません、/p></div>';
+                list.innerHTML = '<div class="col-12"><p class="text-muted">縺ｾ縺謠撰ｿｽE縺後≠繧翫∪縺帙ｓ縲・p></div>';
                 return;
             }
 
@@ -257,15 +257,15 @@
                         ${sub.date_image ? `<img src="${sub.date_image}" class="card-img-top" style="height:150px; object-fit:cover; border-radius:1rem 1rem 0 0;">` : ''}
                         <div class="card-body p-2">
                             <p class="fw-bold mb-1 small">${sub.date_name}</p>
-                            <p class="text-muted small mb-1">投稿者 ${sub.user_name}</p>
-                            <a href="/date/${sub.date_id}" class="btn btn-sm btn-outline-success w-100">詳細</a>
+                            <p class="text-muted small mb-1">謚慕ｨｿ閠・${sub.user_name}</p>
+                            <a href="/date/${sub.date_id}" class="btn btn-sm btn-outline-success w-100">隧ｳ邏ｰ</a>
                         </div>
                     </div>
                 </div>
             `).join('');
         }
 
-        // 初回読み込みと自動更新
+        // 蛻晏屓隱ｭ縺ｿ霎ｼ縺ｿ縺ｨ閾ｪ蜍墓峩譁ｰ
         loadChats();
         loadSubmissions();
         setInterval(loadChats, 5000);
@@ -273,7 +273,7 @@
     </script>
 
 <script>
-    // メンテナンスモード監視（0.3秒ごと）
+    // 繝｡繝ｳ繝・リ繝ｳ繧ｹ繝｢繝ｼ繝臥屮隕厄ｼ・.3遘偵＃縺ｨ・・
     (function() {
         const IS_MAINTENANCE_PAGE = window.location.pathname.includes('/maintenance');
         if (IS_MAINTENANCE_PAGE) return;
