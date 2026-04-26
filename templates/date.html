@@ -4,9 +4,8 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>蝗ｳ髑・- {{ date.name }}</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    <title>図鑑 - {{ date.name }}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <style>
         body {
@@ -35,12 +34,45 @@
             height: 200px;
             border-radius: 4px;
         }
+
+        .edit-field {
+            border: none;
+            background: transparent;
+            width: 100%;
+            resize: none;
+            font-size: inherit;
+            color: inherit;
+        }
+
+        .edit-field:focus {
+            outline: 2px solid {
+                    {
+                    '#28a745' if is_school_user else '#ff6b6b'
+                }
+            }
+
+            ;
+            border-radius: 4px;
+            background: white;
+            padding: 4px;
+        }
+
+        .edit-hint {
+            font-size: 0.75rem;
+            color: #aaa;
+        }
+
+        .saved-indicator {
+            display: none;
+            color: #28a745;
+            font-size: 0.8rem;
+        }
     </style>
 </head>
 
 <body class="{{ 'theme-green' if is_school_user else 'theme-pink' }}">
     <div class="container py-4">
-        <a href="/user" class="btn btn-sm btn-outline-secondary mb-3">竊・謌ｻ繧・/a>
+        <a href="/user" class="btn btn-sm btn-outline-secondary mb-3">← 戻る</a>
 
         <div class="card mb-4">
             <div class="row g-0">
@@ -49,162 +81,231 @@
                 </div>
                 <div class="col-md-8">
                     <div class="card-body">
-                        <h3 class="card-title">{{ date.name }}</h3>
+
                         {% if session.get('is_admin') == 1 %}
-                        <div class="mb-3 mt-2">
+                        <div class="mb-2">
                             <a href="/toggle_hide/{{ date.id }}"
                                 class="btn btn-sm {{ 'btn-warning' if date.is_hidden == 1 else 'btn-outline-warning' }}">
-                                {{ '早・・蜈ｬ髢倶ｸｭ・医け繝ｪ繝・け縺ｧ髫縺呻ｼ・ if date.is_hidden == 0 else '刪 髱櫁｡ｨ遉ｺ荳ｭ・医け繝ｪ繝・け縺ｧ蜃ｺ縺呻ｼ・ }}
+                                {{ '👁️ 公開中' if date.is_hidden == 0 else '🙈 非表示中' }}
                             </a>
                         </div>
                         {% endif %}
+
+                        {% set is_owner = (current_user.id == date.user_id or current_user.id == 2) %}
+
+                        {% if is_owner %}
+                        <div class="mb-2">
+                            <span class="badge bg-success">✏️ 編集可能</span>
+                            <span class="saved-indicator ms-2" id="saved_msg">✅ 保存しました</span>
+                            <div class="edit-hint">フィールドをクリックして編集できます</div>
+                        </div>
+                        {% endif %}
+
+                        <h3 class="card-title">
+                            {% if is_owner %}
+                            <input type="text" class="edit-field fw-bold" id="field_name" value="{{ date.name }}"
+                                data-field="name">
+                            {% else %}
+                            {{ date.name }}
+                            {% endif %}
+                        </h3>
+
                         <div class="row">
                             <div class="col-sm-7">
-                                {%- if date.subject %}
-                                <p class="card-text text-muted">遞ｮ鬘・ {{ date.subject }}</p>
-                                {%- endif %}
-                                {%- if date.place %}
-                                <p class="card-text text-muted">隕九▽縺代◆蝣ｴ謇: {{ date.place }}</p>
-                                {%- endif %}
+                                {% if date.subject or is_owner %}
+                                <p class="card-text text-muted">
+                                    種類：
+                                    {% if is_owner %}
+                                    <input type="text" class="edit-field" id="field_subject"
+                                        value="{{ date.subject or '' }}" data-field="subject" placeholder="種類を入力...">
+                                    {% else %}
+                                    {{ date.subject }}
+                                    {% endif %}
+                                </p>
+                                {% endif %}
+
+                                {% if date.place or is_owner %}
+                                <p class="card-text text-muted">
+                                    見つけた場所：
+                                    {% if is_owner %}
+                                    <input type="text" class="edit-field" id="field_place"
+                                        value="{{ date.place or '' }}" data-field="place" placeholder="場所を入力...">
+                                    {% else %}
+                                    {{ date.place }}
+                                    {% endif %}
+                                </p>
+                                {% endif %}
                             </div>
                             <div class="col-sm-5">
                                 <div id="map"></div>
                             </div>
                         </div>
-                        {%- if date.explanatorytext %}
-                        <p class="card-text"><strong>隱ｬ譏・</strong> {{ date.explanatorytext }}</p>
-                        {%- endif %}
-                        <p>謚慕ｨｿ閠・ {{ date.user.name }}</p>
-                        <p>縺・＞縺ｭ: {{ date.goodpoint }}</p>
+
+                        {% if date.explanatorytext or is_owner %}
+                        <p class="card-text">
+                            <strong>説明：</strong>
+                            {% if is_owner %}
+                            <textarea class="edit-field" id="field_explanatorytext" data-field="explanatorytext"
+                                rows="3" placeholder="説明を入力...">{{ date.explanatorytext or '' }}</textarea>
+                            {% else %}
+                            {{ date.explanatorytext }}
+                            {% endif %}
+                        </p>
+                        {% endif %}
+
+                        {% if is_school_user and (date.knowledge or is_owner) %}
+                        <p class="card-text">
+                            <strong>知っていること：</strong>
+                            {% if is_owner %}
+                            <textarea class="edit-field" id="field_knowledge" data-field="knowledge" rows="3"
+                                placeholder="知っていることを入力...">{{ date.knowledge or '' }}</textarea>
+                            {% else %}
+                            {{ date.knowledge }}
+                            {% endif %}
+                        </p>
+                        {% endif %}
+
+                        <p>投稿者: {{ date.user.name }}</p>
+                        <p>いいね: {{ date.goodpoint }}</p>
                     </div>
                 </div>
             </div>
         </div>
 
-        <h4>繝√Ε繝・ヨ</h4>
+        <h4>チャット</h4>
         <div id="chat_list" class="mb-3">
-            <div class="text-muted">隱ｭ縺ｿ霎ｼ縺ｿ荳ｭ...</div>
+            <div class="text-muted">読み込み中...</div>
         </div>
 
         <div class="mb-3">
-            <label for="message" class="form-label">繝｡繝・そ繝ｼ繧ｸ</label>
+            <label for="message" class="form-label">メッセージ</label>
             <textarea class="form-control" id="message" rows="3"></textarea>
         </div>
-        <button class="btn btn-primary" onclick="sendChat()">騾∽ｿ｡</button>
-
-        <script>
-            const DATE_ID = {{ date.id }};
-            const CURRENT_USER_ID = {{ current_user.id }};
-
-            // 繝√Ε繝・ヨ荳隕ｧ繧貞叙蠕励＠縺ｦ陦ｨ遉ｺ
-            async function loadChats() {
-                const res = await fetch(`/api/chats/${DATE_ID}`);
-                const data = await res.json();
-                const list = document.getElementById('chat_list');
-
-                if (data.chats.length === 0) {
-                    list.innerHTML = '<div class="text-muted">縺ｾ縺繧ｳ繝｡繝ｳ繝医′縺ゅｊ縺ｾ縺帙ｓ縲よ兜遞ｿ縺励※縺ｿ縺ｾ縺励ｇ縺・・/div>';
-                    return;
-                }
-
-                list.innerHTML = data.chats.map(chat => `
-                    <div class="border rounded p-2 mb-2" id="chat_${chat.id}">
-                        <div class="d-flex justify-content-between">
-                            <strong>${chat.user_name}</strong>
-                            <div>
-                                <small class="text-muted">${chat.created_at}</small>
-                                ${chat.can_delete ? `
-                                <button class="btn btn-sm btn-outline-danger ms-2"
-                                    onclick="deleteChat(${chat.id}, '${chat.user_name}')">蜑企勁</button>
-                                ` : ''}
-                            </div>
-                        </div>
-                        <div class="mt-1">${chat.message}</div>
-                    </div>
-                `).join('');
-            }
-
-            // 繝√Ε繝・ヨ騾∽ｿ｡
-            async function sendChat() {
-                const message = document.getElementById('message').value.trim();
-                if (!message) return;
-
-                const res = await fetch(`/api/chats/${DATE_ID}`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ message })
-                });
-                const data = await res.json();
-                if (data.success) {
-                    document.getElementById('message').value = '';
-                    loadChats();
-                }
-            }
-
-            // 繝√Ε繝・ヨ蜑企勁
-            async function deleteChat(chatId, userName) {
-                if (!confirm(`${userName}縺ｮ繧ｳ繝｡繝ｳ繝医ｒ譛ｬ蠖薙↓豸医＠縺ｾ縺吶°・歔)) return;
-
-                const res = await fetch(`/api/chats/delete/${chatId}`, {
-                    method: 'DELETE'
-                });
-                const data = await res.json();
-                if (data.success) {
-                    loadChats();
-                }
-            }
-
-            // Enter繧ｭ繝ｼ縺ｧ騾∽ｿ｡・・hift+Enter縺ｧ謾ｹ陦鯉ｼ・
-            document.getElementById('message').addEventListener('keydown', function (e) {
-                if (e.key === 'Enter' && !e.shiftKey) {
-                    e.preventDefault();
-                    sendChat();
-                }
-            });
-
-            // 蛻晏屓隱ｭ縺ｿ霎ｼ縺ｿ縺ｨ5遘偵＃縺ｨ縺ｫ閾ｪ蜍墓峩譁ｰ
-            loadChats();
-            setInterval(loadChats, 5000);
-        </script>
-
+        <button class="btn btn-primary" onclick="sendChat()">送信</button>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
-        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
+        const DATE_ID = {{ date.id }};
+        const CURRENT_USER_ID = {{ current_user.id }};
+        const IS_OWNER = {{ 'true' if is_owner else 'false' }};
+
+        // チャット読み込み
+        async function loadChats() {
+            const res = await fetch(`/api/chats/${DATE_ID}`);
+            const data = await res.json();
+            const list = document.getElementById('chat_list');
+
+            if (data.chats.length === 0) {
+                list.innerHTML = '<div class="text-muted">まだコメントがありません。投稿してみましょう！</div>';
+                return;
+            }
+
+            list.innerHTML = data.chats.map(chat => `
+                <div class="border rounded p-2 mb-2" id="chat_${chat.id}">
+                    <div class="d-flex justify-content-between">
+                        <strong>${chat.user_name}</strong>
+                        <div>
+                            <small class="text-muted">${chat.created_at}</small>
+                            ${chat.can_delete ? `
+                            <button class="btn btn-sm btn-outline-danger ms-2"
+                                onclick="deleteChat(${chat.id}, '${chat.user_name}')">削除</button>
+                            ` : ''}
+                        </div>
+                    </div>
+                    <div class="mt-1">${chat.message}</div>
+                </div>
+            `).join('');
+        }
+
+        // チャット送信
+        async function sendChat() {
+            const message = document.getElementById('message').value.trim();
+            if (!message) return;
+
+            const res = await fetch(`/api/chats/${DATE_ID}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message })
+            });
+            const data = await res.json();
+            if (data.success) {
+                document.getElementById('message').value = '';
+                loadChats();
+            }
+        }
+
+        // チャット削除
+        async function deleteChat(chatId, userName) {
+            if (!confirm(`${userName}のコメントを本当に消しますか？`)) return;
+            const res = await fetch(`/api/chats/delete/${chatId}`, { method: 'DELETE' });
+            const data = await res.json();
+            if (data.success) loadChats();
+        }
+
+        // Enterで送信
+        document.getElementById('message').addEventListener('keydown', function (e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendChat();
+            }
+        });
+
+        // リアルタイム編集
+        if (IS_OWNER) {
+            let saveTimer = null;
+
+            function showSaved() {
+                const msg = document.getElementById('saved_msg');
+                msg.style.display = 'inline';
+                setTimeout(() => msg.style.display = 'none', 2000);
+            }
+
+            async function saveField(field, value) {
+                const res = await fetch(`/date/${DATE_ID}/edit`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ [field]: value })
+                });
+                const data = await res.json();
+                if (data.success) showSaved();
+            }
+
+            document.querySelectorAll('.edit-field').forEach(el => {
+                el.addEventListener('input', function () {
+                    const field = this.dataset.field;
+                    const value = this.value;
+                    clearTimeout(saveTimer);
+                    saveTimer = setTimeout(() => saveField(field, value), 800);
+                });
+            });
+        }
+
+        // 地図
         window.addEventListener('load', () => {
             const mapEl = document.getElementById('map');
             if (mapEl) {
-                // Jinja 螟画焚縺九ｉ邱ｯ蠎ｦ邨悟ｺｦ繧貞叙蠕・
                 const lat = "{{ date.ido }}";
                 const lng = "{{ date.keido }}";
-
-                // 蠎ｧ讓吶′謖・ｮ壹＆繧後※縺・↑縺・ｴ蜷医・繧ｰ繝ｬ繝ｼ閭梧勹繧定｡ｨ遉ｺ
                 if (!lat || !lng) {
                     mapEl.style.backgroundColor = '#f5f5f5';
                     return;
                 }
-
-                // 蠎ｧ讓吶′謖・ｮ壹＆繧後※縺・ｋ蝣ｴ蜷医・蝨ｰ蝗ｳ繧定｡ｨ遉ｺ
                 const centerLat = parseFloat(lat);
                 const centerLng = parseFloat(lng);
-
                 const map = L.map(mapEl).setView([centerLat, centerLng], 15);
-
                 L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png', {
-                    attribution: "<a href='https://maps.gsi.go.jp/development/ichiran.html' target='_blank'>蝨ｰ逅・劼繧ｿ繧､繝ｫ</a>"
+                    attribution: "<a href='https://maps.gsi.go.jp/development/ichiran.html' target='_blank'>地理院タイル</a>"
                 }).addTo(map);
-
-                // 繝槭・繧ｫ繝ｼ繧定ｿｽ蜉
                 L.marker([centerLat, centerLng]).addTo(map);
-
                 map.invalidateSize();
             }
         });
+
+        loadChats();
+        setInterval(loadChats, 5000);
     </script>
 </body>
 
 </html>
-<!-- 莉翫∝慍蝗ｳ繧定｡ｨ遉ｺ縺吶ｋ縺溘ａ縺ｮ繧ｳ繝ｼ繝峨ｒ霑ｽ蜉縺励∪縺励◆縲ゅ￠繧後←縲∝慍蝗ｳ縺ｮ蛻晄悄險ｭ螳壹＆繧後※縺・↑縺・・縺ｧ縲√げ繝ｬ繝ｼ縺ｪ閭梧勹縺ｧ縺吶・-->

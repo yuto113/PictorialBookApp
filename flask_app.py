@@ -221,6 +221,34 @@ def delete_class_chat(chat_id):
     
     return redirect('/user')
 
+@app.route('/date/<int:id>/edit', methods=['POST'])
+def edit_date(id):
+    user_id = session.get('user_id')
+    if not user_id:
+        return {'error': 'unauthorized'}, 401
+    
+    date_obj = db_session.query(Date).filter_by(id=id).first()
+    if not date_obj:
+        return {'error': 'not found'}, 404
+    
+    if date_obj.user_id != user_id and user_id != 2:
+        return {'error': 'forbidden'}, 403
+    
+    data = request.get_json()
+    if 'name' in data:
+        date_obj.name = data['name']
+    if 'place' in data:
+        date_obj.place = data['place']
+    if 'explanatorytext' in data:
+        date_obj.explanatorytext = data['explanatorytext']
+    if 'subject' in data:
+        date_obj.subject = data['subject']
+    if 'knowledge' in data:
+        date_obj.knowledge = data['knowledge']
+    
+    db_session.commit()
+    return {'success': True}
+
 @app.route('/user')
 def user_page():
     # show user page only when logged in
