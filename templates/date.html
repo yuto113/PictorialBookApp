@@ -1,10 +1,10 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="ja">
 
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>図鑑 - {{ date.name }}</title>
+    <title>蝗ｳ髑・- {{ date.name }}</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
@@ -40,7 +40,7 @@
 
 <body class="{{ 'theme-green' if is_school_user else 'theme-pink' }}">
     <div class="container py-4">
-        <a href="/user" class="btn btn-sm btn-outline-secondary mb-3">← 戻る</a>
+        <a href="/user" class="btn btn-sm btn-outline-secondary mb-3">竊・謌ｻ繧・/a>
 
         <div class="card mb-4">
             <div class="row g-0">
@@ -54,17 +54,17 @@
                         <div class="mb-3 mt-2">
                             <a href="/toggle_hide/{{ date.id }}"
                                 class="btn btn-sm {{ 'btn-warning' if date.is_hidden == 1 else 'btn-outline-warning' }}">
-                                {{ '👁️ 公開中（クリックで隠す）' if date.is_hidden == 0 else '🙈 非表示中（クリックで出す）' }}
+                                {{ '早・・蜈ｬ髢倶ｸｭ・医け繝ｪ繝・け縺ｧ髫縺呻ｼ・ if date.is_hidden == 0 else '刪 髱櫁｡ｨ遉ｺ荳ｭ・医け繝ｪ繝・け縺ｧ蜃ｺ縺呻ｼ・ }}
                             </a>
                         </div>
                         {% endif %}
                         <div class="row">
                             <div class="col-sm-7">
                                 {%- if date.subject %}
-                                <p class="card-text text-muted">種類: {{ date.subject }}</p>
+                                <p class="card-text text-muted">遞ｮ鬘・ {{ date.subject }}</p>
                                 {%- endif %}
                                 {%- if date.place %}
-                                <p class="card-text text-muted">見つけた場所: {{ date.place }}</p>
+                                <p class="card-text text-muted">隕九▽縺代◆蝣ｴ謇: {{ date.place }}</p>
                                 {%- endif %}
                             </div>
                             <div class="col-sm-5">
@@ -72,38 +72,38 @@
                             </div>
                         </div>
                         {%- if date.explanatorytext %}
-                        <p class="card-text"><strong>説明:</strong> {{ date.explanatorytext }}</p>
+                        <p class="card-text"><strong>隱ｬ譏・</strong> {{ date.explanatorytext }}</p>
                         {%- endif %}
-                        <p>投稿者: {{ date.user.name }}</p>
-                        <p>いいね: {{ date.goodpoint }}</p>
+                        <p>謚慕ｨｿ閠・ {{ date.user.name }}</p>
+                        <p>縺・＞縺ｭ: {{ date.goodpoint }}</p>
                     </div>
                 </div>
             </div>
         </div>
 
-        <h4>チャット</h4>
+        <h4>繝√Ε繝・ヨ</h4>
         <div id="chat_list" class="mb-3">
-            <div class="text-muted">読み込み中...</div>
+            <div class="text-muted">隱ｭ縺ｿ霎ｼ縺ｿ荳ｭ...</div>
         </div>
 
         <div class="mb-3">
-            <label for="message" class="form-label">メッセージ</label>
+            <label for="message" class="form-label">繝｡繝・そ繝ｼ繧ｸ</label>
             <textarea class="form-control" id="message" rows="3"></textarea>
         </div>
-        <button class="btn btn-primary" onclick="sendChat()">送信</button>
+        <button class="btn btn-primary" onclick="sendChat()">騾∽ｿ｡</button>
 
         <script>
             const DATE_ID = {{ date.id }};
             const CURRENT_USER_ID = {{ current_user.id }};
 
-            // チャット一覧を取得して表示
+            // 繝√Ε繝・ヨ荳隕ｧ繧貞叙蠕励＠縺ｦ陦ｨ遉ｺ
             async function loadChats() {
                 const res = await fetch(`/api/chats/${DATE_ID}`);
                 const data = await res.json();
                 const list = document.getElementById('chat_list');
 
                 if (data.chats.length === 0) {
-                    list.innerHTML = '<div class="text-muted">まだコメントがありません。投稿してみましょう。</div>';
+                    list.innerHTML = '<div class="text-muted">縺ｾ縺繧ｳ繝｡繝ｳ繝医′縺ゅｊ縺ｾ縺帙ｓ縲よ兜遞ｿ縺励※縺ｿ縺ｾ縺励ｇ縺・・/div>';
                     return;
                 }
 
@@ -115,7 +115,7 @@
                                 <small class="text-muted">${chat.created_at}</small>
                                 ${chat.can_delete ? `
                                 <button class="btn btn-sm btn-outline-danger ms-2"
-                                    onclick="deleteChat(${chat.id}, '${chat.user_name}')">削除</button>
+                                    onclick="deleteChat(${chat.id}, '${chat.user_name}')">蜑企勁</button>
                                 ` : ''}
                             </div>
                         </div>
@@ -124,7 +124,7 @@
                 `).join('');
             }
 
-            // チャット送信
+            // 繝√Ε繝・ヨ騾∽ｿ｡
             async function sendChat() {
                 const message = document.getElementById('message').value.trim();
                 if (!message) return;
@@ -141,9 +141,9 @@
                 }
             }
 
-            // チャット削除
+            // 繝√Ε繝・ヨ蜑企勁
             async function deleteChat(chatId, userName) {
-                if (!confirm(`${userName}のコメントを本当に消しますか？`)) return;
+                if (!confirm(`${userName}縺ｮ繧ｳ繝｡繝ｳ繝医ｒ譛ｬ蠖薙↓豸医＠縺ｾ縺吶°・歔)) return;
 
                 const res = await fetch(`/api/chats/delete/${chatId}`, {
                     method: 'DELETE'
@@ -154,7 +154,7 @@
                 }
             }
 
-            // Enterキーで送信（Shift+Enterで改行）
+            // Enter繧ｭ繝ｼ縺ｧ騾∽ｿ｡・・hift+Enter縺ｧ謾ｹ陦鯉ｼ・
             document.getElementById('message').addEventListener('keydown', function (e) {
                 if (e.key === 'Enter' && !e.shiftKey) {
                     e.preventDefault();
@@ -162,7 +162,7 @@
                 }
             });
 
-            // 初回読み込みと5秒ごとに自動更新
+            // 蛻晏屓隱ｭ縺ｿ霎ｼ縺ｿ縺ｨ5遘偵＃縺ｨ縺ｫ閾ｪ蜍墓峩譁ｰ
             loadChats();
             setInterval(loadChats, 5000);
         </script>
@@ -177,27 +177,27 @@
         window.addEventListener('load', () => {
             const mapEl = document.getElementById('map');
             if (mapEl) {
-                // Jinja 変数から緯度経度を取得
+                // Jinja 螟画焚縺九ｉ邱ｯ蠎ｦ邨悟ｺｦ繧貞叙蠕・
                 const lat = "{{ date.ido }}";
                 const lng = "{{ date.keido }}";
 
-                // 座標が指定されていない場合はグレー背景を表示
+                // 蠎ｧ讓吶′謖・ｮ壹＆繧後※縺・↑縺・ｴ蜷医・繧ｰ繝ｬ繝ｼ閭梧勹繧定｡ｨ遉ｺ
                 if (!lat || !lng) {
                     mapEl.style.backgroundColor = '#f5f5f5';
                     return;
                 }
 
-                // 座標が指定されている場合は地図を表示
+                // 蠎ｧ讓吶′謖・ｮ壹＆繧後※縺・ｋ蝣ｴ蜷医・蝨ｰ蝗ｳ繧定｡ｨ遉ｺ
                 const centerLat = parseFloat(lat);
                 const centerLng = parseFloat(lng);
 
                 const map = L.map(mapEl).setView([centerLat, centerLng], 15);
 
                 L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png', {
-                    attribution: "<a href='https://maps.gsi.go.jp/development/ichiran.html' target='_blank'>地理院タイル</a>"
+                    attribution: "<a href='https://maps.gsi.go.jp/development/ichiran.html' target='_blank'>蝨ｰ逅・劼繧ｿ繧､繝ｫ</a>"
                 }).addTo(map);
 
-                // マーカーを追加
+                // 繝槭・繧ｫ繝ｼ繧定ｿｽ蜉
                 L.marker([centerLat, centerLng]).addTo(map);
 
                 map.invalidateSize();
@@ -207,4 +207,4 @@
 </body>
 
 </html>
-<!-- 今、地図を表示するためのコードを追加しました。けれど、地図の初期設定されていないので、グレーな背景です。 -->
+<!-- 莉翫∝慍蝗ｳ繧定｡ｨ遉ｺ縺吶ｋ縺溘ａ縺ｮ繧ｳ繝ｼ繝峨ｒ霑ｽ蜉縺励∪縺励◆縲ゅ￠繧後←縲∝慍蝗ｳ縺ｮ蛻晄悄險ｭ螳壹＆繧後※縺・↑縺・・縺ｧ縲√げ繝ｬ繝ｼ縺ｪ閭梧勹縺ｧ縺吶・-->

@@ -1,10 +1,10 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ja">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>レビュー管理</title>
+    <title>繝ｬ繝薙Η繝ｼ邂｡逅・/title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
@@ -26,11 +26,11 @@
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
         <div class="container">
-            <a class="navbar-brand d-flex align-items-center" href="/user">
-                <span class="fs-4 brand-color">図鑑</span>
-                <small class="text-muted ms-2">レビュー管理</small>
+            <a class="navbar-brand d-flex align-items-center" href="/">
+                <span class="fs-4 brand-color">蝗ｳ髑・/span>
+                <small class="text-muted ms-2">繝ｬ繝薙Η繝ｼ邂｡逅・/small>
             </a>
-            <a class="btn btn-sm btn-outline-secondary" href="/user">戻る</a>
+            <a class="btn btn-sm btn-outline-secondary" href="/user">謌ｻ繧・/a>
         </div>
     </nav>
 
@@ -43,61 +43,61 @@
         {% endif %}
         {% endwith %}
 
-        <h2 class="mb-4 brand-color">📬 レビュー管理</h2>
+        <h2 class="mb-4 brand-color">闘 繝ｬ繝薙Η繝ｼ邂｡逅・/h2>
 
-        <h4 class="mb-3">⏳ 承認待ち（{{ pending|length }}件）</h4>
+        <h4 class="mb-3">竢ｳ 謇ｿ隱榊ｾ・■・・{ pending|length }}莉ｶ・・/h4>
         {% for review in pending %}
         <div class="card shadow-sm border-0 p-3 mb-2" style="border-radius:1rem;">
             <div class="d-flex justify-content-between align-items-start">
                 <div class="flex-grow-1">
-                    <strong>{{ review.user.name }}さん</strong>
-                    {% if review.role_label %}<small class="text-muted">（{{ review.role_label }}）</small>{% endif %}
-                    <div class="text-warning my-1">{{ '★' * review.stars }}{{ '☆' * (5 - review.stars) }}</div>
+                    <strong>{{ review.user.name }}縺輔ｓ</strong>
+                    {% if review.role_label %}<small class="text-muted">・・{ review.role_label }}・・/small>{% endif %}
+                    <div class="text-warning my-1">{{ '笘・ * review.stars }}{{ '笘・ * (5 - review.stars) }}</div>
                     <p class="mb-1">{{ review.message }}</p>
                     <small class="text-muted">{{ review.created_at.strftime('%Y/%m/%d %H:%M') }}</small>
                 </div>
                 <div class="d-flex gap-2 ms-2">
                     <form method="POST" action="/admin/reviews/approve/{{ review.id }}" class="d-inline">
-                        <button type="submit" class="btn btn-sm btn-success">承認</button>
+                        <button type="submit" class="btn btn-sm btn-success">謇ｿ隱・/button>
                     </form>
                     <form method="POST" action="/admin/reviews/delete/{{ review.id }}" class="d-inline"
-                        onsubmit="return confirm('削除しますか？')">
-                        <button type="submit" class="btn btn-sm btn-outline-danger">削除</button>
+                        onsubmit="return confirm('蜑企勁縺励∪縺吶°・・)">
+                        <button type="submit" class="btn btn-sm btn-outline-danger">蜑企勁</button>
                     </form>
                 </div>
             </div>
         </div>
         {% else %}
-        <p class="text-muted">承認待ちはありません。</p>
+        <p class="text-muted">謇ｿ隱榊ｾ・■縺ｯ縺ゅｊ縺ｾ縺帙ｓ縲・/p>
         {% endfor %}
 
-        <h4 class="mb-3 mt-5">✅ 承認済み（{{ approved|length }}件）</h4>
+        <h4 class="mb-3 mt-5">笨・謇ｿ隱肴ｸ医∩・・{ approved|length }}莉ｶ・・/h4>
         {% for review in approved %}
         <div class="card shadow-sm border-0 p-3 mb-2" style="border-radius:1rem;">
             <div class="d-flex justify-content-between align-items-start">
                 <div class="flex-grow-1">
-                    <strong>{{ review.user.name }}さん</strong>
-                    {% if review.role_label %}<small class="text-muted">（{{ review.role_label }}）</small>{% endif %}
-                    <div class="text-warning my-1">{{ '★' * review.stars }}{{ '☆' * (5 - review.stars) }}</div>
+                    <strong>{{ review.user.name }}縺輔ｓ</strong>
+                    {% if review.role_label %}<small class="text-muted">・・{ review.role_label }}・・/small>{% endif %}
+                    <div class="text-warning my-1">{{ '笘・ * review.stars }}{{ '笘・ * (5 - review.stars) }}</div>
                     <p class="mb-1">{{ review.message }}</p>
                     <small class="text-muted">{{ review.created_at.strftime('%Y/%m/%d %H:%M') }}</small>
                 </div>
                 <div class="ms-2">
                     <form method="POST" action="/admin/reviews/delete/{{ review.id }}" class="d-inline"
-                        onsubmit="return confirm('削除しますか？')">
-                        <button type="submit" class="btn btn-sm btn-outline-danger">削除</button>
+                        onsubmit="return confirm('蜑企勁縺励∪縺吶°・・)">
+                        <button type="submit" class="btn btn-sm btn-outline-danger">蜑企勁</button>
                     </form>
                 </div>
             </div>
         </div>
         {% else %}
-        <p class="text-muted">承認済みはまだありません。</p>
+        <p class="text-muted">謇ｿ隱肴ｸ医∩縺ｯ縺ｾ縺縺ゅｊ縺ｾ縺帙ｓ縲・/p>
         {% endfor %}
     </div>
 
     <footer class="footer text-center">
         <div class="container">
-            <small>© {{ now().year }} 図鑑 — {{ verj }}</small>
+            <small>ﾂｩ {{ now().year }} 蝗ｳ髑・窶・{{ verj }}</small>
         </div>
     </footer>
 </body>
