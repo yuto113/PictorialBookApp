@@ -52,10 +52,18 @@
                 await new Promise(resolve => setTimeout(resolve, 150));
                 const item = document.createElement('div');
                 item.className = `test-item ${result.status}`;
-                item.innerHTML = `<span>${result.status === 'ok' ? '✅' : '❌'} <strong>${result.name}</strong></span><small class="text-muted">${result.detail}</small>`
-                    + (result.files && result.files.length > 0
-                        ? `<div style="width:100%;margin-top:0.5rem;font-size:0.8rem;color:#666;">${result.files.map(f => '・' + f).join('<br>')}</div>`
-                        : '');
+                item.innerHTML = `
+                    <div class="d-flex justify-content-between align-items-center w-100"
+                        ${result.files && result.files.length > 0 ? 'style="cursor:pointer;" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display===\'none\'?\'block\':\'none\'"' : ''}>
+                        <span>${result.status === 'ok' ? '✅' : '❌'} <strong>${result.name}</strong></span>
+                        <small class="text-muted">${result.detail}${result.files && result.files.length > 0 ? ' ▼' : ''}</small>
+                    </div>
+                    ${result.files && result.files.length > 0
+                        ? `<div style="display:none; width:100%; margin-top:0.5rem; font-size:0.8rem; color:#666; text-align:left;">
+                                ${result.files.map(f => '・' + f).join('<br>')}
+                            </div>`
+                        : ''}`;
+                item.style.flexWrap = 'wrap';
                 resultsDiv.appendChild(item);
                 i++;
                 document.getElementById('progress_bar').style.width = Math.round((i / data.results.length) * 100) + '%';
