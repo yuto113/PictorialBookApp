@@ -116,20 +116,20 @@
                     <a class="btn btn-sm btn-outline-warning" href="/review">⭐ レビュー</a>
                     {%- if user.id == 2 %}
                     <a class="btn btn-sm btn-outline-danger" href="/admin">⚙️ 管理</a>
-                    <form method="POST" action="/admin/maintenance/off" class="d-inline">
+                    <!-- <form method="POST" action="/admin/maintenance/off" class="d-inline">
                         <button type="submit" class="btn btn-sm btn-outline-success">🔧 メンテナンス解除</button>
-                    </form>
+                    </form> -->
                     <form method="POST" action="/admin/maintenance/test" class="d-inline">
                         <button type="submit" class="btn btn-sm btn-outline-warning"
                             onclick="return confirm('システムテストを開始しますか？一時的にメンテナンス中になります。')">
                             🔧 システムテスト
                         </button>
                     </form>
-                    <form method="POST" action="/admin/maintenance/off" class="d-inline">
+                    <!-- <form method="POST" action="/admin/maintenance/off" class="d-inline">
                         <button type="submit" class="btn btn-sm btn-outline-success">
                             ✅ メンテナンスOFF
                         </button>
-                    </form>
+                    </form> -->
                     {%- endif %}
                     <a class="btn btn-sm btn-outline-secondary" href="/logout">ログアウト</a>
                 </div>
