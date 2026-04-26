@@ -44,13 +44,16 @@ def check_maintenance():
 def internal_error(e):
     global MAINTENANCE_MODE
     MAINTENANCE_MODE = True
-    # エラーログ
     app.logger.error(f'Server Error: {e}\n{traceback.format_exc()}')
     return render_template('maintenance.html'), 500
 
 @app.errorhandler(Exception)
 def handle_exception(e):
     global MAINTENANCE_MODE
+    # 404はメンテナンスにしない
+    from werkzeug.exceptions import HTTPException
+    if isinstance(e, HTTPException):
+        return e
     MAINTENANCE_MODE = True
     app.logger.error(f'Unhandled Exception: {e}\n{traceback.format_exc()}')
     return render_template('maintenance.html'), 500
