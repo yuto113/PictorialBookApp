@@ -263,19 +263,17 @@ def map_page():
         if my_member:
             school_member_ids = [m.user_id for m in SchoolMember.query.filter_by(school_id=my_member.school_id).all()]
             dates = Date.query.filter(
-                Date.user_id.in_(school_member_ids),
-                Date.ido != None,
-                Date.ido != '',
-                Date.is_hidden != 1
-            ).all()
+            Date.user_id.in_(school_member_ids),
+            Date.ido != None,
+            Date.is_hidden != 1
+        ).all()
         else:
             dates = []
     else:
         school_user_ids = [m.user_id for m in SchoolMember.query.all()]
         dates = Date.query.filter(
-            Date.user_id.notin_(school_user_ids),
+            Date.user_id.in_(school_member_ids),
             Date.ido != None,
-            Date.ido != '',
             Date.is_hidden != 1
         ).all()
     
