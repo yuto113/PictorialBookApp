@@ -1,12 +1,12 @@
-?<!doctype html>
+<!doctype html>
 <html lang="ja">
 
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>オンライン図鑁E- signup</title>
+    <title>オンライン図鑑 - signup</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+        crossorigin="anonymous">
     <style>
         body {
             background: linear-gradient(135deg, #fff7f0 0%, #f0f9ff 100%);
@@ -33,57 +33,51 @@
     <nav class="navbar navbar-light bg-white shadow-sm">
         <div class="container">
             <a class="navbar-brand d-flex align-items-center" href="/">
-                <span class="fs-4 brand-color">図鑁E/span>
-                <small class="text-muted ms-2">オンライン図鑁E/small>
+                <span class="fs-4 brand-color">図鑑</span>
+                <small class="text-muted ms-2">オンライン図鑑</small>
             </a>
         </div>
     </nav>
-
     <div class="container py-5">
         <div class="row justify-content-center">
             <div class="col-md-6 col-lg-5">
                 <div class="card card-auth p-4 bg-white">
                     <h3 class="mb-2">新規登録</h3>
-                    <p class="text-muted small">登録名とパスワードを入力してアカウントを作�Eしてください、E/p>
-
+                    <p class="text-muted small">登録名とパスワードを入力してアカウントを作成してください。</p>
                     <form method="post">
                         <div class="mb-3">
-                            <label for="name" class="form-label">登録吁E/label>
-                            <input type="text" id="name" name="name" class="form-control" required value="{{ saved_name if saved_name else '' }}" />
+                            <label for="name" class="form-label">登録名</label>
+                            <input type="text" id="name" name="name" class="form-control" required
+                                value="{{ saved_name if saved_name else '' }}" />
                         </div>
-
                         <div class="mb-3">
-                            <label for="password_s" class="form-label">パスワーチE/label>
+                            <label for="password_s" class="form-label">パスワード</label>
                             <input type="password" id="password_s" name="password_s" class="form-control" required
                                 minlength="1" maxlength="10" />
                         </div>
-
                         <div class="mb-3">
-                            <label for="password_s2" class="form-label">パスワード（確認！E/label>
+                            <label for="password_s2" class="form-label">パスワード（確認）</label>
                             <input type="password" id="password_s2" name="password_s2" class="form-control" required
                                 minlength="1" maxlength="10" />
                         </div>
-
                         <div class="mb-3">
-                            <label class="form-label fw-bold">アイコンを選抁E/label>
+                            <label class="form-label fw-bold">アイコンを選ぶ</label>
                             <div class="d-flex gap-3 mb-3">
                                 <div class="form-check">
                                     <input class="form-check-input" type="radio" name="icon_type" id="icon_default"
                                         value="default" checked onchange="toggleIconUpload()">
-                                    <label class="form-check-label" for="icon_default">チE��ォルトアイコン</label>
+                                    <label class="form-check-label" for="icon_default">デフォルトアイコン</label>
                                 </div>
                                 <div class="form-check">
                                     <input class="form-check-input" type="radio" name="icon_type" id="icon_upload"
                                         value="upload" onchange="toggleIconUpload()">
-                                    <label class="form-check-label" for="icon_upload">画像をアチE�EローチE/label>
+                                    <label class="form-check-label" for="icon_upload">画像をアップロード</label>
                                 </div>
                             </div>
-
                             <div id="default_preview" class="text-center">
                                 <img src="{{ url_for('static', filename='icons/default.png') }}" width="80" height="80"
                                     class="rounded-circle border shadow-sm">
                             </div>
-
                             <div id="upload_area" style="display:none;">
                                 <input type="file" name="icon_file" id="icon_file" class="form-control" accept="image/*"
                                     onchange="previewIcon(this)">
@@ -93,84 +87,71 @@
                                 </div>
                             </div>
                         </div>
-
-                        <!-- ↓�E↓ここから�E↓�E -->
                         <div class="mb-3">
                             <div class="border rounded p-3 bg-light" id="terms_box"
                                 style="max-height: 150px; overflow-y: scroll; font-size: 0.85rem;">
-                                <h6 class="fw-bold">図鑁E利用規紁E/h6>
-                                <p>本サービス「図鑑」（以下「本サービス」）をご利用ぁE��だくにあたり、以下�E利用規紁E��以下「本規紁E��）を忁E��お読みください。本規紁E��同意ぁE��だけなぁE��合�E、本サービスをご利用ぁE��だけません、E
+                                <h6 class="fw-bold">図鑑利用規約</h6>
+                                <p>本サービス「図鑑」（以下「本サービス」）をご利用いただくにあたり、以下の利用規約（以下「本規約」）を必ずお読みください。本規約に同意いただけない場合、本サービスをご利用いただけません。
                                 </p>
-
-                                <p><strong>第1条�E�著作権法につぁE���E�E/strong><br>
-                                    本サービスに投稿するコンチE��チE��画像�E斁E��・動画等）�E、著作権法（昭咁E5年法律第48号�E�により保護されてぁE��す。以下�E行為を固く禁止します、Ebr>
-                                    ・他老E��撮影した写真めE���Eした斁E��を無断で投稿すること<br>
-                                    ・インターネット上�E画像を著作権老E�E許可なく転載すること<br>
-                                    ・書籍�E雑誌�EチE��ビ等�EコンチE��チE��無断で褁E��・投稿すること<br>
-                                    違反した場合、著作権法第119条に基づき、E0年以下�E懲役また�E1000丁E�E以下�E罰金、もしくはそ�E両方が科せられる可能性があります、E/p>
-
-                                <p><strong>第2条�E�個人惁E��保護法につぁE���E�E/strong><br>
-                                    個人惁E��の保護に関する法律（平戁E5年法律第57号�E�に基づき、本サービスは以下を遵守します、Ebr>
-                                    ・取得した個人惁E��はサービス運営の目皁E��外には使用しません<br>
-                                    ・第三老E��の個人惁E��の無断提供�E行いません<br>
-                                    ・ユーザーは自身の個人惁E��の開示・訂正・削除を請求する権利を有しまぁEbr>
-                                    また、他�Eユーザーの個人惁E���E�氏名・住所・電話番号等）を無断で投稿する行為は、個人惁E��保護法違反となる場合があります、E/p>
-
-                                <p><strong>第3条�E�不正アクセス禁止法につぁE���E�E/strong><br>
-                                    不正アクセス行為の禁止等に関する法律（平戁E1年法律第128号�E�により、以下�E行為を禁止します、Ebr>
-                                    ・他�Eユーザーのアカウントへの不正ログイン<br>
-                                    ・シスチE��への不正アクセスめE��撁E��為<br>
-                                    ・他�Eユーザーのパスワードを不正に取得�E使用する行為<br>
-                                    違反した場合、同法第11条に基づき、E年以下�E懲役また�E100丁E�E以下�E罰金が科せられる可能性があります、E/p>
-
-                                <p><strong>第4条�E�名誉毀損�E侮辱罪につぁE���E�E/strong><br>
-                                    刑法（�E治40年法律第45号�E�第230条�E�名誉毀損罪�E�およ�E第231条�E�侮辱罪�E�に基づき、以下�E行為を禁止します、Ebr>
-                                    ・他�EユーザーめE��三老E��誹謗中傷する投稿<br>
-                                    ・虚偽の事実を摘示して他老E�E名誉を傷つける行為<br>
-                                    ・侮辱皁E��言葉で他老E��貶める行為<br>
-                                    名誉毀損罪は3年以下�E懲役・禁E��また�E50丁E�E以下�E罰金、侮辱罪は1年以下�E懲役・禁E��また�E30丁E�E以下�E罰金が科せられる可能性があります、E/p>
-
-                                <p><strong>第5条�E��Eロバイダ責任制限法につぁE���E�E/strong><br>
-                                    特定電気通信役務提供老E�E損害賠償責任の制限及び発信老E��報の開示に関する法律（平戁E3年法律第137号�E�に基づき、本サービスは違法なコンチE��チE�E削除および発信老E��報の開示に応じる場合があります。権利侵害の申告があった場合、E��営老E�E該当コンチE��チE��削除する権限を有します、E
+                                <p><strong>第1条 著作権法について</strong><br>
+                                    本サービスに投稿するコンテンツ（画像、文章、動画等）は、著作権法（昭和45年法律第48号）により保護されています。以下の行為を固く禁止します。<br>
+                                    ・他者が撮影した写真や、作成した文章を無断で投稿すること<br>
+                                    ・インターネット上の画像を著作権者の許可なく転載すること<br>
+                                    ・書籍、雑誌、テレビ等のコンテンツを無断で複製・投稿すること<br>
+                                    違反した場合、著作権法第119条に基づき、10年以下の懲役または1000万円以下の罰金、もしくはその両方が科せられる可能性があります。</p>
+                                <p><strong>第2条 個人情報保護法について</strong><br>
+                                    個人情報の保護に関する法律（平成15年法律第57号）に基づき、本サービスは以下を遵守します。<br>
+                                    ・取得した個人情報はサービス運営の目的外には使用しません<br>
+                                    ・第三者への個人情報の無断提供は行いません<br>
+                                    ・ユーザーは自身の個人情報の開示・訂正・削除を請求する権利を有します<br>
+                                    また、他のユーザーの個人情報（氏名・住所・電話番号等）を無断で投稿する行為は、個人情報保護法違反となる場合があります。</p>
+                                <p><strong>第3条 不正アクセス禁止法について</strong><br>
+                                    不正アクセス行為の禁止等に関する法律（平成11年法律第128号）により、以下の行為を禁止します。<br>
+                                    ・他のユーザーのアカウントへの不正ログイン<br>
+                                    ・システムへの不正アクセスや破壊行為<br>
+                                    ・他のユーザーのパスワードを不正に取得・使用する行為<br>
+                                    違反した場合、同法第11条に基づき、3年以下の懲役または100万円以下の罰金が科せられる可能性があります。</p>
+                                <p><strong>第4条 名誉毀損・侮辱罪について</strong><br>
+                                    刑法（明治40年法律第45号）第230条（名誉毀損罪）および第231条（侮辱罪）に基づき、以下の行為を禁止します。<br>
+                                    ・他のユーザーや第三者を誹謗中傷する投稿<br>
+                                    ・虚偽の事実を摘示して他者の名誉を傷つける行為<br>
+                                    ・侮辱的な言葉で他者を貶める行為<br>
+                                    名誉毀損罪は3年以下の懲役・禁錮または50万円以下の罰金、侮辱罪は1年以下の懲役・禁錮または30万円以下の罰金が科せられる可能性があります。</p>
+                                <p><strong>第5条 プロバイダ責任制限法について</strong><br>
+                                    特定電気通信役務提供者の損害賠償責任の制限及び発信者情報の開示に関する法律（平成13年法律第137号）に基づき、本サービスは違法なコンテンツの削除および発信者情報の開示に応じる場合があります。権利侵害の申告があった場合、運営者は該当コンテンツを削除する権限を有します。
                                 </p>
-
-                                <p><strong>第6条�E��E童ポルノ禁止法につぁE���E�E/strong><br>
-                                    児童買春、�E童ポルノに係る行為等�E規制及�E処罰並びに児童の保護等に関する法律（平戁E1年法律第52号�E�に基づき、E8歳未満の児童に係る性皁E��コンチE��チE�E投稿を固く禁止します。違反した場合、同法に基づき厳しい刑事罰の対象となります、E
+                                <p><strong>第6条 児童ポルノ禁止法について</strong><br>
+                                    児童買春、児童ポルノに係る行為等の規制及び処罰並びに児童の保護等に関する法律（平成11年法律第52号）に基づき、18歳未満の児童に係る性的なコンテンツの投稿を固く禁止します。違反した場合、同法に基づき厳しい刑事罰の対象となります。
                                 </p>
-
-                                <p><strong>第7条�E�禁止事頁E��E/strong><br>
-                                    上記に加え、以下�E行為を禁止します、Ebr>
-                                    ・スパム行為めE��E��目皁E�E投稿<br>
-                                    ・マルウェアめE��イルスの配币Ebr>
+                                <p><strong>第7条 禁止事項</strong><br>
+                                    上記に加え、以下の行為を禁止します。<br>
+                                    ・スパム行為や宣伝目的の投稿<br>
+                                    ・マルウェアやウイルスの配布<br>
                                     ・本サービスの運営を妨害する行為<br>
-                                    ・虚偽の惁E��を登録する行為<br>
-                                    ・そ�E他、法令また�E公序良俗に反する行為</p>
-
-                                <p><strong>第8条�E��E責事頁E��E/strong><br>
-                                    本サービスの利用により生じた損害につぁE��、E��営老E�E敁E��また�E重大な過失がある場合を除き、責任を負ぁE��せん。また、ユーザー間�EトラブルにつぁE��は、当事老E��で解決するも�Eとします、E
+                                    ・虚偽の情報を登録する行為<br>
+                                    ・その他、法令または公序良俗に反する行為</p>
+                                <p><strong>第8条 免責事項</strong><br>
+                                    本サービスの利用により生じた損害について、運営者は故意または重大な過失がある場合を除き、責任を負いません。また、ユーザー間のトラブルについては、当事者間で解決するものとします。
                                 </p>
-
-                                <p><strong>第9条�E�規紁E�E変更�E�E/strong><br>
-                                    本規紁E�E予告なく変更される場合があります。変更後も本サービスを継続して利用した場合、変更後�E規紁E��同意したも�Eとみなします、E/p>
-
-                                <p class="text-muted">制定日�E�E026年4朁E4日</p>
+                                <p><strong>第9条 規約の変更</strong><br>
+                                    本規約は予告なく変更される場合があります。変更後も本サービスを継続して利用した場合、変更後の規約に同意したものとみなします。</p>
+                                <p class="text-muted">制定日：2026年4月14日</p>
                             </div>
                             <div class="form-check mt-2">
                                 <input class="form-check-input" type="checkbox" id="agree" name="agree" required
                                     disabled>
                                 <label class="form-check-label text-muted" for="agree" id="agree_label">
-                                    利用規紁E��最後まで読むとチェチE��できまぁE
+                                    利用規約を最後まで読むとチェックできます
                                 </label>
                             </div>
                             <div class="mt-2 small">
                                 <a href="/terms" target="_blank" style="color:#007bff; text-decoration:underline;">📜
-                                    利用規紁E�E斁E/a>
+                                    利用規約の全文</a>
                                 ・
                                 <a href="/privacy" target="_blank" style="color:#007bff; text-decoration:underline;">🔐
                                     プライバシーポリシー</a>
                             </div>
                         </div>
-
                         <div class="d-flex justify-content-between align-items-center">
                             <button type="submit" class="btn btn-danger">登録</button>
                             <a href="/login" class="btn btn-link">ログイン画面へ</a>
@@ -185,54 +166,41 @@
             </div>
         </div>
     </div>
-
     <footer class="footer text-center">
         <div class="container">
-            <small>© {{ now().year }} 図鑁E E{{ verj }}</small>
+            <small>© {{ now().year }} 図鑑 — {{ verj }}</small>
         </div>
     </footer>
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
         crossorigin="anonymous"></script>
-
     <script>
-        // フォーム送信時に同意チェチE��を確誁E
-        document.querySelector('form').addEventListener('submit', function(e) {
+        document.querySelector('form').addEventListener('submit', function (e) {
             const agree = document.getElementById('agree');
             if (!agree.checked) {
                 e.preventDefault();
-                alert('利用規紁E��最後まで読んで、同意してください');
-                // 規紁E�EチE��スまでスクロール
+                alert('利用規約を最後まで読んで、同意してください');
                 document.getElementById('terms_box').scrollIntoView({ behavior: 'smooth', block: 'center' });
             }
         });
-        // 利用規紁E��最後まで読んだらチェチE��ボックスを有効にする
         const termsBox = document.getElementById('terms_box');
         const agreeCheckbox = document.getElementById('agree');
         const agreeLabel = document.getElementById('agree_label');
-
         function checkScroll() {
             const scrolled = termsBox.scrollTop + termsBox.clientHeight;
             const total = termsBox.scrollHeight;
-            console.log(scrolled, total); // チE��チE��用
             if (scrolled >= total - 20) {
                 agreeCheckbox.disabled = false;
-                agreeLabel.textContent = '利用規紁E��同意しまぁE;
+                agreeLabel.textContent = '利用規約に同意します';
                 agreeLabel.classList.remove('text-muted');
             }
         }
-
         termsBox.addEventListener('scroll', checkScroll);
-        // ペ�Eジ読み込み時にも確認（�E容が短ぁE��合！E
         window.addEventListener('load', checkScroll);
-
         function toggleIconUpload() {
             const isUpload = document.getElementById('icon_upload').checked;
             document.getElementById('default_preview').style.display = isUpload ? 'none' : 'block';
             document.getElementById('upload_area').style.display = isUpload ? 'block' : 'none';
         }
-
         function previewIcon(input) {
             const preview = document.getElementById('icon_preview');
             if (input.files && input.files[0]) {
@@ -245,7 +213,6 @@
             }
         }
     </script>
-
 </body>
 
 </html>
