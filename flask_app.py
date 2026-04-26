@@ -152,7 +152,7 @@ def run_tests():
                     mojibake_files.append(os.path.basename(filepath))
                     break
         if mojibake_files:
-            results.append({'name': '文字化けチェック', 'status': 'error', 'detail': f'文字化けあり: {", ".join(mojibake_files[:3])}...'})
+            results.append({'name': '文字化けチェック', 'status': 'error', 'detail': f'文字化けあり: {", ".join(mojibake_files[:3])}...', 'files': mojibake_files})
             all_ok = False
         else:
             results.append({'name': '文字化けチェック', 'status': 'ok', 'detail': '全テンプレート正常'})

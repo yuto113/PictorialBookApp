@@ -52,7 +52,10 @@
                 await new Promise(resolve => setTimeout(resolve, 150));
                 const item = document.createElement('div');
                 item.className = `test-item ${result.status}`;
-                item.innerHTML = `<span>${result.status === 'ok' ? '✅' : '❌'} <strong>${result.name}</strong></span><small class="text-muted">${result.detail}</small>`;
+                item.innerHTML = `<span>${result.status === 'ok' ? '✅' : '❌'} <strong>${result.name}</strong></span><small class="text-muted">${result.detail}</small>`
+                    + (result.files && result.files.length > 0
+                        ? `<div style="width:100%;margin-top:0.5rem;font-size:0.8rem;color:#666;">${result.files.map(f => '・' + f).join('<br>')}</div>`
+                        : '');
                 resultsDiv.appendChild(item);
                 i++;
                 document.getElementById('progress_bar').style.width = Math.round((i / data.results.length) * 100) + '%';
