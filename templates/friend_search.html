@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>繝輔Ξ繝ｳ繝画､懃ｴ｢</title>
+    <title>郢晁ｼ釆樒ｹ晢ｽｳ郢晉判・､諛・ｽｴ・｢</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
     <style>
@@ -23,28 +23,28 @@
     <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
         <div class="container">
             <a class="navbar-brand d-flex align-items-center" href="/">
-                <span class="fs-4 brand-color">蝗ｳ髑・span>
-                <small class="text-muted ms-2">繧ｪ繝ｳ繝ｩ繧､繝ｳ蝗ｳ髑・small>
+                <span class="fs-4 brand-color">陜暦ｽｳ鬮代・span>
+                <small class="text-muted ms-2">郢ｧ・ｪ郢晢ｽｳ郢晢ｽｩ郢ｧ・､郢晢ｽｳ陜暦ｽｳ鬮代・small>
             </a>
             <div>
-                <a class="btn btn-sm btn-outline-secondary" href="/user">謌ｻ繧・a>
+                <a class="btn btn-sm btn-outline-secondary" href="/user">隰鯉ｽｻ郢ｧ繝ｻa>
             </div>
         </div>
     </nav>
 
     <div class="container py-4">
-        <h2 class="mb-4 brand-color">繝輔Ξ繝ｳ繝画､懃ｴ｢</h2>
+        <h2 class="mb-4 brand-color">郢晁ｼ釆樒ｹ晢ｽｳ郢晉判・､諛・ｽｴ・｢</h2>
         <div class="row justify-content-center">
             <div class="col-md-6">
                 <div class="card card-tilt shadow-sm border-0" style="border-radius: 1rem;">
                     <div class="card-body p-4">
                         <form method="POST">
                             <div class="mb-3">
-                                <label for="nickname" class="form-label">繝ｦ繝ｼ繧ｶ繝ｼ蜷阪〒讀懃ｴ｢</label>
+                                <label for="nickname" class="form-label">郢晢ｽｦ郢晢ｽｼ郢ｧ・ｶ郢晢ｽｼ陷ｷ髦ｪ縲定ｮ諛・ｽｴ・｢</label>
                                 <input type="text" class="form-control search-input" id="nickname" name="nickname"
-                                    required placeholder="繝ｦ繝ｼ繧ｶ繝ｼ蜷阪ｒ蜈･蜉・
+                                    required placeholder="郢晢ｽｦ郢晢ｽｼ郢ｧ・ｶ郢晢ｽｼ陷ｷ髦ｪ・定怦・･陷峨・
                             </div>
-                            <button type="submit" class="btn btn-danger w-100">讀懃ｴ｢</button>
+                            <button type="submit" class="btn btn-danger w-100">隶諛・ｽｴ・｢</button>
                         </form>
                     </div>
                 </div>
@@ -52,7 +52,7 @@
         </div>
 
         {% if users %}
-        <h3 class="mt-5 mb-3">讀懃ｴ｢邨先棡</h3>
+        <h3 class="mt-5 mb-3">隶諛・ｽｴ・｢驍ｨ蜈域｣｡</h3>
         <div class="row row-cols-1 row-cols-md-2 g-4">
             {% for user in users %}
             <div class="col">
@@ -62,19 +62,19 @@
                         {% set relation = user_relations[user.id] %}
                         <div id="friend_status_{{ user.id }}">
                             {% if relation.status == 'accepted' %}
-                            <span class="badge bg-success">繝輔Ξ繝ｳ繝・ヨ/span>
+                            <span class="badge bg-success">郢晁ｼ釆樒ｹ晢ｽｳ郢昴・繝ｨ/span>
                             {% elif relation.status == 'pending' %}
                             {% if relation.is_requester %}
                             <div class="d-flex gap-2 align-items-center">
-                                <span class="badge bg-warning">逕ｳ隲倶ｸｭ</span>
+                                <span class="badge bg-warning">騾包ｽｳ髫ｲ蛟ｶ・ｸ・ｭ</span>
                                 <button class="btn btn-outline-secondary btn-sm"
-                                    onclick="cancelFriend({{ user.id }})">逕ｳ隲玖ｧ｣髯､</button>
+                                    onclick="cancelFriend({{ user.id }})">騾包ｽｳ髫ｲ邇厄ｽｧ・｣鬮ｯ・､</button>
                             </div>
                             {% else %}
-                            <span class="badge bg-info">謇ｿ隱榊ｾ・■・ｽ・ｽ</span>
+                            <span class="badge bg-info">隰・ｽｿ髫ｱ讎奇ｽｾ繝ｻ笆繝ｻ・ｽ繝ｻ・ｽ</span>
                             {% endif %}
                             {% else %}
-                            <button class="btn btn-primary" onclick="requestFriend({{ user.id }})">繝輔Ξ繝ｳ繝臥筏隲・button>
+                            <button class="btn btn-primary" onclick="requestFriend({{ user.id }})">郢晁ｼ釆樒ｹ晢ｽｳ郢晁・遲城坿繝ｻbutton>
                             {% endif %}
                         </div>
                     </div>
@@ -87,7 +87,7 @@
 
     <footer class="footer text-center">
         <div class="container">
-            <small>ﾂｩ 2026 蝗ｳ髑鯛・ver.1.0</small>
+            <small>・ゑｽｩ 2026 陜暦ｽｳ鬮鷹ｯ崢繝ｻver.1.0</small>
         </div>
     </footer>
 
@@ -105,8 +105,8 @@
             if (data.success) {
                 document.getElementById(`friend_status_${userId}`).innerHTML = `
                     <div class="d-flex gap-2 align-items-center">
-                        <span class="badge bg-warning">逕ｳ隲倶ｸｭ</span>
-                        <button class="btn btn-outline-secondary btn-sm" onclick="cancelFriend(${userId})">逕ｳ隲玖ｧ｣髯､</button>
+                        <span class="badge bg-warning">騾包ｽｳ髫ｲ蛟ｶ・ｸ・ｭ</span>
+                        <button class="btn btn-outline-secondary btn-sm" onclick="cancelFriend(${userId})">騾包ｽｳ髫ｲ邇厄ｽｧ・｣鬮ｯ・､</button>
                     </div>`;
             }
         }
@@ -116,13 +116,13 @@
             const data = await res.json();
             if (data.success) {
                 document.getElementById(`friend_status_${userId}`).innerHTML = `
-                    <button class="btn btn-primary" onclick="requestFriend(${userId})">繝輔Ξ繝ｳ繝臥筏隲・button>`;
+                    <button class="btn btn-primary" onclick="requestFriend(${userId})">郢晁ｼ釆樒ｹ晢ｽｳ郢晁・遲城坿繝ｻbutton>`;
             }
         }
     </script>
 
 <script>
-    // 繝｡繝ｳ繝・リ繝ｳ繧ｹ繝｢繝ｼ繝臥屮隕厄ｼ・.3遘偵＃縺ｨ・・
+    // 郢晢ｽ｡郢晢ｽｳ郢昴・繝ｪ郢晢ｽｳ郢ｧ・ｹ郢晢ｽ｢郢晢ｽｼ郢晁・螻ｮ髫募私・ｼ繝ｻ.3驕伜・・・ｸｺ・ｨ繝ｻ繝ｻ
     (function() {
         const IS_MAINTENANCE_PAGE = window.location.pathname.includes('/maintenance');
         if (IS_MAINTENANCE_PAGE) return;

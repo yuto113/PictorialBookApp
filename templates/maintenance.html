@@ -29,9 +29,12 @@
         <div class="progress mb-3">
             <div class="progress-bar bg-danger progress-bar-striped progress-bar-animated" style="width: 100%"></div>
         </div>
-        {% if is_admin %}
+       {% if is_admin %}
         <hr class="mt-4">
         <p class="text-muted small">管理者メニュー</p>
+        {% else %}
+        <hr class="mt-4">
+        <a href="/maintenance/login" class="btn btn-outline-secondary btn-sm">管理者ログイン</a>
         <form method="POST" action="/admin/maintenance/off" class="mb-2">
             <button type="submit" class="btn btn-success">✅ メンテナンス解除</button>
         </form>

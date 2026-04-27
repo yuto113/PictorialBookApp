@@ -179,6 +179,20 @@ def health_check():
         return jsonify({'status': 'maintenance'}), 503
     return jsonify({'status': 'ok'}), 200
 
+@app.route('/maintenance/login', methods=['GET', 'POST'])
+def maintenance_login():
+    error = None
+    if request.method == 'POST':
+        user_id = request.form.get('id')
+        password = request.form.get('password')
+        user = User.query.get(int(user_id))
+        if user and user.id == 2:
+            if check_password_hash(user.password, password):
+                session['user_id'] = user.id
+                return redirect('/admin')
+        error = 'IDまたはパスワードが違います'
+    return render_template('maintenance_login.html', error=error)
+
 @app.route('/admin/maintenance/off', methods=['POST'])
 def maintenance_off():
     global MAINTENANCE_MODE
