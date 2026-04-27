@@ -2,7 +2,7 @@ import os
 os.makedirs('/app/instance', exist_ok=True)
 from flask import Flask, render_template, request, redirect, session, flash, jsonify
 import traceback
-from models import User, db, Date, Like, Chat, Friend, Feedback, School, SchoolMember, SchoolClass, ClassMember, SchoolMessage, SchoolMessageReply, ClassChat, ClassChatReply, ClassTeacher, Assignment, AssignmentSubmission, AssignmentChat, AssignmentChatReply, AppSetting, Review
+from models import User, db, Date, Like, Chat, Friend, Feedback, School, SchoolMember, SchoolClass, ClassMember, SchoolMessage, SchoolMessageReply, ClassChat, ClassChatReply, ClassTeacher, Assignment, AssignmentSubmission, AssignmentChat, AssignmentChatReply, AppSetting, Review, AccessLog
 from sqlalchemy import or_
 from datetime import datetime
 from zoneinfo import ZoneInfo
@@ -32,18 +32,30 @@ MAINTENANCE_MODE = False
 def check_maintenance():
     global MAINTENANCE_MODE
     if MAINTENANCE_MODE:
-        # 管理者（ID=2）は通過させる
         user_id = session.get('user_id')
         if user_id == 2:
             return None
-        # APIは503を返す
-        # APIは503を返す
         if request.path.startswith('/api/'):
             return jsonify({'error': 'maintenance'}), 503
-        # メンテナンス関連ページは通過させる
         if request.path in ['/maintenance/login', '/admin/maintenance/off']:
             return None
-        return render_template('maintenance.html', is_admin=False), 503 
+        return render_template('maintenance.html', is_admin=False), 503
+
+@app.before_request
+def log_access():
+    # 静的ファイルとAPIはログしない
+    if request.path.startswith('/static/') or request.path.startswith('/api/'):
+        return
+    try:
+        log = AccessLog(
+            user_id=session.get('user_id'),
+            path=request.path,
+            ip_address=request.remote_addr
+        )
+        db.session.add(log)
+        db.session.commit()
+    except:
+        db.session.rollback()
 
 @app.errorhandler(500)
 def internal_error(e):
@@ -79,11 +91,23 @@ def maintenance_testing():
         return redirect('/login')
     return render_template('maintenance_test.html')
 
+@app.route('/admin/access_logs')
+def access_logs():
+    user_id = session.get('user_id')
+    if user_id != 2:
+        return redirect('/login')
+    logs = AccessLog.query.order_by(AccessLog.accessed_at.desc()).limit(500).all()
+    return render_template('access_logs.html', logs=logs)
+
 @app.route('/api/maintenance/run_tests')
 def run_tests():
     user_id = session.get('user_id')
     if not user_id or user_id != 2:
         return jsonify({'error': 'unauthorized'}), 401
+    # リファラチェック（外部からの直接アクセスを防ぐ）
+    referer = request.headers.get('Referer', '')
+    if not referer or request.host not in referer:
+        return jsonify({'error': 'forbidden'}), 403
     
     results = []
     all_ok = True

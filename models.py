@@ -45,6 +45,7 @@ class Date(db.Model):
     school_id = db.Column(db.Integer, db.ForeignKey('school.id'), nullable=True)
 
     knowledge = db.Column(db.Text, nullable=True)
+    created_at = db.Column(db.DateTime(timezone=True), default=func.now())
     # リレーションシップ設定
     user = db.relationship(
         'User', 
@@ -288,6 +289,16 @@ class AppSetting(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     key = db.Column(db.String(50), unique=True, nullable=False)
     value = db.Column(db.Text, nullable=True)
+
+class AccessLog(db.Model):
+    """アクセスログ"""
+    __tablename__ = 'access_log'
+    
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    user_id = db.Column(db.Integer, nullable=True)  # 未ログインはNone
+    path = db.Column(db.Text, nullable=False)
+    accessed_at = db.Column(db.DateTime(timezone=True), default=func.now())
+    ip_address = db.Column(db.Text, nullable=True)
 
 class Friend(db.Model):
     __tablename__ = 'friends'
