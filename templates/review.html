@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>繝ｬ繝薙Η繝ｼ謚慕ｨｿ</title>
+    <title>レビュー投稿</title>
     <meta property="og:title" content="図鑑 - みんなで作るオンライン図鑑">
     <meta property="og:description" content="見つけた植物・動物の写真と情報をみんなで共有！あなただけの図鑑を作ろう！">
     <meta property="og:type" content="website">
@@ -19,29 +19,11 @@
             background: linear-gradient(135deg, #fff7f0 0%, #f0f9ff 100%);
             color: #333;
         }
-
-        .brand-color {
-            color: #ff6b6b;
-        }
-
-        .footer {
-            color: #666;
-            padding: 1rem 0;
-        }
-
-        .star-rating {
-            font-size: 2rem;
-            cursor: pointer;
-        }
-
-        .star-rating .star {
-            color: #ddd;
-            transition: color 0.2s;
-        }
-
-        .star-rating .star.active {
-            color: #ffc107;
-        }
+        .brand-color { color: #ff6b6b; }
+        .footer { color: #666; padding: 1rem 0; }
+        .star-rating { font-size: 2rem; cursor: pointer; }
+        .star-rating .star { color: #ddd; transition: color 0.2s; }
+        .star-rating .star.active { color: #ffc107; }
     </style>
 </head>
 
@@ -49,10 +31,10 @@
     <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
         <div class="container">
             <a class="navbar-brand d-flex align-items-center" href="/user">
-                <span class="fs-4 brand-color">蝗ｳ髑・/span>
-                <small class="text-muted ms-2">繝ｬ繝薙Η繝ｼ謚慕ｨｿ</small>
+                <span class="fs-4 brand-color">図鑑</span>
+                <small class="text-muted ms-2">レビュー投稿</small>
             </a>
-            <a class="btn btn-sm btn-outline-secondary" href="/user">謌ｻ繧・/a>
+            <a class="btn btn-sm btn-outline-secondary" href="/user">戻る</a>
         </div>
     </nav>
 
@@ -65,36 +47,36 @@
         {% endif %}
         {% endwith %}
 
-        <h2 class="mb-4 brand-color">箝・繝ｬ繝薙Η繝ｼ繧呈兜遞ｿ</h2>
-        <p class="text-muted">蝗ｳ髑代ｒ菴ｿ縺｣縺滓─諠ｳ繧呈蕗縺医※縺上□縺輔＞・∵価隱阪＆繧後◆繧峨ヨ繝・・繝壹・繧ｸ縺ｫ陦ｨ遉ｺ縺輔ｌ縺ｾ縺吶・/p>
+        <h2 class="mb-4 brand-color">⭐ レビューを投稿</h2>
+        <p class="text-muted">図鑑を使った感想を教えてください。承認されたらトップページに表示されます。</p>
 
         <div class="card shadow-sm border-0 p-4 mb-4" style="border-radius:1rem;">
             <form method="POST">
                 <div class="mb-3">
-                    <label class="form-label fw-bold">縺ゅ↑縺溘・遶句ｴ・井ｻｻ諢擾ｼ・/label>
-                    <input type="text" name="role_label" class="form-control" placeholder="萓具ｼ壼ｰ丞ｭｦ逕溘∽ｸｭ蟄ｦ逕溘∽ｿ晁ｭｷ閠・∝・逕溘↑縺ｩ">
+                    <label class="form-label fw-bold">あなたの立場（任意）</label>
+                    <input type="text" name="role_label" class="form-control" placeholder="例：小学生、中学生、先生、保護者など">
                 </div>
                 <div class="mb-3">
-                    <label class="form-label fw-bold">譏溯ｩ穂ｾ｡</label>
+                    <label class="form-label fw-bold">満足度</label>
                     <div class="star-rating">
-                        <span class="star" data-value="1">笘・/span>
-                        <span class="star" data-value="2">笘・/span>
-                        <span class="star" data-value="3">笘・/span>
-                        <span class="star" data-value="4">笘・/span>
-                        <span class="star" data-value="5">笘・/span>
+                        <span class="star" data-value="1">★</span>
+                        <span class="star" data-value="2">★</span>
+                        <span class="star" data-value="3">★</span>
+                        <span class="star" data-value="4">★</span>
+                        <span class="star" data-value="5">★</span>
                     </div>
                     <input type="hidden" name="stars" id="stars_input" value="5">
                 </div>
                 <div class="mb-3">
-                    <label class="form-label fw-bold">繝｡繝・そ繝ｼ繧ｸ</label>
+                    <label class="form-label fw-bold">メッセージ</label>
                     <textarea name="message" class="form-control" rows="4" required
-                        placeholder="菴ｿ縺｣縺ｦ縺ｿ縺滓─諠ｳ繧呈蕗縺医※縺上□縺輔＞..."></textarea>
+                        placeholder="使ってみた感想を教えてください..."></textarea>
                 </div>
-                <button type="submit" class="btn btn-danger w-100">謚慕ｨｿ縺吶ｋ</button>
+                <button type="submit" class="btn btn-danger w-100">投稿する</button>
             </form>
         </div>
 
-        <h4 class="brand-color mb-3">糖 閾ｪ蛻・・謚慕ｨｿ縺励◆繝ｬ繝薙Η繝ｼ</h4>
+        <h4 class="brand-color mb-3">📄 自分が投稿したレビュー</h4>
         {% for review in my_reviews %}
         <div class="card shadow-sm border-0 p-3 mb-2" style="border-radius:1rem;">
             <div class="d-flex justify-content-between align-items-start">
@@ -105,21 +87,21 @@
                 </div>
                 <div>
                     {% if review.is_approved == 1 %}
-                    <span class="badge bg-success">謇ｿ隱肴ｸ医∩</span>
+                    <span class="badge bg-success">承認済み</span>
                     {% else %}
-                    <span class="badge bg-warning text-dark">謇ｿ隱榊ｾ・■</span>
+                    <span class="badge bg-warning text-dark">承認待ち</span>
                     {% endif %}
                 </div>
             </div>
         </div>
         {% else %}
-        <p class="text-muted">縺ｾ縺謚慕ｨｿ縺励※縺・∪縺帙ｓ縲・/p>
+        <p class="text-muted">まだ投稿していません。</p>
         {% endfor %}
     </div>
 
     <footer class="footer text-center">
         <div class="container">
-            <small>ﾂｩ {{ now().year }} 蝗ｳ髑・窶・{{ verj }}</small>
+            <small>© {{ now().year }} 図鑑 — {{ verj }}</small>
         </div>
     </footer>
 
@@ -133,28 +115,23 @@
                 });
             });
         });
-        // 繝・ヵ繧ｩ繝ｫ繝医〒5縺､蜈ｨ驛ｨ蜈峨ｉ縺帙ｋ
+        // デフォルトで5つ全部光らせる
         document.querySelectorAll('.star').forEach(s => s.classList.add('active'));
     </script>
 
-<script>
-    // メンテナンスモード監視（0.3秒ごと）
+    <script>
     (function() {
         const IS_MAINTENANCE_PAGE = window.location.pathname.includes('/maintenance');
         if (IS_MAINTENANCE_PAGE) return;
-        
         async function checkMaintenance() {
             try {
                 const res = await fetch('/api/health', { cache: 'no-store' });
-                if (!res.ok) {
-                    window.location.href = '/maintenance/current';
-                }
+                if (!res.ok) { window.location.href = '/maintenance/current'; }
             } catch(e) {}
         }
         setInterval(checkMaintenance, 300);
     })();
-</script>
-
+    </script>
 </body>
 
 </html>
