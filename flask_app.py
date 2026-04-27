@@ -37,8 +37,12 @@ def check_maintenance():
         if user_id == 2:
             return None
         # APIは503を返す
+        # APIは503を返す
         if request.path.startswith('/api/'):
             return jsonify({'error': 'maintenance'}), 503
+        # メンテナンス関連ページは通過させる
+        if request.path in ['/maintenance/login', '/admin/maintenance/off']:
+            return None
         return render_template('maintenance.html', is_admin=False), 503 
 
 @app.errorhandler(500)
