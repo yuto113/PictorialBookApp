@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>郢ｧ・ｪ郢晢ｽｳ郢晢ｽｩ郢ｧ・､郢晢ｽｳ陜暦ｽｳ鬮代・- home</title>
+    <title>オンライン図鑑 - home</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/css/lightbox.css" rel="stylesheet">
@@ -69,11 +69,11 @@
     <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
         <div class="container">
             <a class="navbar-brand d-flex align-items-center" href="/">
-                <span class="fs-4 brand-color">陜暦ｽｳ鬮代・/span>
+                <span class="fs-4 brand-color">図鑑</span>
                 {% if is_school_user %}
-                <small class="text-muted ms-2">{{ my_school.name if my_school else '郢ｧ・ｪ郢晢ｽｳ郢晢ｽｩ郢ｧ・､郢晢ｽｳ陜暦ｽｳ鬮代・ }}</small>
+                <small class="text-muted ms-2">{{ my_school.name if my_school else 'オンライン図鑑' }}</small>
                 {% else %}
-                <small class="text-muted ms-2">郢ｧ・ｪ郢晢ｽｳ郢晢ｽｩ郢ｧ・､郢晢ｽｳ陜暦ｽｳ鬮代・/small>
+                <small class="text-muted ms-2">オンライン図鑑</small>
                 {% endif %}
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
@@ -88,50 +88,42 @@
                     <img src="{{ url_for('static', filename='icons/default.png') }}" width="40" height="40"
                         class="rounded-circle border" style="object-fit: cover;">
                     {% endif %}
-                    <span>郢ｧ蛹ｻ竕ｧ邵ｺ阮吮落邵ｲ繝ｻa href="/profile/{{ user.id }}" class="text-decoration-none text-dark"><strong>{{
-                                user.name }}</strong></a>邵ｺ霈費ｽ・/span>
+                    <span>ようこそ、<a href="/profile/{{ user.id }}" class="text-decoration-none text-dark"><strong>{{
+                                user.name }}</strong></a>さん</span>
 
                     {% if user.role in ['teacher', 'school_admin'] %}
                     {% if my_school %}
                     <a class="btn btn-sm btn-success" href="/school/dashboard">{{ my_school.name }}</a>
                     {% else %}
-                    <a class="btn btn-sm btn-outline-success" href="/school/join">陝・ｽｦ隴ｬ・｡邵ｺ・ｫ陷ｿ繧・・</a>
+                    <a class="btn btn-sm btn-outline-success" href="/school/join">学校に参加</a>
                     {% endif %}
                     {% endif %}
 
                     {% if user.role in ['teacher', 'school_admin', 'student'] %}
-                    <a class="btn btn-sm btn-outline-success" href="/school/mypage">郢晄ｧｭ縺・ｹ晏｣ｹ繝ｻ郢ｧ・ｸ</a>
-                    <a class="btn btn-sm btn-outline-success" href="/assignments">﨟樒ｵｱ 髫ｱ・ｲ鬯倥・/a>
+                    <a class="btn btn-sm btn-outline-success" href="/school/mypage">マイページ</a>
+                    <a class="btn btn-sm btn-outline-success" href="/assignments">📚 課題</a>
                     {% endif %}
 
-                    <a class="btn btn-sm btn-outline-primary" href="/upload">郢ｧ・｢郢昴・繝ｻ郢晢ｽｭ郢晢ｽｼ郢昴・/a>
-                    <a class="btn btn-sm btn-outline-primary" href="/map">﨟樔ｺｮ繝ｻ繝ｻ陜ｨ・ｰ陜暦ｽｳ</a>
+                    <a class="btn btn-sm btn-outline-primary" href="/upload">アップロード</a>
+                    <a class="btn btn-sm btn-outline-primary" href="/map">🗺️ 地図図鑑</a>
 
                     {% if not is_school_user %}
-                    <a class="btn btn-sm btn-outline-info" href="/friend_search">郢晁ｼ釆樒ｹ晢ｽｳ郢晉判・､諛・ｽｴ・｢</a>
-                    <a class="btn btn-sm btn-outline-info" href="/friends">郢晁ｼ釆樒ｹ晢ｽｳ郢晏ｳｨﾎ懃ｹｧ・ｹ郢昴・/a>
+                    <a class="btn btn-sm btn-outline-info" href="/friend_search">フレンド検索</a>
+                    <a class="btn btn-sm btn-outline-info" href="/friends">フレンドリスト</a>
                     {% endif %}
-                    <a class="btn btn-sm btn-outline-info" href="/help">隨ｶ繝ｻ郢晏･ﾎ晉ｹ昴・/a>
-                    <a class="btn btn-sm btn-outline-warning" href="/feedback">郢晁ｼ斐≦郢晢ｽｼ郢晏ｳｨ繝ｰ郢昴・縺・/a>
-                    <a class="btn btn-sm btn-outline-warning" href="/review">邂昴・郢晢ｽｬ郢晁侭ﾎ礼ｹ晢ｽｼ</a>
+                    <a class="btn btn-sm btn-outline-info" href="/help">❓ ヘルプ</a>
+                    <a class="btn btn-sm btn-outline-warning" href="/feedback">フィードバック</a>
+                    <a class="btn btn-sm btn-outline-warning" href="/review">⭐ レビュー</a>
                     {%- if user.id == 2 %}
-                    <a class="btn btn-sm btn-outline-danger" href="/admin">隨槫遜・ｸ繝ｻ驍ゑｽ｡騾・・/a>
-                    <!-- <form method="POST" action="/admin/maintenance/off" class="d-inline">
-                        <button type="submit" class="btn btn-sm btn-outline-success">﨟櫁ｌ 郢晢ｽ｡郢晢ｽｳ郢昴・繝ｪ郢晢ｽｳ郢ｧ・ｹ髫暦ｽ｣鬮ｯ・､</button>
-                    </form> -->
+                    <a class="btn btn-sm btn-outline-danger" href="/admin">⚙️ 管理</a>
                     <form method="POST" action="/admin/maintenance/test" class="d-inline">
                         <button type="submit" class="btn btn-sm btn-outline-warning"
-                            onclick="return confirm('郢ｧ・ｷ郢ｧ・ｹ郢昴・ﾎ堤ｹ昴・縺帷ｹ晏現・帝ｫ｢蜿･・ｧ荵晢ｼ邵ｺ・ｾ邵ｺ蜷ｶﾂｰ繝ｻ貊会ｽｸﾂ隴弱ｉ蝎ｪ邵ｺ・ｫ郢晢ｽ｡郢晢ｽｳ郢昴・繝ｪ郢晢ｽｳ郢ｧ・ｹ闕ｳ・ｭ邵ｺ・ｫ邵ｺ・ｪ郢ｧ鄙ｫ竏ｪ邵ｺ蜷ｶﾂ繝ｻ)">
-                            﨟櫁ｌ 郢ｧ・ｷ郢ｧ・ｹ郢昴・ﾎ堤ｹ昴・縺帷ｹ昴・
+                            onclick="return confirm('システムテストを開始しますか？一時的にメンテナンス中になります。')">
+                            🔍 システムテスト
                         </button>
                     </form>
-                    <!-- <form method="POST" action="/admin/maintenance/off" class="d-inline">
-                        <button type="submit" class="btn btn-sm btn-outline-success">
-                            隨ｨ繝ｻ郢晢ｽ｡郢晢ｽｳ郢昴・繝ｪ郢晢ｽｳ郢ｧ・ｹOFF
-                        </button>
-                    </form> -->
                     {%- endif %}
-                    <a class="btn btn-sm btn-outline-secondary" href="/logout">郢晢ｽｭ郢ｧ・ｰ郢ｧ・｢郢ｧ・ｦ郢昴・/a>
+                    <a class="btn btn-sm btn-outline-secondary" href="/logout">ログアウト</a>
                 </div>
             </div>
         </div>
@@ -152,11 +144,11 @@
         <div class="row mb-3 align-items-center">
             <div class="col-md-6">
                 <form class="d-flex gap-2" method="get">
-                    <input class="form-control me-2 search-input" type="search" placeholder="陷ｷ讎顔√邵ｺ・ｧ隶諛・ｽｴ・｢" aria-label="Search"
+                    <input class="form-control me-2 search-input" type="search" placeholder="名前で検索" aria-label="Search"
                         id="queryname" name="search">
                     <button class="btn {{ 'btn-success' if is_school_user else 'btn-danger' }}"
-                        type="submit">隶諛・ｽｴ・｢</button>
-                    <a href="/user" class="btn btn-outline-secondary">郢ｧ・ｯ郢晢ｽｪ郢ｧ・｢</a>
+                        type="submit">検索</button>
+                    <a href="/user" class="btn btn-outline-secondary">クリア</a>
                 </form>
             </div>
             {% if not is_school_user %}
@@ -165,17 +157,17 @@
                     <div class="form-check form-check-inline">
                         <input class="form-check-input" type="checkbox" id="ev" name="ev" onchange="this.form.submit()"
                             {% if filter_ev %}checked{% endif %}>
-                        <label class="form-check-label" for="ev">邵ｺ・ｿ郢ｧ阮吮・邵ｺ譴ｧ蜈憺◇・ｿ邵ｺ蜉ｱ笳・摎・ｳ鬮代・/label>
+                        <label class="form-check-label" for="ev">みんなが投稿した図鑑</label>
                     </div>
                     <div class="form-check form-check-inline">
                         <input class="form-check-input" type="checkbox" id="ki" name="ki" onchange="this.form.submit()"
                             {% if filter_ki %}checked{% endif %}>
-                        <label class="form-check-label" for="ki">陜難ｽｺ隴幢ｽｬ陜暦ｽｳ鬮代・/label>
+                        <label class="form-check-label" for="ki">基本図鑑</label>
                     </div>
                     <div class="form-check form-check-inline">
                         <select class="form-select form-select-sm d-inline-block w-auto" name="friend"
                             onchange="this.form.submit()">
-                            <option value="">郢晁ｼ釆樒ｹ晢ｽｳ郢昴・/option>
+                            <option value="">フレンド</option>
                             {% for friend in friends %}
                             <option value="{{ friend.id }}" {% if filter_friend==friend.id|string %}selected{% endif %}>
                                 {{ friend.name }}</option>
@@ -189,21 +181,21 @@
 
         {% if is_school_user and my_school %}
         <div class="d-flex align-items-center gap-3 mb-3 p-3 bg-white rounded shadow-sm">
-            <label class="fw-bold text-success mb-0">﨟樊政 髯ｦ・ｨ驕会ｽｺ陋ｻ繝ｻ蟠帙・繝ｻ/label>
+            <label class="fw-bold text-success mb-0">📋 表示切替</label>
             <select id="class_selector" class="form-select w-auto" onchange="switchClass(this.value)">
-                <option value="school">﨟槫ｰ・陝・ｽｦ隴ｬ・｡陷茨ｽｨ闖ｴ繝ｻ/option>
+                <option value="school">🏫 学校全体</option>
                 {% for cls in my_classes %}
-                <option value="{{ cls.id }}">﨟樒ｭ・{{ cls.name }}</option>
+                <option value="{{ cls.id }}">📝 {{ cls.name }}</option>
                 {% endfor %}
             </select>
             <div id="message_btn">
-                <a href="/school/messages" class="btn btn-success btn-sm">﨟櫁ｨ・郢晢ｽ｡郢昴・縺晉ｹ晢ｽｼ郢ｧ・ｸ</a>
+                <a href="/school/messages" class="btn btn-success btn-sm">💬 メッセージ</a>
             </div>
         </div>
         {% endif %}
 
         {% if is_school_user and my_assignments %}
-        <h4 class="mb-3 brand-color">﨟樒ｵｱ 髫ｱ・ｲ鬯倥・/h4>
+        <h4 class="mb-3 brand-color">📚 課題</h4>
         <div class="row row-cols-1 row-cols-md-3 g-3 mb-4">
             {% for assignment in my_assignments %}
             {% set deadline_naive = assignment.deadline.replace(tzinfo=None) %}
@@ -213,14 +205,14 @@
                     style="border-radius:1rem; border-left: 4px solid {% if is_closed or is_passed %}#6c757d{% elif days_left <= 1 %}#dc3545{% else %}#28a745{% endif %} !important;">
                     <div class="card-body p-3">
                         <div class="d-flex justify-content-between align-items-start">
-                            <h6 class="fw-bold mb-1">﨟樒ｵｱ {{ assignment.title }}</h6>
+                            <h6 class="fw-bold mb-1">📚 {{ assignment.title }}</h6>
                             {% if is_closed %}
-                            <span class="badge bg-dark">驍ｱ・ｰ郢ｧ竏昴・郢ｧ鬆托ｽｸ蛹ｻ竏ｩ</span>
+                            <span class="badge bg-dark">提出締め切り済み</span>
                             {% elif is_passed %}
-                            <span class="badge bg-secondary">隴帶ｻ・応陋ｻ繝ｻ・・/span>
-                            {% elif days_left <= 1 %} <span class="badge bg-danger">郢ｧ繧・鴬邵ｺ蜷ｶ・・こ・ｰ郢ｧ竏昴・郢ｧ繝ｻ/span>
+                            <span class="badge bg-secondary">期限切れ</span>
+                            {% elif days_left <= 1 %} <span class="badge bg-danger">もうすぐ締切</span>
                                 {% else %}
-                                <span class="badge bg-success">陷ｿ蠍ｺ・ｻ蛟・ｽｸ・ｭ</span>
+                                <span class="badge bg-success">受付中</span>
                                 {% endif %}
                         </div>
                         <p class="text-muted small mb-1">{{ assignment.school_class.name }}</p>
@@ -231,8 +223,8 @@
                         </p>
                         {% endif %}
                         <div class="d-flex justify-content-between align-items-center">
-                            <small class="text-muted">驍ｱ・ｰ陋ｻ繝ｻ {{ assignment.deadline.strftime('%m/%d %H:%M') }}</small>
-                            <a href="/assignments/{{ assignment.id }}" class="btn btn-sm btn-outline-success">髫ｧ・ｳ驍擾ｽｰ</a>
+                            <small class="text-muted">締切: {{ assignment.deadline.strftime('%m/%d %H:%M') }}</small>
+                            <a href="/assignments/{{ assignment.id }}" class="btn btn-sm btn-outline-success">詳細</a>
                         </div>
                     </div>
                 </div>
@@ -241,7 +233,7 @@
     </div>
     {% endif %}
 
-    <h2 class="mb-4">邵ｺ・ｿ郢ｧ阮吮・邵ｺ・ｮ郢ｧ・ｳ郢晢ｽｬ郢ｧ・ｯ郢ｧ・ｷ郢晢ｽｧ郢晢ｽｳ</h2>
+    <h2 class="mb-4">みんなのコレクション</h2>
 
     <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
         {% for date in dates %}
@@ -262,44 +254,44 @@
                 <div class="card-body">
                     <h5 class="card-title mb-1">{{ date.name }}</h5>
                     {%- if date.subject %}
-                    <p class="card-text text-muted small mb-1">驕橸ｽｮ鬯倥・ {{ date.subject }}</p>
+                    <p class="card-text text-muted small mb-1">種類: {{ date.subject }}</p>
                     {%- endif %}
                     <p class="card-text text-muted small mb-1"
                         style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
-                        髫穂ｹ昶命邵ｺ莉｣笳・撻・ｴ隰・: {{ date.place }}</p>
+                        見つけた場所: {{ date.place }}</p>
                     <p class="card-text text-muted small mb-1"
                         style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
-                        髫ｧ・ｳ邵ｺ蜉ｱ・樣坡・ｬ隴上・ {{ date.explanatorytext }}</p>
+                        詳しい説明: {{ date.explanatorytext }}</p>
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
                             {% if date.user_id == 2 %}
-                            <span class="badge bg-warning text-dark">陷茨ｽｬ陟代・/span>
+                            <span class="badge bg-warning text-dark">公式</span>
                             {% else %}
                             <p class="text-muted mb-2">
-                                隰壽・・ｨ・ｿ髢繝ｻ
+                                投稿者:
                                 <a href="/profile/{{ date.user_id }}" class="text-decoration-none fw-bold">
                                     {{ date.user.name }}
                                 </a>
                             </p>
                             {% endif %}
-                            <span class="badge bg-info text-dark">邵ｺ繝ｻ・樒ｸｺ・ｭ: {{ date.goodpoint }}</span>
-                            <span class="badge bg-info text-dark">郢ｧ・ｳ郢晢ｽ｡郢晢ｽｳ郢昴・ {{ date.chat_count }}</span>
+                            <span class="badge bg-info text-dark">いいね: {{ date.goodpoint }}</span>
+                            <span class="badge bg-info text-dark">コメント: {{ date.chat_count }}</span>
                         </div>
                         <div>
                             <a href="/like/{{ date.id }}"
                                 class="btn btn-sm {% if date.is_liked %}btn-danger{% else %}btn-outline-danger{% endif %} me-1">{%
-                                if date.is_liked %}邵ｺ繝ｻ・樒ｸｺ・ｭ髫暦ｽ｣鬮ｯ・､{% else %}邵ｺ繝ｻ・樒ｸｺ・ｭ{% endif %}</a>
-                            <a href="/date/{{ date.id }}" class="btn btn-sm btn-outline-primary me-1">髫ｧ・ｳ驍擾ｽｰ</a>
+                                if date.is_liked %}いいね解除{% else %}いいね{% endif %}</a>
+                            <a href="/date/{{ date.id }}" class="btn btn-sm btn-outline-primary me-1">詳細</a>
                             {% if session.get('is_admin') == 1 %}
                             <a href="/toggle_hide/{{ date.id }}"
                                 class="btn btn-sm {{ 'btn-warning' if date.is_hidden == 1 else 'btn-outline-warning' }} me-1">
-                                {{ '﨟樊掠繝ｻ繝ｻ髯ｦ・ｨ驕会ｽｺ闕ｳ・ｭ' if date.is_hidden == 0 else '﨟槫穐 鬮ｱ讚・ｽ｡・ｨ驕会ｽｺ闕ｳ・ｭ' }}
+                                {{ '👁 表示中' if date.is_hidden == 0 else '🚫 非表示中' }}
                             </a>
                             {% endif %}
                             {% if date.user_id == session.get('user_id') or session.get('is_admin') == 1 %}
                             <form method="post" action="/delete_date/{{ date.id }}" class="d-inline">
                                 <button type="submit" class="btn btn-sm btn-outline-danger"
-                                    onclick="return confirm('{{ date.name }}邵ｺ・ｮ郢昴・繝ｻ郢ｧ・ｿ郢ｧ蜻域た陟冶侭竊楢ｱｸ蛹ｻ・邵ｺ・ｾ邵ｺ蜷ｶﾂｰ繝ｻ繝ｻ)">陷台ｼ∝求</button>
+                                    onclick="return confirm('{{ date.name }}のデータを本当に消しますか？')">削除</button>
                             </form>
                             {% endif %}
                         </div>
@@ -311,18 +303,18 @@
     </div>
 
     {% if dates|length == 0 %}
-    <div class="alert alert-info mt-4">髫ｧ・ｲ陟冶侭笘・ｹｧ蜿･蟲咎ｫ台ｻ｣窶ｲ髫穂ｹ昶命邵ｺ荵晢ｽ顔ｸｺ・ｾ邵ｺ蟶呻ｽ鍋ｸｺ・ｧ邵ｺ蜉ｱ笳・ｸｲ繧育悛邵ｺ蜉ｱ・･隰壽・・ｨ・ｿ邵ｺ蜉ｱ窶ｻ邵ｺ・ｿ邵ｺ・ｾ邵ｺ蜉ｱ・・ｸｺ繝ｻ・ｼ繝ｻ/div>
+    <div class="alert alert-info mt-4">該当する図鑑が見つかりませんでした。新しく投稿してみましょう！</div>
     {% endif %}
     </div>
 
     <footer class="footer text-center">
         <div class="container">
             <div class="mb-2">
-                <a href="/help" class="text-decoration-none text-muted me-3">隨ｶ繝ｻ郢晏･ﾎ晉ｹ昴・/a>
-                <a href="/terms" class="text-decoration-none text-muted me-3">﨟樒ｳ・陋ｻ・ｩ騾包ｽｨ髫募・・ｴ繝ｻ/a>
-                <a href="/privacy" class="text-decoration-none text-muted">﨟樊沛 郢晏干ﾎ帷ｹｧ・､郢晁・縺咏ｹ晢ｽｼ郢晄亢ﾎ懃ｹｧ・ｷ郢晢ｽｼ</a>
+                <a href="/help" class="text-decoration-none text-muted me-3">❓ ヘルプ</a>
+                <a href="/terms" class="text-decoration-none text-muted me-3">📄 利用規約</a>
+                <a href="/privacy" class="text-decoration-none text-muted">🔒 プライバシーポリシー</a>
             </div>
-            <small>・ゑｽｩ {{ now().year }} 陜暦ｽｳ鬮代・遯ｶ繝ｻ{{ verj }}</small>
+            <small>© {{ now().year }} 図鑑 — {{ verj }}</small>
         </div>
     </footer>
 
@@ -330,9 +322,9 @@
         function switchClass(value) {
             const msgBtn = document.getElementById('message_btn');
             if (value === 'school') {
-                msgBtn.innerHTML = '<a href="/school/messages" class="btn btn-success btn-sm">﨟櫁ｨ・郢晢ｽ｡郢昴・縺晉ｹ晢ｽｼ郢ｧ・ｸ</a>';
+                msgBtn.innerHTML = '<a href="/school/messages" class="btn btn-success btn-sm">💬 メッセージ</a>';
             } else {
-                msgBtn.innerHTML = `<a href="/school/class_chat/${value}" class="btn btn-success btn-sm">﨟樒伴 郢ｧ・ｯ郢晢ｽｩ郢ｧ・ｹ郢昶・ﾎ慕ｹ昴・繝ｨ</a>`;
+                msgBtn.innerHTML = `<a href="/school/class_chat/${value}" class="btn btn-success btn-sm">🏫 クラスチャット</a>`;
             }
         }
     </script>
@@ -342,55 +334,63 @@
         crossorigin="anonymous"></script>
     <script src="/static/js/index.js"></script>
 
-<div id="maintenance_overlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(255,247,240,0.97); z-index:99999; display:none; align-items:center; justify-content:center; flex-direction:column;">
-    <div style="text-align:center; background:white; border-radius:2rem; padding:3rem; box-shadow:0 10px 40px rgba(0,0,0,0.1); max-width:400px;">
-        <div style="font-size:4rem; animation:spin 2s linear infinite; display:inline-block;">﨟櫁ｌ</div>
-        <h2 style="color:#ff6b6b; margin-top:1rem;">郢晢ｽ｡郢晢ｽｳ郢昴・繝ｪ郢晢ｽｳ郢ｧ・ｹ闕ｳ・ｭ</h2>
-        <p style="color:#666;">邵ｺ貅倪味邵ｺ繝ｻ竏ｪ郢ｧ・ｷ郢ｧ・ｹ郢昴・ﾎ堤ｸｺ・ｮ郢晢ｽ｡郢晢ｽｳ郢昴・繝ｪ郢晢ｽｳ郢ｧ・ｹ郢ｧ螳夲ｽ｡蠕娯夢邵ｺ・ｦ邵ｺ繝ｻ竏ｪ邵ｺ蜷ｶﾂ繝ｻ/p>
-        <div style="background:#fff3cd; border-radius:0.5rem; padding:0.5rem 1rem; font-size:0.85rem;">
-            <span id="maintenance_check_count">陟包ｽｩ隴鯉ｽｧ驕抵ｽｺ髫ｱ蝣ｺ・ｸ・ｭ...</span>
+    <div id="maintenance_overlay"
+        style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(255,247,240,0.97); z-index:99999; display:none; align-items:center; justify-content:center; flex-direction:column;">
+        <div
+            style="text-align:center; background:white; border-radius:2rem; padding:3rem; box-shadow:0 10px 40px rgba(0,0,0,0.1); max-width:400px;">
+            <div style="font-size:4rem; animation:spin 2s linear infinite; display:inline-block;">🔧</div>
+            <h2 style="color:#ff6b6b; margin-top:1rem;">メンテナンス中</h2>
+            <p style="color:#666;">ただいまシステムのメンテナンスを行っています。</p>
+            <div style="background:#fff3cd; border-radius:0.5rem; padding:0.5rem 1rem; font-size:0.85rem;">
+                <span id="maintenance_check_count">復旧確認中...</span>
+            </div>
         </div>
     </div>
-</div>
-<style>
-@keyframes spin { 0% { transform:rotate(0deg); } 100% { transform:rotate(360deg); } }
-</style>
-<script>
-(function() {
-    const IS_MAINTENANCE_PAGE = window.location.pathname.startsWith('/maintenance');
-    if (IS_MAINTENANCE_PAGE) return;
-    
-    const overlay = document.getElementById('maintenance_overlay');
-    let isMaintenance = false;
-    let checkCount = 0;
-
-    async function checkMaintenance() {
-        try {
-            const adminRes = await fetch('/api/is_admin', { cache: 'no-store' });
-            const adminData = await adminRes.json();
-            if (adminData.is_admin) { overlay.style.display = 'none'; return; }
-            const res = await fetch('/api/health', { cache: 'no-store' });
-            if (!res.ok) {
-                // 郢晢ｽ｡郢晢ｽｳ郢昴・繝ｪ郢晢ｽｳ郢ｧ・ｹ闕ｳ・ｭ 遶翫・郢ｧ・ｪ郢晢ｽｼ郢晁・繝ｻ郢晢ｽｬ郢ｧ・､髯ｦ・ｨ驕会ｽｺ
-                if (!isMaintenance) {
-                    isMaintenance = true;
-                    overlay.style.display = 'flex';
-                }
-                checkCount++;
-                document.getElementById('maintenance_check_count').textContent = `陟包ｽｩ隴鯉ｽｧ驕抵ｽｺ髫ｱ蝣ｺ・ｸ・ｭ... (${checkCount}陜玲ｨ貞ｲｼ)`;
-            } else {
-                // 陟包ｽｩ隴鯉ｽｧ 遶翫・郢ｧ・ｪ郢晢ｽｼ郢晁・繝ｻ郢晢ｽｬ郢ｧ・､鬮ｱ讚・ｽ｡・ｨ驕会ｽｺ
-                if (isMaintenance) {
-                    isMaintenance = false;
-                    overlay.style.display = 'none';
-                    checkCount = 0;
-                }
+    <style>
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
             }
-        } catch(e) {}
-    }
-    setInterval(checkMaintenance, 300);
-})();
-</script>
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+    <script>
+        (function () {
+            const IS_MAINTENANCE_PAGE = window.location.pathname.startsWith('/maintenance');
+            if (IS_MAINTENANCE_PAGE) return;
+
+            const overlay = document.getElementById('maintenance_overlay');
+            let isMaintenance = false;
+            let checkCount = 0;
+
+            async function checkMaintenance() {
+                try {
+                    const adminRes = await fetch('/api/is_admin', { cache: 'no-store' });
+                    const adminData = await adminRes.json();
+                    if (adminData.is_admin) { overlay.style.display = 'none'; return; }
+                    const res = await fetch('/api/health', { cache: 'no-store' });
+                    if (!res.ok) {
+                        if (!isMaintenance) {
+                            isMaintenance = true;
+                            overlay.style.display = 'flex';
+                        }
+                        checkCount++;
+                        document.getElementById('maintenance_check_count').textContent = `復旧確認中... (${checkCount}回目)`;
+                    } else {
+                        if (isMaintenance) {
+                            isMaintenance = false;
+                            overlay.style.display = 'none';
+                            checkCount = 0;
+                        }
+                    }
+                } catch (e) { }
+            }
+            setInterval(checkMaintenance, 300);
+        })();
+    </script>
 </body>
 
 </html>
