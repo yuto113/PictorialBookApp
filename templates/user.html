@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>繧ｪ繝ｳ繝ｩ繧､繝ｳ蝗ｳ髑・- home</title>
+    <title>郢ｧ・ｪ郢晢ｽｳ郢晢ｽｩ郢ｧ・､郢晢ｽｳ陜暦ｽｳ鬮代・- home</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/css/lightbox.css" rel="stylesheet">
@@ -69,11 +69,11 @@
     <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
         <div class="container">
             <a class="navbar-brand d-flex align-items-center" href="/">
-                <span class="fs-4 brand-color">蝗ｳ髑・/span>
+                <span class="fs-4 brand-color">陜暦ｽｳ鬮代・/span>
                 {% if is_school_user %}
-                <small class="text-muted ms-2">{{ my_school.name if my_school else '繧ｪ繝ｳ繝ｩ繧､繝ｳ蝗ｳ髑・ }}</small>
+                <small class="text-muted ms-2">{{ my_school.name if my_school else '郢ｧ・ｪ郢晢ｽｳ郢晢ｽｩ郢ｧ・､郢晢ｽｳ陜暦ｽｳ鬮代・ }}</small>
                 {% else %}
-                <small class="text-muted ms-2">繧ｪ繝ｳ繝ｩ繧､繝ｳ蝗ｳ髑・/small>
+                <small class="text-muted ms-2">郢ｧ・ｪ郢晢ｽｳ郢晢ｽｩ郢ｧ・､郢晢ｽｳ陜暦ｽｳ鬮代・/small>
                 {% endif %}
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
@@ -88,50 +88,50 @@
                     <img src="{{ url_for('static', filename='icons/default.png') }}" width="40" height="40"
                         class="rounded-circle border" style="object-fit: cover;">
                     {% endif %}
-                    <span>繧医≧縺薙◎縲・a href="/profile/{{ user.id }}" class="text-decoration-none text-dark"><strong>{{
-                                user.name }}</strong></a>縺輔ｓ</span>
+                    <span>郢ｧ蛹ｻ竕ｧ邵ｺ阮吮落邵ｲ繝ｻa href="/profile/{{ user.id }}" class="text-decoration-none text-dark"><strong>{{
+                                user.name }}</strong></a>邵ｺ霈費ｽ・/span>
 
                     {% if user.role in ['teacher', 'school_admin'] %}
                     {% if my_school %}
                     <a class="btn btn-sm btn-success" href="/school/dashboard">{{ my_school.name }}</a>
                     {% else %}
-                    <a class="btn btn-sm btn-outline-success" href="/school/join">蟄ｦ譬｡縺ｫ蜿ょ刈</a>
+                    <a class="btn btn-sm btn-outline-success" href="/school/join">陝・ｽｦ隴ｬ・｡邵ｺ・ｫ陷ｿ繧・・</a>
                     {% endif %}
                     {% endif %}
 
                     {% if user.role in ['teacher', 'school_admin', 'student'] %}
-                    <a class="btn btn-sm btn-outline-success" href="/school/mypage">繝槭う繝壹・繧ｸ</a>
-                    <a class="btn btn-sm btn-outline-success" href="/assignments">統 隱ｲ鬘・/a>
+                    <a class="btn btn-sm btn-outline-success" href="/school/mypage">郢晄ｧｭ縺・ｹ晏｣ｹ繝ｻ郢ｧ・ｸ</a>
+                    <a class="btn btn-sm btn-outline-success" href="/assignments">﨟樒ｵｱ 髫ｱ・ｲ鬯倥・/a>
                     {% endif %}
 
-                    <a class="btn btn-sm btn-outline-primary" href="/upload">繧｢繝・・繝ｭ繝ｼ繝・/a>
-                    <a class="btn btn-sm btn-outline-primary" href="/map">亮・・蝨ｰ蝗ｳ</a>
+                    <a class="btn btn-sm btn-outline-primary" href="/upload">郢ｧ・｢郢昴・繝ｻ郢晢ｽｭ郢晢ｽｼ郢昴・/a>
+                    <a class="btn btn-sm btn-outline-primary" href="/map">﨟樔ｺｮ繝ｻ繝ｻ陜ｨ・ｰ陜暦ｽｳ</a>
 
                     {% if not is_school_user %}
-                    <a class="btn btn-sm btn-outline-info" href="/friend_search">繝輔Ξ繝ｳ繝画､懃ｴ｢</a>
-                    <a class="btn btn-sm btn-outline-info" href="/friends">繝輔Ξ繝ｳ繝峨Μ繧ｹ繝・/a>
+                    <a class="btn btn-sm btn-outline-info" href="/friend_search">郢晁ｼ釆樒ｹ晢ｽｳ郢晉判・､諛・ｽｴ・｢</a>
+                    <a class="btn btn-sm btn-outline-info" href="/friends">郢晁ｼ釆樒ｹ晢ｽｳ郢晏ｳｨﾎ懃ｹｧ・ｹ郢昴・/a>
                     {% endif %}
-                    <a class="btn btn-sm btn-outline-info" href="/help">笶・繝倥Ν繝・/a>
-                    <a class="btn btn-sm btn-outline-warning" href="/feedback">繝輔ぅ繝ｼ繝峨ヰ繝・け</a>
-                    <a class="btn btn-sm btn-outline-warning" href="/review">箝・繝ｬ繝薙Η繝ｼ</a>
+                    <a class="btn btn-sm btn-outline-info" href="/help">隨ｶ繝ｻ郢晏･ﾎ晉ｹ昴・/a>
+                    <a class="btn btn-sm btn-outline-warning" href="/feedback">郢晁ｼ斐≦郢晢ｽｼ郢晏ｳｨ繝ｰ郢昴・縺・/a>
+                    <a class="btn btn-sm btn-outline-warning" href="/review">邂昴・郢晢ｽｬ郢晁侭ﾎ礼ｹ晢ｽｼ</a>
                     {%- if user.id == 2 %}
-                    <a class="btn btn-sm btn-outline-danger" href="/admin">笞呻ｸ・邂｡逅・/a>
+                    <a class="btn btn-sm btn-outline-danger" href="/admin">隨槫遜・ｸ繝ｻ驍ゑｽ｡騾・・/a>
                     <!-- <form method="POST" action="/admin/maintenance/off" class="d-inline">
-                        <button type="submit" class="btn btn-sm btn-outline-success">肌 繝｡繝ｳ繝・リ繝ｳ繧ｹ隗｣髯､</button>
+                        <button type="submit" class="btn btn-sm btn-outline-success">﨟櫁ｌ 郢晢ｽ｡郢晢ｽｳ郢昴・繝ｪ郢晢ｽｳ郢ｧ・ｹ髫暦ｽ｣鬮ｯ・､</button>
                     </form> -->
                     <form method="POST" action="/admin/maintenance/test" class="d-inline">
                         <button type="submit" class="btn btn-sm btn-outline-warning"
-                            onclick="return confirm('繧ｷ繧ｹ繝・Β繝・せ繝医ｒ髢句ｧ九＠縺ｾ縺吶°・滉ｸ譎ら噪縺ｫ繝｡繝ｳ繝・リ繝ｳ繧ｹ荳ｭ縺ｫ縺ｪ繧翫∪縺吶・)">
-                            肌 繧ｷ繧ｹ繝・Β繝・せ繝・
+                            onclick="return confirm('郢ｧ・ｷ郢ｧ・ｹ郢昴・ﾎ堤ｹ昴・縺帷ｹ晏現・帝ｫ｢蜿･・ｧ荵晢ｼ邵ｺ・ｾ邵ｺ蜷ｶﾂｰ繝ｻ貊会ｽｸﾂ隴弱ｉ蝎ｪ邵ｺ・ｫ郢晢ｽ｡郢晢ｽｳ郢昴・繝ｪ郢晢ｽｳ郢ｧ・ｹ闕ｳ・ｭ邵ｺ・ｫ邵ｺ・ｪ郢ｧ鄙ｫ竏ｪ邵ｺ蜷ｶﾂ繝ｻ)">
+                            﨟櫁ｌ 郢ｧ・ｷ郢ｧ・ｹ郢昴・ﾎ堤ｹ昴・縺帷ｹ昴・
                         </button>
                     </form>
                     <!-- <form method="POST" action="/admin/maintenance/off" class="d-inline">
                         <button type="submit" class="btn btn-sm btn-outline-success">
-                            笨・繝｡繝ｳ繝・リ繝ｳ繧ｹOFF
+                            隨ｨ繝ｻ郢晢ｽ｡郢晢ｽｳ郢昴・繝ｪ郢晢ｽｳ郢ｧ・ｹOFF
                         </button>
                     </form> -->
                     {%- endif %}
-                    <a class="btn btn-sm btn-outline-secondary" href="/logout">繝ｭ繧ｰ繧｢繧ｦ繝・/a>
+                    <a class="btn btn-sm btn-outline-secondary" href="/logout">郢晢ｽｭ郢ｧ・ｰ郢ｧ・｢郢ｧ・ｦ郢昴・/a>
                 </div>
             </div>
         </div>
@@ -152,11 +152,11 @@
         <div class="row mb-3 align-items-center">
             <div class="col-md-6">
                 <form class="d-flex gap-2" method="get">
-                    <input class="form-control me-2 search-input" type="search" placeholder="蜷榊燕縺ｧ讀懃ｴ｢" aria-label="Search"
+                    <input class="form-control me-2 search-input" type="search" placeholder="陷ｷ讎顔√邵ｺ・ｧ隶諛・ｽｴ・｢" aria-label="Search"
                         id="queryname" name="search">
                     <button class="btn {{ 'btn-success' if is_school_user else 'btn-danger' }}"
-                        type="submit">讀懃ｴ｢</button>
-                    <a href="/user" class="btn btn-outline-secondary">繧ｯ繝ｪ繧｢</a>
+                        type="submit">隶諛・ｽｴ・｢</button>
+                    <a href="/user" class="btn btn-outline-secondary">郢ｧ・ｯ郢晢ｽｪ郢ｧ・｢</a>
                 </form>
             </div>
             {% if not is_school_user %}
@@ -165,17 +165,17 @@
                     <div class="form-check form-check-inline">
                         <input class="form-check-input" type="checkbox" id="ev" name="ev" onchange="this.form.submit()"
                             {% if filter_ev %}checked{% endif %}>
-                        <label class="form-check-label" for="ev">縺ｿ繧薙↑縺梧兜遞ｿ縺励◆蝗ｳ髑・/label>
+                        <label class="form-check-label" for="ev">邵ｺ・ｿ郢ｧ阮吮・邵ｺ譴ｧ蜈憺◇・ｿ邵ｺ蜉ｱ笳・摎・ｳ鬮代・/label>
                     </div>
                     <div class="form-check form-check-inline">
                         <input class="form-check-input" type="checkbox" id="ki" name="ki" onchange="this.form.submit()"
                             {% if filter_ki %}checked{% endif %}>
-                        <label class="form-check-label" for="ki">蝓ｺ譛ｬ蝗ｳ髑・/label>
+                        <label class="form-check-label" for="ki">陜難ｽｺ隴幢ｽｬ陜暦ｽｳ鬮代・/label>
                     </div>
                     <div class="form-check form-check-inline">
                         <select class="form-select form-select-sm d-inline-block w-auto" name="friend"
                             onchange="this.form.submit()">
-                            <option value="">繝輔Ξ繝ｳ繝・/option>
+                            <option value="">郢晁ｼ釆樒ｹ晢ｽｳ郢昴・/option>
                             {% for friend in friends %}
                             <option value="{{ friend.id }}" {% if filter_friend==friend.id|string %}selected{% endif %}>
                                 {{ friend.name }}</option>
@@ -189,21 +189,21 @@
 
         {% if is_school_user and my_school %}
         <div class="d-flex align-items-center gap-3 mb-3 p-3 bg-white rounded shadow-sm">
-            <label class="fw-bold text-success mb-0">搭 陦ｨ遉ｺ蛻・崛・・/label>
+            <label class="fw-bold text-success mb-0">﨟樊政 髯ｦ・ｨ驕会ｽｺ陋ｻ繝ｻ蟠帙・繝ｻ/label>
             <select id="class_selector" class="form-select w-auto" onchange="switchClass(this.value)">
-                <option value="school">将 蟄ｦ譬｡蜈ｨ菴・/option>
+                <option value="school">﨟槫ｰ・陝・ｽｦ隴ｬ・｡陷茨ｽｨ闖ｴ繝ｻ/option>
                 {% for cls in my_classes %}
-                <option value="{{ cls.id }}">答 {{ cls.name }}</option>
+                <option value="{{ cls.id }}">﨟樒ｭ・{{ cls.name }}</option>
                 {% endfor %}
             </select>
             <div id="message_btn">
-                <a href="/school/messages" class="btn btn-success btn-sm">討 繝｡繝・そ繝ｼ繧ｸ</a>
+                <a href="/school/messages" class="btn btn-success btn-sm">﨟櫁ｨ・郢晢ｽ｡郢昴・縺晉ｹ晢ｽｼ郢ｧ・ｸ</a>
             </div>
         </div>
         {% endif %}
 
         {% if is_school_user and my_assignments %}
-        <h4 class="mb-3 brand-color">統 隱ｲ鬘・/h4>
+        <h4 class="mb-3 brand-color">﨟樒ｵｱ 髫ｱ・ｲ鬯倥・/h4>
         <div class="row row-cols-1 row-cols-md-3 g-3 mb-4">
             {% for assignment in my_assignments %}
             {% set deadline_naive = assignment.deadline.replace(tzinfo=None) %}
@@ -213,14 +213,14 @@
                     style="border-radius:1rem; border-left: 4px solid {% if is_closed or is_passed %}#6c757d{% elif days_left <= 1 %}#dc3545{% else %}#28a745{% endif %} !important;">
                     <div class="card-body p-3">
                         <div class="d-flex justify-content-between align-items-start">
-                            <h6 class="fw-bold mb-1">統 {{ assignment.title }}</h6>
+                            <h6 class="fw-bold mb-1">﨟樒ｵｱ {{ assignment.title }}</h6>
                             {% if is_closed %}
-                            <span class="badge bg-dark">邱繧∝・繧頑ｸ医∩</span>
+                            <span class="badge bg-dark">驍ｱ・ｰ郢ｧ竏昴・郢ｧ鬆托ｽｸ蛹ｻ竏ｩ</span>
                             {% elif is_passed %}
-                            <span class="badge bg-secondary">譛滄剞蛻・ｌ</span>
-                            {% elif days_left <= 1 %} <span class="badge bg-danger">繧ゅ≧縺吶＄邱繧∝・繧・/span>
+                            <span class="badge bg-secondary">隴帶ｻ・応陋ｻ繝ｻ・・/span>
+                            {% elif days_left <= 1 %} <span class="badge bg-danger">郢ｧ繧・鴬邵ｺ蜷ｶ・・こ・ｰ郢ｧ竏昴・郢ｧ繝ｻ/span>
                                 {% else %}
-                                <span class="badge bg-success">蜿嶺ｻ倅ｸｭ</span>
+                                <span class="badge bg-success">陷ｿ蠍ｺ・ｻ蛟・ｽｸ・ｭ</span>
                                 {% endif %}
                         </div>
                         <p class="text-muted small mb-1">{{ assignment.school_class.name }}</p>
@@ -231,8 +231,8 @@
                         </p>
                         {% endif %}
                         <div class="d-flex justify-content-between align-items-center">
-                            <small class="text-muted">邱蛻・ {{ assignment.deadline.strftime('%m/%d %H:%M') }}</small>
-                            <a href="/assignments/{{ assignment.id }}" class="btn btn-sm btn-outline-success">隧ｳ邏ｰ</a>
+                            <small class="text-muted">驍ｱ・ｰ陋ｻ繝ｻ {{ assignment.deadline.strftime('%m/%d %H:%M') }}</small>
+                            <a href="/assignments/{{ assignment.id }}" class="btn btn-sm btn-outline-success">髫ｧ・ｳ驍擾ｽｰ</a>
                         </div>
                     </div>
                 </div>
@@ -241,7 +241,7 @@
     </div>
     {% endif %}
 
-    <h2 class="mb-4">縺ｿ繧薙↑縺ｮ繧ｳ繝ｬ繧ｯ繧ｷ繝ｧ繝ｳ</h2>
+    <h2 class="mb-4">邵ｺ・ｿ郢ｧ阮吮・邵ｺ・ｮ郢ｧ・ｳ郢晢ｽｬ郢ｧ・ｯ郢ｧ・ｷ郢晢ｽｧ郢晢ｽｳ</h2>
 
     <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
         {% for date in dates %}
@@ -262,44 +262,44 @@
                 <div class="card-body">
                     <h5 class="card-title mb-1">{{ date.name }}</h5>
                     {%- if date.subject %}
-                    <p class="card-text text-muted small mb-1">遞ｮ鬘・ {{ date.subject }}</p>
+                    <p class="card-text text-muted small mb-1">驕橸ｽｮ鬯倥・ {{ date.subject }}</p>
                     {%- endif %}
                     <p class="card-text text-muted small mb-1"
                         style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
-                        隕九▽縺代◆蝣ｴ謇: {{ date.place }}</p>
+                        髫穂ｹ昶命邵ｺ莉｣笳・撻・ｴ隰・: {{ date.place }}</p>
                     <p class="card-text text-muted small mb-1"
                         style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
-                        隧ｳ縺励＞隱ｬ譏・ {{ date.explanatorytext }}</p>
+                        髫ｧ・ｳ邵ｺ蜉ｱ・樣坡・ｬ隴上・ {{ date.explanatorytext }}</p>
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
                             {% if date.user_id == 2 %}
-                            <span class="badge bg-warning text-dark">蜈ｬ蠑・/span>
+                            <span class="badge bg-warning text-dark">陷茨ｽｬ陟代・/span>
                             {% else %}
                             <p class="text-muted mb-2">
-                                謚慕ｨｿ閠・
+                                隰壽・・ｨ・ｿ髢繝ｻ
                                 <a href="/profile/{{ date.user_id }}" class="text-decoration-none fw-bold">
                                     {{ date.user.name }}
                                 </a>
                             </p>
                             {% endif %}
-                            <span class="badge bg-info text-dark">縺・＞縺ｭ: {{ date.goodpoint }}</span>
-                            <span class="badge bg-info text-dark">繧ｳ繝｡繝ｳ繝・ {{ date.chat_count }}</span>
+                            <span class="badge bg-info text-dark">邵ｺ繝ｻ・樒ｸｺ・ｭ: {{ date.goodpoint }}</span>
+                            <span class="badge bg-info text-dark">郢ｧ・ｳ郢晢ｽ｡郢晢ｽｳ郢昴・ {{ date.chat_count }}</span>
                         </div>
                         <div>
                             <a href="/like/{{ date.id }}"
                                 class="btn btn-sm {% if date.is_liked %}btn-danger{% else %}btn-outline-danger{% endif %} me-1">{%
-                                if date.is_liked %}縺・＞縺ｭ隗｣髯､{% else %}縺・＞縺ｭ{% endif %}</a>
-                            <a href="/date/{{ date.id }}" class="btn btn-sm btn-outline-primary me-1">隧ｳ邏ｰ</a>
+                                if date.is_liked %}邵ｺ繝ｻ・樒ｸｺ・ｭ髫暦ｽ｣鬮ｯ・､{% else %}邵ｺ繝ｻ・樒ｸｺ・ｭ{% endif %}</a>
+                            <a href="/date/{{ date.id }}" class="btn btn-sm btn-outline-primary me-1">髫ｧ・ｳ驍擾ｽｰ</a>
                             {% if session.get('is_admin') == 1 %}
                             <a href="/toggle_hide/{{ date.id }}"
                                 class="btn btn-sm {{ 'btn-warning' if date.is_hidden == 1 else 'btn-outline-warning' }} me-1">
-                                {{ '早・・陦ｨ遉ｺ荳ｭ' if date.is_hidden == 0 else '刪 髱櫁｡ｨ遉ｺ荳ｭ' }}
+                                {{ '﨟樊掠繝ｻ繝ｻ髯ｦ・ｨ驕会ｽｺ闕ｳ・ｭ' if date.is_hidden == 0 else '﨟槫穐 鬮ｱ讚・ｽ｡・ｨ驕会ｽｺ闕ｳ・ｭ' }}
                             </a>
                             {% endif %}
                             {% if date.user_id == session.get('user_id') or session.get('is_admin') == 1 %}
                             <form method="post" action="/delete_date/{{ date.id }}" class="d-inline">
                                 <button type="submit" class="btn btn-sm btn-outline-danger"
-                                    onclick="return confirm('{{ date.name }}縺ｮ繝・・繧ｿ繧呈悽蠖薙↓豸医＠縺ｾ縺吶°・・)">蜑企勁</button>
+                                    onclick="return confirm('{{ date.name }}邵ｺ・ｮ郢昴・繝ｻ郢ｧ・ｿ郢ｧ蜻域た陟冶侭竊楢ｱｸ蛹ｻ・邵ｺ・ｾ邵ｺ蜷ｶﾂｰ繝ｻ繝ｻ)">陷台ｼ∝求</button>
                             </form>
                             {% endif %}
                         </div>
@@ -311,18 +311,18 @@
     </div>
 
     {% if dates|length == 0 %}
-    <div class="alert alert-info mt-4">隧ｲ蠖薙☆繧句峙髑代′隕九▽縺九ｊ縺ｾ縺帙ｓ縺ｧ縺励◆縲よ眠縺励￥謚慕ｨｿ縺励※縺ｿ縺ｾ縺励ｇ縺・ｼ・/div>
+    <div class="alert alert-info mt-4">髫ｧ・ｲ陟冶侭笘・ｹｧ蜿･蟲咎ｫ台ｻ｣窶ｲ髫穂ｹ昶命邵ｺ荵晢ｽ顔ｸｺ・ｾ邵ｺ蟶呻ｽ鍋ｸｺ・ｧ邵ｺ蜉ｱ笳・ｸｲ繧育悛邵ｺ蜉ｱ・･隰壽・・ｨ・ｿ邵ｺ蜉ｱ窶ｻ邵ｺ・ｿ邵ｺ・ｾ邵ｺ蜉ｱ・・ｸｺ繝ｻ・ｼ繝ｻ/div>
     {% endif %}
     </div>
 
     <footer class="footer text-center">
         <div class="container">
             <div class="mb-2">
-                <a href="/help" class="text-decoration-none text-muted me-3">笶・繝倥Ν繝・/a>
-                <a href="/terms" class="text-decoration-none text-muted me-3">糖 蛻ｩ逕ｨ隕冗ｴ・/a>
-                <a href="/privacy" class="text-decoration-none text-muted">柏 繝励Λ繧､繝舌す繝ｼ繝昴Μ繧ｷ繝ｼ</a>
+                <a href="/help" class="text-decoration-none text-muted me-3">隨ｶ繝ｻ郢晏･ﾎ晉ｹ昴・/a>
+                <a href="/terms" class="text-decoration-none text-muted me-3">﨟樒ｳ・陋ｻ・ｩ騾包ｽｨ髫募・・ｴ繝ｻ/a>
+                <a href="/privacy" class="text-decoration-none text-muted">﨟樊沛 郢晏干ﾎ帷ｹｧ・､郢晁・縺咏ｹ晢ｽｼ郢晄亢ﾎ懃ｹｧ・ｷ郢晢ｽｼ</a>
             </div>
-            <small>ﾂｩ {{ now().year }} 蝗ｳ髑・窶・{{ verj }}</small>
+            <small>・ゑｽｩ {{ now().year }} 陜暦ｽｳ鬮代・遯ｶ繝ｻ{{ verj }}</small>
         </div>
     </footer>
 
@@ -330,9 +330,9 @@
         function switchClass(value) {
             const msgBtn = document.getElementById('message_btn');
             if (value === 'school') {
-                msgBtn.innerHTML = '<a href="/school/messages" class="btn btn-success btn-sm">討 繝｡繝・そ繝ｼ繧ｸ</a>';
+                msgBtn.innerHTML = '<a href="/school/messages" class="btn btn-success btn-sm">﨟櫁ｨ・郢晢ｽ｡郢昴・縺晉ｹ晢ｽｼ郢ｧ・ｸ</a>';
             } else {
-                msgBtn.innerHTML = `<a href="/school/class_chat/${value}" class="btn btn-success btn-sm">町 繧ｯ繝ｩ繧ｹ繝√Ε繝・ヨ</a>`;
+                msgBtn.innerHTML = `<a href="/school/class_chat/${value}" class="btn btn-success btn-sm">﨟樒伴 郢ｧ・ｯ郢晢ｽｩ郢ｧ・ｹ郢昶・ﾎ慕ｹ昴・繝ｨ</a>`;
             }
         }
     </script>
@@ -344,11 +344,11 @@
 
 <div id="maintenance_overlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(255,247,240,0.97); z-index:99999; display:none; align-items:center; justify-content:center; flex-direction:column;">
     <div style="text-align:center; background:white; border-radius:2rem; padding:3rem; box-shadow:0 10px 40px rgba(0,0,0,0.1); max-width:400px;">
-        <div style="font-size:4rem; animation:spin 2s linear infinite; display:inline-block;">肌</div>
-        <h2 style="color:#ff6b6b; margin-top:1rem;">繝｡繝ｳ繝・リ繝ｳ繧ｹ荳ｭ</h2>
-        <p style="color:#666;">縺溘□縺・∪繧ｷ繧ｹ繝・Β縺ｮ繝｡繝ｳ繝・リ繝ｳ繧ｹ繧定｡後▲縺ｦ縺・∪縺吶・/p>
+        <div style="font-size:4rem; animation:spin 2s linear infinite; display:inline-block;">﨟櫁ｌ</div>
+        <h2 style="color:#ff6b6b; margin-top:1rem;">郢晢ｽ｡郢晢ｽｳ郢昴・繝ｪ郢晢ｽｳ郢ｧ・ｹ闕ｳ・ｭ</h2>
+        <p style="color:#666;">邵ｺ貅倪味邵ｺ繝ｻ竏ｪ郢ｧ・ｷ郢ｧ・ｹ郢昴・ﾎ堤ｸｺ・ｮ郢晢ｽ｡郢晢ｽｳ郢昴・繝ｪ郢晢ｽｳ郢ｧ・ｹ郢ｧ螳夲ｽ｡蠕娯夢邵ｺ・ｦ邵ｺ繝ｻ竏ｪ邵ｺ蜷ｶﾂ繝ｻ/p>
         <div style="background:#fff3cd; border-radius:0.5rem; padding:0.5rem 1rem; font-size:0.85rem;">
-            <span id="maintenance_check_count">蠕ｩ譌ｧ遒ｺ隱堺ｸｭ...</span>
+            <span id="maintenance_check_count">陟包ｽｩ隴鯉ｽｧ驕抵ｽｺ髫ｱ蝣ｺ・ｸ・ｭ...</span>
         </div>
     </div>
 </div>
@@ -371,15 +371,15 @@
             if (adminData.is_admin) { overlay.style.display = 'none'; return; }
             const res = await fetch('/api/health', { cache: 'no-store' });
             if (!res.ok) {
-                // 繝｡繝ｳ繝・リ繝ｳ繧ｹ荳ｭ 竊・繧ｪ繝ｼ繝舌・繝ｬ繧､陦ｨ遉ｺ
+                // 郢晢ｽ｡郢晢ｽｳ郢昴・繝ｪ郢晢ｽｳ郢ｧ・ｹ闕ｳ・ｭ 遶翫・郢ｧ・ｪ郢晢ｽｼ郢晁・繝ｻ郢晢ｽｬ郢ｧ・､髯ｦ・ｨ驕会ｽｺ
                 if (!isMaintenance) {
                     isMaintenance = true;
                     overlay.style.display = 'flex';
                 }
                 checkCount++;
-                document.getElementById('maintenance_check_count').textContent = `蠕ｩ譌ｧ遒ｺ隱堺ｸｭ... (${checkCount}蝗樒岼)`;
+                document.getElementById('maintenance_check_count').textContent = `陟包ｽｩ隴鯉ｽｧ驕抵ｽｺ髫ｱ蝣ｺ・ｸ・ｭ... (${checkCount}陜玲ｨ貞ｲｼ)`;
             } else {
-                // 蠕ｩ譌ｧ 竊・繧ｪ繝ｼ繝舌・繝ｬ繧､髱櫁｡ｨ遉ｺ
+                // 陟包ｽｩ隴鯉ｽｧ 遶翫・郢ｧ・ｪ郢晢ｽｼ郢晁・繝ｻ郢晢ｽｬ郢ｧ・､鬮ｱ讚・ｽ｡・ｨ驕会ｽｺ
                 if (isMaintenance) {
                     isMaintenance = false;
                     overlay.style.display = 'none';
