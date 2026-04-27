@@ -52,7 +52,7 @@
                 <div class="flex-grow-1">
                     <strong>{{ review.user.name }}縺輔ｓ</strong>
                     {% if review.role_label %}<small class="text-muted">・・{ review.role_label }}・・/small>{% endif %}
-                    <div class="text-warning my-1">{{ '笘・ * review.stars }}{{ '笘・ * (5 - review.stars) }}</div>
+                    <div class="text-warning my-1">{{ '★' * review.stars }}{{ '☆' * (5 - review.stars) }}</div>
                     <p class="mb-1">{{ review.message }}</p>
                     <small class="text-muted">{{ review.created_at.strftime('%Y/%m/%d %H:%M') }}</small>
                 </div>
@@ -78,7 +78,7 @@
                 <div class="flex-grow-1">
                     <strong>{{ review.user.name }}縺輔ｓ</strong>
                     {% if review.role_label %}<small class="text-muted">・・{ review.role_label }}・・/small>{% endif %}
-                    <div class="text-warning my-1">{{ '笘・ * review.stars }}{{ '笘・ * (5 - review.stars) }}</div>
+                    <div class="text-warning my-1">{{ '★' * review.stars }}{{ '☆' * (5 - review.stars) }}</div>
                     <p class="mb-1">{{ review.message }}</p>
                     <small class="text-muted">{{ review.created_at.strftime('%Y/%m/%d %H:%M') }}</small>
                 </div>
