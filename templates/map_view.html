@@ -1,64 +1,27 @@
 <!DOCTYPE html>
 <html lang="ja">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>・ｽ}・ｽ・ｽ - ・ｽn・ｽ}・ｽ齬・/title>
+    <title>図鑑 - 地図</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <style>
-        body {
-            background: {
-                    {
-                    'linear-gradient(135deg, #f0fff4 0%, #e8f5e9 100%)' if is_school_user else 'linear-gradient(135deg, #fff7f0 0%, #f0f9ff 100%)'
-                }
-            }
-
-            ;
-            color: #333;
-        }
-
-        .brand-color {
-            color: {
-                    {
-                    '#28a745' if is_school_user else '#ff6b6b'
-                }
-            }
-
-            ;
-        }
-
-        #map {
-            width: 100%;
-            height: calc(100vh - 120px);
-            border-radius: 1rem;
-        }
-
-        .leaflet-popup-content img {
-            width: 100%;
-            height: 100px;
-            object-fit: cover;
-            border-radius: 4px;
-            margin-bottom: 4px;
-        }
-
-        .leaflet-popup-content a {
-            display: block;
-            text-align: center;
-            margin-top: 4px;
-        }
+        body { background: {{ 'linear-gradient(135deg, #f0fff4 0%, #e8f5e9 100%)' if is_school_user else 'linear-gradient(135deg, #fff7f0 0%, #f0f9ff 100%)' }}; color: #333; }
+        .brand-color { color: {{ '#28a745' if is_school_user else '#ff6b6b' }}; }
+        #map { width: 100%; height: calc(100vh - 120px); border-radius: 1rem; }
+        .leaflet-popup-content img { width: 100%; height: 100px; object-fit: cover; border-radius: 4px; margin-bottom: 4px; }
+        .leaflet-popup-content a { display: block; text-align: center; margin-top: 4px; }
     </style>
 </head>
-
 <body class="{{ 'theme-green' if is_school_user else 'theme-pink' }}">
     <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
         <div class="container">
             <a class="navbar-brand d-flex align-items-center" href="/">
-                <span class="fs-4 brand-color">・ｽ}・ｽ・ｽ</span>
-                <small class="text-muted ms-2">・ｽn・ｽ}・ｽ齬・/small>
+                <span class="fs-4 brand-color">図鑑</span>
+                <small class="text-muted ms-2">地図</small>
             </a>
-            <a class="btn btn-sm btn-outline-secondary" href="/user">・ｽz・ｽ[・ｽ・ｽ・ｽ・ｽ</a>
+            <a class="btn btn-sm btn-outline-secondary" href="/user">ホームへ</a>
         </div>
     </nav>
 
@@ -71,57 +34,50 @@
         const map = L.map('map').setView([36.0, 138.0], 6);
 
         L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png', {
-            attribution: "<a href='https://maps.gsi.go.jp/development/ichiran.html' target='_blank'>・ｽn・ｽ・ｽ・ｽ@・ｽ^・ｽC・ｽ・ｽ</a>"
+            attribution: "<a href='https://maps.gsi.go.jp/development/ichiran.html' target='_blank'>地理院タイル</a>"
         }).addTo(map);
 
-        const mapData = {{ map_data| safe }};
+        const mapData = {{ map_data|safe }};
 
         mapData.forEach(d => {
             const marker = L.marker([d.lat, d.lng]).addTo(map);
             marker.bindPopup(`
                 ${d.image ? `<img src="${d.image}" alt="${d.name}">` : ''}
                 <strong>${d.name}</strong><br>
-                <small>? ${d.place}</small><br>
-                <small>? ${d.user}</small>
-                <a href="/date/${d.id}" class="btn btn-sm btn-outline-primary mt-1">・ｽﾚ細ゑｿｽ・ｽ・ｽ・ｽ・ｽ</a>
+                <small>📍 ${d.place}</small><br>
+                <small>👤 ${d.user}</small>
+                <a href="/date/${d.id}" class="btn btn-sm btn-outline-primary mt-1">詳細を見る</a>
             `);
         });
 
-        // ・ｽ}・ｽ[・ｽJ・ｽ[・ｽ・ｽ0・ｽ・ｽ・ｽﾌとゑｿｽ
         if (mapData.length === 0) {
             const info = L.control();
             info.onAdd = function () {
                 const div = L.DomUtil.create('div', 'leaflet-bar');
-                div.innerHTML = '<div style="background:white;padding:8px;border-radius:4px;">・ｽﾊ置・ｽ・ｽ・ｽﾌゑｿｽ・ｽ體奇ｿｽe・ｽ・ｽ・ｽ・ｽ・ｽ・ｽﾜゑｿｽ・ｽ・ｽ</div>';
+                div.innerHTML = '<div style="background:white;padding:8px;border-radius:4px;">位置情報のある投稿がありません</div>';
                 return div;
             };
             info.addTo(map);
         }
 
-        // ・ｽS・ｽ}・ｽ[・ｽJ・ｽ[・ｽ・ｽ・ｽ・ｽ・ｽ・ｽ・ｽ・ｽ謔､・ｽﾉズ・ｽ[・ｽ・ｽ
         if (mapData.length > 0) {
             const bounds = L.latLngBounds(mapData.map(d => [d.lat, d.lng]));
             map.fitBounds(bounds, { padding: [30, 30] });
         }
     </script>
 
-<script>
-    // 繝｡繝ｳ繝・リ繝ｳ繧ｹ繝｢繝ｼ繝臥屮隕厄ｼ・.3遘偵＃縺ｨ・・    (function() {
+    <script>
+    (function() {
         const IS_MAINTENANCE_PAGE = window.location.pathname.includes('/maintenance');
         if (IS_MAINTENANCE_PAGE) return;
-        
         async function checkMaintenance() {
             try {
                 const res = await fetch('/api/health', { cache: 'no-store' });
-                if (!res.ok) {
-                    window.location.href = '/maintenance/current';
-                }
+                if (!res.ok) { window.location.href = '/maintenance/current'; }
             } catch(e) {}
         }
         setInterval(checkMaintenance, 300);
     })();
-</script>
-
+    </script>
 </body>
-
 </html>

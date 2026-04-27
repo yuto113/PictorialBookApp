@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>繝槭う繝夲ｿｽE繧ｸ</title>
+    <title>マイページ</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body { background: linear-gradient(135deg, #f0fff4 0%, #e8f5e9 100%); color: #333; }
@@ -15,10 +15,10 @@
     <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
         <div class="container">
             <a class="navbar-brand d-flex align-items-center" href="/">
-                <span class="fs-4 brand-color">蝗ｳ髑・span>
-                <small class="text-muted ms-2">{{ my_school.name if my_school else '繧ｪ繝ｳ繝ｩ繧､繝ｳ蝗ｳ髑・}}</small>
+                <span class="fs-4 brand-color">図鑑</span>
+                <small class="text-muted ms-2">{{ my_school.name if my_school else 'オンライン図鑑' }}</small>
             </a>
-            <a class="btn btn-sm btn-outline-secondary" href="/user">繝幢ｿｽE繝縺ｸ</a>
+            <a class="btn btn-sm btn-outline-secondary" href="/user">ホームへ</a>
         </div>
     </nav>
 
@@ -31,46 +31,43 @@
         {% endif %}
         {% endwith %}
 
-        <h2 class="mb-4 brand-color">繝槭う繝夲ｿｽE繧ｸ</h2>
+        <h2 class="mb-4 brand-color">マイページ</h2>
 
         <div class="row g-4">
-            <!-- 繝励Ο繝輔ぅ繝ｼ繝ｫ諠・ｱ・ｽ・ｽ -->
             <div class="col-md-6">
                 <div class="card shadow-sm border-0 p-4" style="border-radius:1rem;">
-                    <h5 class="fw-bold mb-3">側 繝励Ο繝輔ぅ繝ｼ繝ｫ</h5>
-                    <p><strong>蜷榊燕・ｽE・ｽE/strong>{{ user.name }}</p>
-                    <p><strong>ID・ｽE・ｽE/strong>{{ user.id }}</p>
-                    <p><strong>蠖ｹ蜑ｲ・ｽE・ｽE/strong>
+                    <h5 class="fw-bold mb-3">👤 プロフィール</h5>
+                    <p><strong>名前：</strong>{{ user.name }}</p>
+                    <p><strong>ID：</strong>{{ user.id }}</p>
+                    <p><strong>役割：</strong>
                         {% if user.role == 'student' %}
-                        <span class="badge bg-success">蟄ｦ逕・span>
+                        <span class="badge bg-success">学生</span>
                         {% elif user.role == 'teacher' %}
-                        <span class="badge bg-primary">謨吝ｸｫ</span>
+                        <span class="badge bg-primary">教師</span>
                         {% elif user.role == 'school_admin' %}
-                        <span class="badge bg-warning text-dark">蟄ｦ譬｡邂｡逅・ｿｽ・ｽE/span>
+                        <span class="badge bg-warning text-dark">学校管理者</span>
                         {% endif %}
                     </p>
-                    <p><strong>蟄ｦ譬｡・ｽE・ｽE/strong>{{ my_school.name if my_school else '譛ｪ蜿ょ刈' }}</p>
+                    <p><strong>学校：</strong>{{ my_school.name if my_school else '未参加' }}</p>
                 </div>
             </div>
 
-            <!-- 謇螻槭け繝ｩ繧ｹ -->
             <div class="col-md-6">
                 <div class="card shadow-sm border-0 p-4" style="border-radius:1rem;">
-                    <h5 class="fw-bold mb-3">答 謇螻槭け繝ｩ繧ｹ</h5>
+                    <h5 class="fw-bold mb-3">📝 所属クラス</h5>
                     {% for cls in my_classes %}
                     <div class="border rounded p-2 mb-2">
                         <strong>{{ cls.name }}</strong>
                     </div>
                     {% else %}
-                    <p class="text-muted small">縺ｾ縺繧ｯ繝ｩ繧ｹ縺ｫ逋ｻ骭ｲ縺輔ｌ縺ｦ縺・ｿｽ・ｽ縺帙ｓ縲・p>
+                    <p class="text-muted small">まだクラスに登録されていません。</p>
                     {% endfor %}
                 </div>
             </div>
 
-            <!-- 繝代せ繝ｯ繝ｼ繝牙､画峩 -->
             <div class="col-md-6">
                 <div class="card shadow-sm border-0 p-4" style="border-radius:1rem;">
-                    <h5 class="fw-bold mb-3">泊 繝代せ繝ｯ繝ｼ繝牙､画峩</h5>
+                    <h5 class="fw-bold mb-3">🔒 パスワード変更</h5>
 
                     {% if message %}
                     <div class="alert alert-danger">{{ message }}</div>
@@ -78,18 +75,18 @@
 
                     <form method="POST">
                         <div class="mb-3">
-                            <label class="form-label small fw-bold">迴ｾ蝨ｨ縺ｮ繝代せ繝ｯ繝ｼ繝・label>
+                            <label class="form-label small fw-bold">現在のパスワード</label>
                             <input type="password" name="current_password" class="form-control" required>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label small fw-bold">譁ｰ縺励＞繝代せ繝ｯ繝ｼ繝・label>
+                            <label class="form-label small fw-bold">新しいパスワード</label>
                             <input type="password" name="new_password" class="form-control" required>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label small fw-bold">譁ｰ縺励＞繝代せ繝ｯ繝ｼ繝会ｼ育｢ｺ隱搾ｼ・label>
+                            <label class="form-label small fw-bold">新しいパスワード（確認）</label>
                             <input type="password" name="new_password2" class="form-control" required>
                         </div>
-                        <button type="submit" class="btn btn-success w-100">螟画峩縺吶ｋ</button>
+                        <button type="submit" class="btn btn-success w-100">変更する</button>
                     </form>
                 </div>
             </div>
@@ -98,51 +95,38 @@
 
     <footer class="footer text-center mt-4">
         <div class="container">
-            <small>ﾂｩ {{ now().year }} 蝗ｳ髑鯛・{{ verj }}</small>
+            <small>© {{ now().year }} 図鑑 — {{ verj }}</small>
         </div>
     </footer>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-<div id="maintenance_overlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(255,247,240,0.97); z-index:99999; display:none; align-items:center; justify-content:center; flex-direction:column;">
+<div id="maintenance_overlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(255,247,240,0.97); z-index:99999; align-items:center; justify-content:center; flex-direction:column;">
     <div style="text-align:center; background:white; border-radius:2rem; padding:3rem; box-shadow:0 10px 40px rgba(0,0,0,0.1); max-width:400px;">
-        <div style="font-size:4rem; animation:spin 2s linear infinite; display:inline-block;">肌</div>
-        <h2 style="color:#ff6b6b; margin-top:1rem;">繝｡繝ｳ繝・リ繝ｳ繧ｹ荳ｭ</h2>
-        <p style="color:#666;">縺溘□縺・∪繧ｷ繧ｹ繝・Β縺ｮ繝｡繝ｳ繝・リ繝ｳ繧ｹ繧定｡後▲縺ｦ縺・∪縺吶・/p>
+        <div style="font-size:4rem; animation:spin 2s linear infinite; display:inline-block;">🔧</div>
+        <h2 style="color:#ff6b6b; margin-top:1rem;">メンテナンス中</h2>
+        <p style="color:#666;">ただいまシステムのメンテナンスを行っています。</p>
         <div style="background:#fff3cd; border-radius:0.5rem; padding:0.5rem 1rem; font-size:0.85rem;">
-            <span id="maintenance_check_count">蠕ｩ譌ｧ遒ｺ隱堺ｸｭ...</span>
+            <span id="maintenance_check_count">復旧確認中...</span>
         </div>
     </div>
 </div>
-<style>
-@keyframes spin { 0% { transform:rotate(0deg); } 100% { transform:rotate(360deg); } }
-</style>
+<style>@keyframes spin { 0% { transform:rotate(0deg); } 100% { transform:rotate(360deg); } }</style>
 <script>
 (function() {
     const IS_MAINTENANCE_PAGE = window.location.pathname.startsWith('/maintenance');
     if (IS_MAINTENANCE_PAGE) return;
-    
     const overlay = document.getElementById('maintenance_overlay');
     let isMaintenance = false;
     let checkCount = 0;
-
     async function checkMaintenance() {
         try {
             const res = await fetch('/api/health', { cache: 'no-store' });
             if (!res.ok) {
-                // 繝｡繝ｳ繝・リ繝ｳ繧ｹ荳ｭ 竊・繧ｪ繝ｼ繝舌・繝ｬ繧､陦ｨ遉ｺ
-                if (!isMaintenance) {
-                    isMaintenance = true;
-                    overlay.style.display = 'flex';
-                }
+                if (!isMaintenance) { isMaintenance = true; overlay.style.display = 'flex'; }
                 checkCount++;
-                document.getElementById('maintenance_check_count').textContent = `蠕ｩ譌ｧ遒ｺ隱堺ｸｭ... (${checkCount}蝗樒岼)`;
+                document.getElementById('maintenance_check_count').textContent = `復旧確認中... (${checkCount}回目)`;
             } else {
-                // 蠕ｩ譌ｧ 竊・繧ｪ繝ｼ繝舌・繝ｬ繧､髱櫁｡ｨ遉ｺ
-                if (isMaintenance) {
-                    isMaintenance = false;
-                    overlay.style.display = 'none';
-                    checkCount = 0;
-                }
+                if (isMaintenance) { isMaintenance = false; overlay.style.display = 'none'; checkCount = 0; }
             }
         } catch(e) {}
     }
