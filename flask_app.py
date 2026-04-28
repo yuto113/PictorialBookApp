@@ -646,6 +646,40 @@ def user_page():
 
     return redirect('/login')
 
+@app.route('/api/collection/progress')
+def collection_progress():
+    """コレクション達成率を返す"""
+    user_id = session.get('user_id')
+    if not user_id:
+        return jsonify({'error': 'unauthorized'}), 401
+
+    # 公式の種類一覧
+    official_subjects = db.session.query(Date.subject).filter(
+        Date.user_id == 2,
+        Date.subject != None,
+        Date.subject != ''
+    ).distinct().all()
+    official_list = [s[0] for s in official_subjects]
+
+    # 自分の投稿の種類一覧
+    my_subjects = db.session.query(Date.subject).filter(
+        Date.user_id == user_id,
+        Date.subject != None,
+        Date.subject != ''
+    ).distinct().all()
+    my_list = [s[0] for s in my_subjects]
+
+    # 達成した種類
+    achieved = [s for s in official_list if s in my_list]
+
+    return jsonify({
+        'total': len(official_list),
+        'achieved': len(achieved),
+        'percent': int(len(achieved) / len(official_list) * 100) if official_list else 0,
+        'achieved_list': achieved,
+        'all_list': official_list
+    })
+
 @app.route('/school/toggle_map', methods=['POST'])
 def toggle_map():
     user_id = session.get('user_id')
