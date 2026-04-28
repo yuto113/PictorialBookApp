@@ -24,6 +24,10 @@
         .step-box strong { color: #ff6b6b; }
         .apply-link { color: #007bff; text-decoration: underline; font-weight: bold; }
         .apply-link:hover { color: #0056b3; }
+        .toc { background: white; border-radius: 1rem; padding: 1.5rem; margin-bottom: 2rem; box-shadow: 0 5px 20px rgba(0,0,0,0.05); }
+        .toc a { color: #ff6b6b; text-decoration: none; }
+        .toc a:hover { text-decoration: underline; }
+        .badge-new { background: #ff6b6b; color: white; font-size: 0.7rem; padding: 2px 6px; border-radius: 4px; vertical-align: middle; }
     </style>
 </head>
 <body>
@@ -38,11 +42,35 @@
     </nav>
 
     <div class="container py-4">
-        <h2 class="brand-color text-center fw-bold mb-4">❓ ヘルプ・使い方ガイド</h2>
+        <h2 class="brand-color text-center fw-bold mb-2">❓ ヘルプ・使い方ガイド</h2>
         <p class="text-center text-muted mb-4">図鑑の使い方を説明します。困ったときはこちらをご覧ください。</p>
 
-        <div class="help-section">
-            <h3><span class="help-icon">🔰</span>はじめての方へ</h3>
+        <div class="toc">
+            <h5 class="fw-bold mb-3">📋 目次</h5>
+            <div class="row">
+                <div class="col-md-6">
+                    <ul class="list-unstyled mb-0">
+                        <li>📌 <a href="#start">はじめての方へ</a></li>
+                        <li>📋 <a href="#post">投稿のしかた</a></li>
+                        <li>✏️ <a href="#edit">投稿の編集</a></li>
+                        <li>🏷️ <a href="#tag">タグ機能</a> <span class="badge-new">NEW</span></li>
+                        <li>💬 <a href="#social">みんなと交流しよう</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-6">
+                    <ul class="list-unstyled mb-0">
+                        <li>🔔 <a href="#notification">通知機能</a> <span class="badge-new">NEW</span></li>
+                        <li>🗺️ <a href="#map">地図機能</a></li>
+                        <li>🏫 <a href="#school">学校で使いたい方へ</a></li>
+                        <li>⭐ <a href="#review">レビューについて</a></li>
+                        <li>🆘 <a href="#trouble">困ったときは</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="help-section" id="start">
+            <h3><span class="help-icon">📌</span>はじめての方へ</h3>
             <p>「図鑑」は、見つけた植物・動物の写真と情報をみんなと共有できるオンライン図鑑アプリです。</p>
             <div class="step-box">
                 <strong>3ステップで始められます</strong>
@@ -52,51 +80,154 @@
                     <li>アップロードして図鑑にコレクション！</li>
                 </ol>
             </div>
+            <div class="step-box">
+                <strong>ログイン方法</strong>
+                <p class="mb-0">登録時に決めた<strong>ID（数字）</strong>と<strong>パスワード</strong>でログインできます。パスワードを忘れた場合は管理者にお問い合わせください。</p>
+            </div>
         </div>
 
-        <div class="help-section">
+        <div class="help-section" id="post">
             <h3><span class="help-icon">📋</span>投稿のしかた</h3>
-            <p>画面右上の「アップロード」ボタンから投稿できます。</p>
+            <p>画面上部の「アップロード」ボタンから投稿できます。</p>
             <div class="step-box">
                 <strong>投稿に必要な情報</strong>
                 <ul class="mb-0 mt-2">
-                    <li>名前（植物・動物の名前）</li>
-                    <li>見つけた場所</li>
-                    <li>写真（必須）</li>
-                    <li>地図で場所を選択</li>
+                    <li><strong>名前</strong>（植物・動物の名前）</li>
+                    <li><strong>見つけた場所</strong>（テキストで入力）</li>
+                    <li><strong>写真</strong>（必須・自分で撮影したもの）</li>
+                    <li><strong>地図</strong>（クリックして場所を選択・任意）</li>
                 </ul>
             </div>
-            <p class="mt-3 text-muted small">※ 投稿する写真は自分で撮影したものに限ります。他者の著作権を侵害しないようご注意ください。</p>
+            <div class="step-box">
+                <strong>学校ユーザーの場合</strong>
+                <ul class="mb-0 mt-2">
+                    <li>「知っていること」欄に生き物の情報を書けます</li>
+                    <li>課題に提出することができます</li>
+                    <li>クラスや学校全体に送信できます</li>
+                </ul>
+            </div>
+            <p class="mt-3 text-muted small">⚠️ 投稿する写真は自分で撮影したものに限ります。他者の著作権を侵害しないようご注意ください。</p>
         </div>
 
-        <div class="help-section">
+        <div class="help-section" id="edit">
+            <h3><span class="help-icon">✏️</span>投稿の編集</h3>
+            <p>自分の投稿は詳細ページから直接編集できます。</p>
+            <div class="step-box">
+                <strong>編集できる項目</strong>
+                <ul class="mb-0 mt-2">
+                    <li>名前・種類・見つけた場所・詳しい説明</li>
+                    <li>学校ユーザーは「知っていること」も編集可能</li>
+                </ul>
+            </div>
+            <div class="step-box">
+                <strong>編集方法</strong>
+                <p class="mb-0">詳細ページで各フィールドをクリックすると編集できます。入力後しばらくすると自動で保存されます（「✅ 保存しました」と表示されます）。</p>
+            </div>
+        </div>
+
+        <div class="help-section" id="tag">
+            <h3><span class="help-icon">🏷️</span>タグ機能 <span class="badge-new">NEW</span></h3>
+            <p>投稿にタグをつけることで、同じ種類の生き物をまとめて検索できます。</p>
+            <div class="step-box">
+                <strong>タグのつけ方</strong>
+                <ol class="mb-0 mt-2">
+                    <li>自分の投稿の詳細ページを開く</li>
+                    <li>「タグを入力（カンマ区切り）」欄にタグを入力</li>
+                    <li>例：「植物, 花, 春」のようにカンマで区切る</li>
+                    <li>「保存」ボタンをクリック</li>
+                </ol>
+            </div>
+            <div class="step-box">
+                <strong>タグで検索する</strong>
+                <p class="mb-0">投稿についている <span class="badge bg-success">#タグ名</span> をクリックすると、同じタグがついた投稿を一覧で見ることができます。</p>
+            </div>
+        </div>
+
+        <div class="help-section" id="social">
             <h3><span class="help-icon">💬</span>みんなと交流しよう</h3>
-            <p>他の人の投稿に「いいね」やコメントができます。</p>
             <div class="step-box">
                 <strong>❤️ いいね</strong>
-                <p class="mb-0">カードの「いいね」ボタンをクリック。もう一度押すと解除できます。</p>
+                <p class="mb-0">カードの「いいね」ボタンをクリック。もう一度押すと解除できます。いいねすると投稿者に通知が届きます。</p>
             </div>
             <div class="step-box">
                 <strong>💬 コメント</strong>
-                <p class="mb-0">「詳細」ページからコメントを投稿できます。返信もできるので、みんなで盛り上がりましょう！</p>
+                <p class="mb-0">「詳細」ページからコメントを投稿できます。返信もできます。コメントすると投稿者に通知が届きます。</p>
             </div>
             <div class="step-box">
                 <strong>👥 フレンド機能</strong>
-                <p class="mb-0">「フレンド検索」から他のユーザーを探して、フレンド申請を送れます。フレンドになると友達の投稿をフィルターできます。</p>
+                <ol class="mb-0 mt-2">
+                    <li>「フレンド検索」からユーザー名で検索</li>
+                    <li>「フレンド申請」ボタンをクリック</li>
+                    <li>相手が承認するとフレンドになります</li>
+                    <li>フレンドの投稿だけをフィルターして見られます</li>
+                </ol>
             </div>
         </div>
 
-        <div class="help-section">
-            <h3><span class="help-icon">🏫</span>学校で使いたい方へ</h3>
-            <p>図鑑は学校の授業でも使えます。クラスごとに課題を出したり、学校全体で情報共有できます。</p>
+        <div class="help-section" id="notification">
+            <h3><span class="help-icon">🔔</span>通知機能 <span class="badge-new">NEW</span></h3>
+            <p>自分の投稿にいいねやコメントがあると通知が届きます。</p>
             <div class="step-box">
-                <strong>🏫 学校モードでできること</strong>
+                <strong>通知の確認方法</strong>
+                <ol class="mb-0 mt-2">
+                    <li>画面上部の 🔔 ボタンをクリック</li>
+                    <li>未読の通知がある場合は赤い数字が表示されます</li>
+                    <li>通知をクリックすると該当の投稿に移動します</li>
+                    <li>通知を開くと自動で既読になります</li>
+                </ol>
+            </div>
+            <div class="step-box">
+                <strong>通知が届くタイミング</strong>
+                <ul class="mb-0 mt-2">
+                    <li>自分の投稿にいいねがついたとき</li>
+                    <li>自分の投稿にコメントがついたとき</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="help-section" id="map">
+            <h3><span class="help-icon">🗺️</span>地図機能</h3>
+            <div class="step-box">
+                <strong>投稿時の地図操作</strong>
+                <ol class="mb-0 mt-2">
+                    <li>アップロードページの地図を表示</li>
+                    <li>見つけた場所をクリック</li>
+                    <li>マーカーが立った状態で投稿すると記録されます</li>
+                </ol>
+            </div>
+            <div class="step-box">
+                <strong>地図一覧ページ</strong>
+                <p class="mb-0">「🗺️ 地図図鑑」ボタンから、位置情報がある投稿をまとめて地図上で確認できます。マーカーをクリックすると詳細が表示されます。</p>
+            </div>
+        </div>
+
+        <div class="help-section" id="school">
+            <h3><span class="help-icon">🏫</span>学校で使いたい方へ</h3>
+            <div class="step-box">
+                <strong>学校モードでできること</strong>
                 <ul class="mb-0 mt-2">
                     <li>クラスごとの課題作成・提出</li>
                     <li>学校全体・クラス単位でのメッセージ共有</li>
+                    <li>クラスチャット機能</li>
                     <li>地図機能のON/OFF（学校ごとに設定可）</li>
                     <li>教師・学生・学校管理者の役割分け</li>
                 </ul>
+            </div>
+            <div class="step-box">
+                <strong>学校に参加する方法</strong>
+                <ol class="mb-0 mt-2">
+                    <li>管理者から学校コードを受け取る</li>
+                    <li>「学校に参加」ページでコードを入力</li>
+                    <li>参加完了後、学校モードで使えます</li>
+                </ol>
+            </div>
+            <div class="step-box">
+                <strong>課題の流れ</strong>
+                <ol class="mb-0 mt-2">
+                    <li>教師が課題を作成・締切を設定</li>
+                    <li>生徒が図鑑に投稿して課題に提出</li>
+                    <li>教師が提出状況を確認</li>
+                </ol>
             </div>
             <div class="alert alert-info mt-3">
                 <strong>📌 学校グループを作りたい方</strong><br>
@@ -105,25 +236,50 @@
             </div>
         </div>
 
-        <div class="help-section">
+        <div class="help-section" id="review">
+            <h3><span class="help-icon">⭐</span>レビューについて</h3>
+            <div class="step-box">
+                <strong>レビューの投稿方法</strong>
+                <ol class="mb-0 mt-2">
+                    <li>画面上部の「⭐ レビュー」ボタンをクリック</li>
+                    <li>立場（小学生・教師など）を入力（任意）</li>
+                    <li>星で満足度を選択</li>
+                    <li>感想を入力して「投稿する」</li>
+                    <li>管理者が承認するとトップページに表示されます</li>
+                </ol>
+            </div>
+        </div>
+
+        <div class="help-section" id="trouble">
             <h3><span class="help-icon">🆘</span>困ったときは</h3>
             <div class="step-box">
                 <strong>パスワードを忘れた</strong>
-                <p class="mb-0">管理者にお問い合わせください。フィードバック機能からお知らせください。</p>
+                <p class="mb-0">フィードバック機能からIDとともにお知らせください。管理者がリセットします。</p>
             </div>
             <div class="step-box">
-                <strong>おかしな投稿を見つけた</strong>
-                <p class="mb-0">フィードバック機能からお知らせください。管理者が確認します。</p>
+                <strong>画像がアップロードできない</strong>
+                <ul class="mb-0 mt-2">
+                    <li>ファイルサイズが大きすぎる場合は圧縮してください</li>
+                    <li>対応形式：JPG・PNG・GIF・WEBP</li>
+                    <li>解決しない場合はフィードバックで報告してください</li>
+                </ul>
+            </div>
+            <div class="step-box">
+                <strong>おかしな投稿・コメントを見つけた</strong>
+                <p class="mb-0">フィードバック機能からお知らせください。管理者が確認して対応します。</p>
+            </div>
+            <div class="step-box">
+                <strong>ページが正しく表示されない</strong>
+                <ul class="mb-0 mt-2">
+                    <li>ブラウザを最新版に更新してください</li>
+                    <li>キャッシュをクリア（Ctrl+Shift+Delete）</li>
+                    <li>解決しない場合はフィードバックで報告してください</li>
+                </ul>
             </div>
             <div class="step-box">
                 <strong>その他のお問い合わせ</strong>
                 <p class="mb-0"><a href="/feedback" class="apply-link">フィードバックページ</a>からお知らせください。</p>
             </div>
-        </div>
-
-        <div class="help-section">
-            <h3><span class="help-icon">⭐</span>レビューについて</h3>
-            <p>使ってみた感想を「レビュー」から投稿できます。承認されると、トップページに表示されます。</p>
         </div>
     </div>
 
