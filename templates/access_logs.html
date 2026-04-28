@@ -32,7 +32,7 @@
                 <tbody>
                     {% for log in logs %}
                     <tr>
-                        <td><small>{{ (log.accessed_at.replace(tzinfo=none) - timedelta(hours=9)).strftime('%Y/%m/%d %H:%M:%S') }}</small></td>
+                        <td><small>{{ (log.accessed_at.replace(tzinfo=none) + timedelta(hours=21)).strftime('%Y/%m/%d %H:%M:%S') }}</small></td>
                         <td>{{ log.user_id or '未ログイン' }}</td>
                         <td>{{ log.path }}</td>
                         <td><small class="text-muted">{{ log.ip_address }}</small></td>
