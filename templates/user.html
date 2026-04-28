@@ -123,6 +123,20 @@
                         </button>
                     </form>
                     {%- endif %}
+                    <div class="position-relative d-inline-block">
+                        <button class="btn btn-sm btn-outline-secondary" onclick="toggleNotifications()" id="notif_btn">
+                            🔔 <span id="notif_badge" class="badge bg-danger" style="display:none;">0</span>
+                        </button>
+                        <div id="notif_dropdown"
+                            style="display:none; position:absolute; right:0; top:110%; width:320px; background:white; border-radius:1rem; box-shadow:0 5px 20px rgba(0,0,0,0.15); z-index:9999; max-height:400px; overflow-y:auto;">
+                            <div class="p-3">
+                                <h6 class="fw-bold mb-2">🔔 通知</h6>
+                                <div id="notif_list">
+                                    <div class="text-muted small">読み込み中...</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <a class="btn btn-sm btn-outline-secondary" href="/logout">ログアウト</a>
                 </div>
             </div>
@@ -311,14 +325,17 @@
         <ul class="pagination justify-content-center flex-wrap">
             {% if pagination.has_prev %}
             <li class="page-item">
-                <a class="page-link" href="?page={{ pagination.prev_num }}{% if request.args.get('search') %}&search={{ request.args.get('search') }}{% endif %}{% if request.args.get('ev') %}&ev=on{% endif %}{% if request.args.get('ki') %}&ki=on{% endif %}{% if request.args.get('friend') %}&friend={{ request.args.get('friend') }}{% endif %}">前へ</a>
+                <a class="page-link"
+                    href="?page={{ pagination.prev_num }}{% if request.args.get('search') %}&search={{ request.args.get('search') }}{% endif %}{% if request.args.get('ev') %}&ev=on{% endif %}{% if request.args.get('ki') %}&ki=on{% endif %}{% if request.args.get('friend') %}&friend={{ request.args.get('friend') }}{% endif %}">前へ</a>
             </li>
             {% endif %}
 
             {% for p in pagination.iter_pages(left_edge=2, right_edge=2, left_current=2, right_current=2) %}
             {% if p %}
             <li class="page-item {% if p == pagination.page %}active{% endif %}">
-                <a class="page-link" href="?page={{ p }}{% if request.args.get('search') %}&search={{ request.args.get('search') }}{% endif %}{% if request.args.get('ev') %}&ev=on{% endif %}{% if request.args.get('ki') %}&ki=on{% endif %}{% if request.args.get('friend') %}&friend={{ request.args.get('friend') }}{% endif %}">{{ p }}</a>
+                <a class="page-link"
+                    href="?page={{ p }}{% if request.args.get('search') %}&search={{ request.args.get('search') }}{% endif %}{% if request.args.get('ev') %}&ev=on{% endif %}{% if request.args.get('ki') %}&ki=on{% endif %}{% if request.args.get('friend') %}&friend={{ request.args.get('friend') }}{% endif %}">{{
+                    p }}</a>
             </li>
             {% else %}
             <li class="page-item disabled"><span class="page-link">…</span></li>
@@ -327,11 +344,13 @@
 
             {% if pagination.has_next %}
             <li class="page-item">
-                <a class="page-link" href="?page={{ pagination.next_num }}{% if request.args.get('search') %}&search={{ request.args.get('search') }}{% endif %}{% if request.args.get('ev') %}&ev=on{% endif %}{% if request.args.get('ki') %}&ki=on{% endif %}{% if request.args.get('friend') %}&friend={{ request.args.get('friend') }}{% endif %}">次へ</a>
+                <a class="page-link"
+                    href="?page={{ pagination.next_num }}{% if request.args.get('search') %}&search={{ request.args.get('search') }}{% endif %}{% if request.args.get('ev') %}&ev=on{% endif %}{% if request.args.get('ki') %}&ki=on{% endif %}{% if request.args.get('friend') %}&friend={{ request.args.get('friend') }}{% endif %}">次へ</a>
             </li>
             {% endif %}
         </ul>
-        <p class="text-center text-muted small">{{ pagination.total }}件中 {{ (pagination.page-1)*15+1 }}〜{{ [pagination.page*15, pagination.total]|min }}件を表示</p>
+        <p class="text-center text-muted small">{{ pagination.total }}件中 {{ (pagination.page-1)*15+1 }}〜{{
+            [pagination.page*15, pagination.total]|min }}件を表示</p>
     </nav>
     {% endif %}
     </div>
@@ -419,6 +438,51 @@
             }
             setInterval(checkMaintenance, 300);
         })();
+        async function loadNotifications() {
+            const res = await fetch('/api/notifications/unread_count');
+            const data = await res.json();
+            const badge = document.getElementById('notif_badge');
+            if (data.count > 0) {
+                badge.style.display = 'inline';
+                badge.textContent = data.count;
+            } else {
+                badge.style.display = 'none';
+            }
+        }
+
+        async function toggleNotifications() {
+            const dropdown = document.getElementById('notif_dropdown');
+            if (dropdown.style.display === 'none') {
+                dropdown.style.display = 'block';
+                const res = await fetch('/api/notifications');
+                const notifs = await res.json();
+                const list = document.getElementById('notif_list');
+                if (notifs.length === 0) {
+                    list.innerHTML = '<div class="text-muted small">通知はありません</div>';
+                } else {
+                    list.innerHTML = notifs.map(n => `
+                    <a href="${n.link || '#'}" class="d-block p-2 rounded mb-1 text-decoration-none ${n.is_read ? 'text-muted' : 'bg-warning-subtle fw-bold'}" style="font-size:0.85rem;">
+                        ${n.message}
+                    </a>
+                `).join('');
+                }
+                await fetch('/api/notifications/read', { method: 'POST' });
+                loadNotifications();
+            } else {
+                dropdown.style.display = 'none';
+            }
+        }
+
+        document.addEventListener('click', function (e) {
+            const btn = document.getElementById('notif_btn');
+            const dropdown = document.getElementById('notif_dropdown');
+            if (btn && dropdown && !btn.contains(e.target) && !dropdown.contains(e.target)) {
+                dropdown.style.display = 'none';
+            }
+        });
+
+        loadNotifications();
+        setInterval(loadNotifications, 30000);
     </script>
 </body>
 
