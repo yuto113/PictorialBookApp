@@ -290,6 +290,19 @@ class AppSetting(db.Model):
     key = db.Column(db.String(50), unique=True, nullable=False)
     value = db.Column(db.Text, nullable=True)
 
+class Notification(db.Model):
+    """通知"""
+    __tablename__ = 'notification'
+    
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id', ondelete='CASCADE'), nullable=False)
+    message = db.Column(db.Text, nullable=False)
+    link = db.Column(db.Text, nullable=True)
+    is_read = db.Column(db.Integer, default=0)
+    created_at = db.Column(db.DateTime(timezone=True), default=func.now())
+    
+    user = db.relationship('User', backref='notifications')
+
 class AccessLog(db.Model):
     """アクセスログ"""
     __tablename__ = 'access_log'

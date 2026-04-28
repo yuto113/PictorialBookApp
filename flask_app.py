@@ -2,7 +2,7 @@ import os
 os.makedirs('/app/instance', exist_ok=True)
 from flask import Flask, render_template, request, redirect, session, flash, jsonify
 import traceback
-from models import User, db, Date, Like, Chat, Friend, Feedback, School, SchoolMember, SchoolClass, ClassMember, SchoolMessage, SchoolMessageReply, ClassChat, ClassChatReply, ClassTeacher, Assignment, AssignmentSubmission, AssignmentChat, AssignmentChatReply, AppSetting, Review, AccessLog, Tag, DateTag
+from models import User, db, Date, Like, Chat, Friend, Feedback, School, SchoolMember, SchoolClass, ClassMember, SchoolMessage, SchoolMessageReply, ClassChat, ClassChatReply, ClassTeacher, Assignment, AssignmentSubmission, AssignmentChat, AssignmentChatReply, AppSetting, Review, AccessLog, Tag, DateTag, Notification
 from sqlalchemy import or_
 from datetime import datetime
 from zoneinfo import ZoneInfo
@@ -829,6 +829,54 @@ def create_teacher():
     
     return redirect('/school/dashboard')
 
+// 通知
+    async function loadNotifications() {
+        const res = await fetch('/api/notifications/unread_count');
+        const data = await res.json();
+        const badge = document.getElementById('notif_badge');
+        if (data.count > 0) {
+            badge.style.display = 'inline';
+            badge.textContent = data.count;
+        } else {
+            badge.style.display = 'none';
+        }
+    }
+
+    async function toggleNotifications() {
+        const dropdown = document.getElementById('notif_dropdown');
+        if (dropdown.style.display === 'none') {
+            dropdown.style.display = 'block';
+            const res = await fetch('/api/notifications');
+            const notifs = await res.json();
+            const list = document.getElementById('notif_list');
+            if (notifs.length === 0) {
+                list.innerHTML = '<div class="text-muted small">通知はありません</div>';
+            } else {
+                list.innerHTML = notifs.map(n => `
+                    <a href="${n.link || '#'}" class="d-block p-2 rounded mb-1 text-decoration-none ${n.is_read ? 'text-muted' : 'bg-warning-subtle fw-bold'}" style="font-size:0.85rem;">
+                        ${n.message}
+                    </a>
+                `).join('');
+            }
+            // 既読にする
+            await fetch('/api/notifications/read', { method: 'POST' });
+            loadNotifications();
+        } else {
+            dropdown.style.display = 'none';
+        }
+    }
+
+    // ページ外クリックで閉じる
+    document.addEventListener('click', function(e) {
+        const btn = document.getElementById('notif_btn');
+        const dropdown = document.getElementById('notif_dropdown');
+        if (btn && dropdown && !btn.contains(e.target) && !dropdown.contains(e.target)) {
+            dropdown.style.display = 'none';
+        }
+    });
+
+    loadNotifications();
+    setInterval(loadNotifications, 30000);
 
 @app.route('/school/register_student', methods=['POST'])
 def register_student_to_class():
@@ -903,6 +951,19 @@ def post_chat(date_id):
     )
     db_session.add(new_chat)
     db_session.commit()
+
+    # 投稿者に通知（自分のコメント以外）
+    date_obj = Date.query.get(date_id)
+    if date_obj and date_obj.user_id != user_id:
+        commenter = User.query.get(user_id)
+        notif = Notification(
+            user_id=date_obj.user_id,
+            message=f'{commenter.name}さんが「{date_obj.name}」にコメントしました！',
+            link=f'/date/{date_obj.id}'
+        )
+        db.session.add(notif)
+        db.session.commit()
+
     return {'success': True, 'chat': {
         'id': new_chat.id,
         'user_id': new_chat.user_id,
@@ -1275,6 +1336,15 @@ def like(id):
         db_session.add(new_like)
         if animal:
             animal.goodpoint += 1
+            # 自分の投稿以外にいいねしたとき通知
+            if animal.user_id != user_id:
+                liker = User.query.get(user_id)
+                notif = Notification(
+                    user_id=animal.user_id,
+                    message=f'{liker.name}さんが「{animal.name}」にいいねしました！',
+                    link=f'/date/{animal.id}'
+                )
+                db.session.add(notif)
     db_session.commit()
     return redirect('/user')
 
