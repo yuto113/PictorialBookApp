@@ -96,9 +96,11 @@ def access_logs():
     user_id = session.get('user_id')
     if user_id != 2:
         return redirect('/login')
-    logs = AccessLog.query.order_by(AccessLog.accessed_at.desc()).limit(500).all()
     from datetime import timedelta
-    return render_template('access_logs.html', logs=logs, timedelta=timedelta)
+    page = request.args.get('page', 1, type=int)
+    pagination = AccessLog.query.order_by(AccessLog.accessed_at.desc()).paginate(page=page, per_page=500, error_out=False)
+    logs = pagination.items
+    return render_template('access_logs.html', logs=logs, pagination=pagination, timedelta=timedelta)
 
 @app.route('/api/maintenance/run_tests')
 def run_tests():
