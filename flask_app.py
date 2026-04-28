@@ -574,6 +574,15 @@ def user_page():
                     Date.name.like(f'%{search_hira}%'),
                 )
             )
+        tag_search = request.args.get('tag', None)
+        if tag_search:
+            tag = Tag.query.filter_by(name=tag_search).first()
+            if tag:
+                date_ids = [dt.date_id for dt in DateTag.query.filter_by(tag_id=tag.id).all()]
+                date = date.filter(Date.id.in_(date_ids))
+            else:
+                date = date.filter(Date.id == -1)
+
         if Illustrated_ki == 'on' and Illustrated_ev == 'on':
             pass  # 両方チェック→全部表示
         elif Illustrated_ki == 'on':
