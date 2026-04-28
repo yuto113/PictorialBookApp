@@ -300,6 +300,23 @@ class AccessLog(db.Model):
     accessed_at = db.Column(db.DateTime(timezone=True), default=func.now())
     ip_address = db.Column(db.Text, nullable=True)
 
+class Tag(db.Model):
+    """タグ"""
+    __tablename__ = 'tag'
+    
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    name = db.Column(db.String(50), unique=True, nullable=False)
+
+class DateTag(db.Model):
+    """投稿とタグの中間テーブル"""
+    __tablename__ = 'date_tag'
+    
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    date_id = db.Column(db.Integer, db.ForeignKey('date.id', ondelete='CASCADE'), nullable=False)
+    tag_id = db.Column(db.Integer, db.ForeignKey('tag.id', ondelete='CASCADE'), nullable=False)
+    
+    __table_args__ = (db.UniqueConstraint('date_id', 'tag_id', name='_date_tag_uc'),)
+
 class Friend(db.Model):
     __tablename__ = 'friends'
     

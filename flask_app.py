@@ -2,7 +2,7 @@ import os
 os.makedirs('/app/instance', exist_ok=True)
 from flask import Flask, render_template, request, redirect, session, flash, jsonify
 import traceback
-from models import User, db, Date, Like, Chat, Friend, Feedback, School, SchoolMember, SchoolClass, ClassMember, SchoolMessage, SchoolMessageReply, ClassChat, ClassChatReply, ClassTeacher, Assignment, AssignmentSubmission, AssignmentChat, AssignmentChatReply, AppSetting, Review, AccessLog
+from models import User, db, Date, Like, Chat, Friend, Feedback, School, SchoolMember, SchoolClass, ClassMember, SchoolMessage, SchoolMessageReply, ClassChat, ClassChatReply, ClassTeacher, Assignment, AssignmentSubmission, AssignmentChat, AssignmentChatReply, AppSetting, Review, AccessLog, Tag, DateTag
 from sqlalchemy import or_
 from datetime import datetime
 from zoneinfo import ZoneInfo
@@ -2033,6 +2033,62 @@ def profile(user_id):
 
     # # ★ ここがエラーの原因でした！ target_user=target_user に直しています！
     # return render_template('profile.html', target_user=target_user, dates=user_dates, is_me=is_me, is_friend=is_friend)
+
+@app.route('/api/tags')
+def get_tags():
+    """全タグ一覧を返す"""
+    tags = Tag.query.order_by(Tag.name).all()
+    return jsonify([{'id': t.id, 'name': t.name} for t in tags])
+
+@app.route('/api/date/<int:date_id>/tags', methods=['GET'])
+def get_date_tags(date_id):
+    """投稿についているタグを返す"""
+    date_tags = DateTag.query.filter_by(date_id=date_id).all()
+    tags = [Tag.query.get(dt.tag_id) for dt in date_tags]
+    return jsonify([{'id': t.id, 'name': t.name} for t in tags if t])
+
+@app.route('/api/date/<int:date_id>/tags', methods=['POST'])
+def set_date_tags(date_id):
+    """投稿のタグを更新する（投稿者・管理者のみ）"""
+    user_id = session.get('user_id')
+    if not user_id:
+        return jsonify({'error': 'unauthorized'}), 401
+    date_obj = Date.query.get(date_id)
+    if not date_obj or (date_obj.user_id != user_id and user_id != 2):
+        return jsonify({'error': 'forbidden'}), 403
+    
+    tag_names = request.json.get('tags', [])
+    
+    # 既存のタグを削除
+    DateTag.query.filter_by(date_id=date_id).delete()
+    
+    for name in tag_names:
+        name = name.strip()
+        if not name:
+            continue
+        # タグが存在しなければ作成
+        tag = Tag.query.filter_by(name=name).first()
+        if not tag:
+            tag = Tag(name=name)
+            db.session.add(tag)
+            db.session.flush()
+        dt = DateTag(date_id=date_id, tag_id=tag.id)
+        db.session.add(dt)
+    
+    db.session.commit()
+    return jsonify({'success': True})
+
+@app.route('/api/tags/search')
+def search_by_tag():
+    """タグで投稿を検索する"""
+    tag_name = request.args.get('tag', '')
+    tag = Tag.query.filter_by(name=tag_name).first()
+    if not tag:
+        return jsonify({'dates': []})
+    date_tags = DateTag.query.filter_by(tag_id=tag.id).all()
+    date_ids = [dt.date_id for dt in date_tags]
+    dates = Date.query.filter(Date.id.in_(date_ids), Date.is_hidden != 1).all()
+    return jsonify({'dates': [{'id': d.id, 'name': d.name, 'imagepass': d.imagepass} for d in dates]})
 
 @app.route('/toggle_hide/<int:post_id>')
 def toggle_hide(post_id):
