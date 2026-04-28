@@ -305,6 +305,35 @@
     {% if dates|length == 0 %}
     <div class="alert alert-info mt-4">該当する図鑑が見つかりませんでした。新しく投稿してみましょう！</div>
     {% endif %}
+
+    {% if pagination and pagination.pages > 1 %}
+    <nav class="mt-4">
+        <ul class="pagination justify-content-center flex-wrap">
+            {% if pagination.has_prev %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ pagination.prev_num }}{% if request.args.get('search') %}&search={{ request.args.get('search') }}{% endif %}{% if request.args.get('ev') %}&ev=on{% endif %}{% if request.args.get('ki') %}&ki=on{% endif %}{% if request.args.get('friend') %}&friend={{ request.args.get('friend') }}{% endif %}">前へ</a>
+            </li>
+            {% endif %}
+
+            {% for p in pagination.iter_pages(left_edge=2, right_edge=2, left_current=2, right_current=2) %}
+            {% if p %}
+            <li class="page-item {% if p == pagination.page %}active{% endif %}">
+                <a class="page-link" href="?page={{ p }}{% if request.args.get('search') %}&search={{ request.args.get('search') }}{% endif %}{% if request.args.get('ev') %}&ev=on{% endif %}{% if request.args.get('ki') %}&ki=on{% endif %}{% if request.args.get('friend') %}&friend={{ request.args.get('friend') }}{% endif %}">{{ p }}</a>
+            </li>
+            {% else %}
+            <li class="page-item disabled"><span class="page-link">…</span></li>
+            {% endif %}
+            {% endfor %}
+
+            {% if pagination.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ pagination.next_num }}{% if request.args.get('search') %}&search={{ request.args.get('search') }}{% endif %}{% if request.args.get('ev') %}&ev=on{% endif %}{% if request.args.get('ki') %}&ki=on{% endif %}{% if request.args.get('friend') %}&friend={{ request.args.get('friend') }}{% endif %}">次へ</a>
+            </li>
+            {% endif %}
+        </ul>
+        <p class="text-center text-muted small">{{ pagination.total }}件中 {{ (pagination.page-1)*15+1 }}〜{{ [pagination.page*15, pagination.total]|min }}件を表示</p>
+    </nav>
+    {% endif %}
     </div>
 
     <footer class="footer text-center">

@@ -598,7 +598,10 @@ def user_page():
             school_user_ids = [m.user_id for m in SchoolMember.query.all()]
             date = date.filter(Date.user_id.notin_(school_user_ids))
         
-        dates = date.filter(Date.is_hidden != 1).order_by(Date.id.desc()).all()
+        page = request.args.get('page', 1, type=int)
+        per_page = 15
+        pagination = date.filter(Date.is_hidden != 1).order_by(Date.id.desc()).paginate(page=page, per_page=per_page, error_out=False)
+        dates = pagination.items
 
         # 各dateに対して、現在のユーザーがいいね済みかをチェック
         for d in dates:
@@ -621,7 +624,7 @@ def user_page():
         if user.role in ['teacher', 'school_admin'] and my_school_member:
             my_classes = SchoolClass.query.filter_by(school_id=my_school_member.school_id).all()
         
-        return render_template('user.html', user=user, dates=dates, filter_ev=Illustrated_ev, filter_ki=Illustrated_ki, filter_friend=Illustrated_friend, friends=friends, my_school=my_school, user_role=user.role, my_classes=my_classes)
+        return render_template('user.html', user=user, dates=dates, filter_ev=Illustrated_ev, filter_ki=Illustrated_ki, filter_friend=Illustrated_friend, friends=friends, my_school=my_school, user_role=user.role, my_classes=my_classes, pagination=pagination)
     
     from datetime import datetime as dt
     now_dt = dt.now(tz=ZoneInfo("Asia/Tokyo"))
