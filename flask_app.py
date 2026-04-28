@@ -599,7 +599,7 @@ def user_page():
             date = date.filter(Date.user_id.notin_(school_user_ids))
         
         page = request.args.get('page', 1, type=int)
-        per_page = 15
+        per_page = 9
         pagination = date.filter(Date.is_hidden != 1).order_by(Date.id.desc()).paginate(page=page, per_page=per_page, error_out=False)
         dates = pagination.items
 
