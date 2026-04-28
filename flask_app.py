@@ -2155,6 +2155,37 @@ def search_by_tag():
     dates = Date.query.filter(Date.id.in_(date_ids), Date.is_hidden != 1).all()
     return jsonify({'dates': [{'id': d.id, 'name': d.name, 'imagepass': d.imagepass} for d in dates]})
 
+@app.route('/api/notifications')
+def get_notifications():
+    user_id = session.get('user_id')
+    if not user_id:
+        return jsonify({'error': 'unauthorized'}), 401
+    notifs = Notification.query.filter_by(user_id=user_id).order_by(Notification.created_at.desc()).limit(20).all()
+    return jsonify([{
+        'id': n.id,
+        'message': n.message,
+        'link': n.link,
+        'is_read': n.is_read,
+        'created_at': str(n.created_at)
+    } for n in notifs])
+
+@app.route('/api/notifications/read', methods=['POST'])
+def mark_notifications_read():
+    user_id = session.get('user_id')
+    if not user_id:
+        return jsonify({'error': 'unauthorized'}), 401
+    Notification.query.filter_by(user_id=user_id, is_read=0).update({'is_read': 1})
+    db.session.commit()
+    return jsonify({'success': True})
+
+@app.route('/api/notifications/unread_count')
+def unread_count():
+    user_id = session.get('user_id')
+    if not user_id:
+        return jsonify({'count': 0})
+    count = Notification.query.filter_by(user_id=user_id, is_read=0).count()
+    return jsonify({'count': count})
+
 @app.route('/toggle_hide/<int:post_id>')
 def toggle_hide(post_id):
     login_id = session.get('user_id')
