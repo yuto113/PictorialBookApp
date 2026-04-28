@@ -2021,7 +2021,15 @@ def profile(user_id):
                 is_pending = True
                 is_requester = (friend_relation.user_id == login_id)
 
-    return render_template('profile.html', target_user=target_user, dates=user_dates, is_me=is_me, is_friend=is_friend, is_pending=is_pending, is_requester=is_requester)
+    # 統計情報
+    post_count = Date.query.filter_by(user_id=user_id, is_hidden=0).count()
+    like_count = sum(d.goodpoint or 0 for d in user_dates)
+    friend_count = Friend.query.filter(
+        ((Friend.user_id == user_id) | (Friend.friend_id == user_id)),
+        Friend.status == 'accepted'
+    ).count()
+
+    return render_template('profile.html', target_user=target_user, dates=user_dates, is_me=is_me, is_friend=is_friend, is_pending=is_pending, is_requester=is_requester, post_count=post_count, like_count=like_count, friend_count=friend_count)
 
     # # ★ ここがエラーの原因でした！ target_user=target_user に直しています！
     # return render_template('profile.html', target_user=target_user, dates=user_dates, is_me=is_me, is_friend=is_friend)
