@@ -829,54 +829,6 @@ def create_teacher():
     
     return redirect('/school/dashboard')
 
-// 通知
-    async function loadNotifications() {
-        const res = await fetch('/api/notifications/unread_count');
-        const data = await res.json();
-        const badge = document.getElementById('notif_badge');
-        if (data.count > 0) {
-            badge.style.display = 'inline';
-            badge.textContent = data.count;
-        } else {
-            badge.style.display = 'none';
-        }
-    }
-
-    async function toggleNotifications() {
-        const dropdown = document.getElementById('notif_dropdown');
-        if (dropdown.style.display === 'none') {
-            dropdown.style.display = 'block';
-            const res = await fetch('/api/notifications');
-            const notifs = await res.json();
-            const list = document.getElementById('notif_list');
-            if (notifs.length === 0) {
-                list.innerHTML = '<div class="text-muted small">通知はありません</div>';
-            } else {
-                list.innerHTML = notifs.map(n => `
-                    <a href="${n.link || '#'}" class="d-block p-2 rounded mb-1 text-decoration-none ${n.is_read ? 'text-muted' : 'bg-warning-subtle fw-bold'}" style="font-size:0.85rem;">
-                        ${n.message}
-                    </a>
-                `).join('');
-            }
-            // 既読にする
-            await fetch('/api/notifications/read', { method: 'POST' });
-            loadNotifications();
-        } else {
-            dropdown.style.display = 'none';
-        }
-    }
-
-    // ページ外クリックで閉じる
-    document.addEventListener('click', function(e) {
-        const btn = document.getElementById('notif_btn');
-        const dropdown = document.getElementById('notif_dropdown');
-        if (btn && dropdown && !btn.contains(e.target) && !dropdown.contains(e.target)) {
-            dropdown.style.display = 'none';
-        }
-    });
-
-    loadNotifications();
-    setInterval(loadNotifications, 30000);
 
 @app.route('/school/register_student', methods=['POST'])
 def register_student_to_class():
