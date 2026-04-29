@@ -128,11 +128,14 @@
                             🔔 <span id="notif_badge" class="badge bg-danger" style="display:none;">0</span>
                         </button>
                         <div id="notif_dropdown"
-                            style="display:none; position:absolute; right:0; top:110%; width:320px; background:white; border-radius:1rem; box-shadow:0 5px 20px rgba(0,0,0,0.15); z-index:9999; max-height:400px; overflow-y:auto;">
+                            style="display:none; position:absolute; right:0; top:110%; width:320px; background:white; border-radius:1rem; box-shadow:0 5px 20px rgba(0,0,0,0.15); z-index:9999;">
                             <div class="p-3">
                                 <h6 class="fw-bold mb-2">🔔 通知</h6>
                                 <div id="notif_list">
                                     <div class="text-muted small">読み込み中...</div>
+                                </div>
+                                <div class="mt-2 pt-2 border-top text-center">
+                                    <a href="/notifications" class="text-decoration-none small fw-bold" style="color:#ff6b6b;">すべて表示 →</a>
                                 </div>
                             </div>
                         </div>
@@ -457,14 +460,15 @@
                 const res = await fetch('/api/notifications');
                 const notifs = await res.json();
                 const list = document.getElementById('notif_list');
-                if (notifs.length === 0) {
+                const top3 = notifs.slice(0, 3);
+                if (top3.length === 0) {
                     list.innerHTML = '<div class="text-muted small">通知はありません</div>';
                 } else {
-                    list.innerHTML = notifs.map(n => `
-                    <a href="${n.link || '#'}" class="d-block p-2 rounded mb-1 text-decoration-none ${n.is_read ? 'text-muted' : 'bg-warning-subtle fw-bold'}" style="font-size:0.85rem;">
-                        ${n.message}
-                    </a>
-                `).join('');
+                    list.innerHTML = top3.map(n => `
+                        <a href="${n.link || '/notifications'}" class="d-block p-2 rounded mb-1 text-decoration-none ${n.is_read ? 'text-muted' : 'bg-warning-subtle fw-bold'}" style="font-size:0.85rem;">
+                            ${n.message}
+                        </a>
+                    `).join('');
                 }
                 await fetch('/api/notifications/read', { method: 'POST' });
                 loadNotifications();
