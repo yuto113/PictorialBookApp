@@ -636,7 +636,8 @@ def user_page():
         if user.role in ['teacher', 'school_admin'] and my_school_member:
             my_classes = SchoolClass.query.filter_by(school_id=my_school_member.school_id).all()
         
-        return render_template('user.html', user=user, dates=dates, filter_ev=Illustrated_ev, filter_ki=Illustrated_ki, filter_friend=Illustrated_friend, friends=friends, my_school=my_school, user_role=user.role, my_classes=my_classes, pagination=pagination)
+        all_tags = Tag.query.order_by(Tag.name).all()
+        return render_template('user.html', user=user, dates=dates, filter_ev=Illustrated_ev, filter_ki=Illustrated_ki, filter_friend=Illustrated_friend, friends=friends, my_school=my_school, user_role=user.role, my_classes=my_classes, pagination=pagination, tag_search=tag_search, all_tags=all_tags)
     
     from datetime import datetime as dt
     now_dt = dt.now(tz=ZoneInfo("Asia/Tokyo"))
@@ -1350,18 +1351,30 @@ def like(id):
 
     existing_like = db_session.query(Like).filter_by(user_id=user_id, date_id=id).first()
     animal = db_session.query(Date).filter_by(id=id).first()
+
     if existing_like:
         # いいね解除
         db_session.delete(existing_like)
         if animal:
-            animal.goodpoint -= 1
+            animal.goodpoint = max(0, animal.goodpoint - 1)
+        db_session.commit()
     else:
         # いいね追加
         new_like = Like(user_id=user_id, date_id=id)
         db_session.add(new_like)
         if animal:
             animal.goodpoint += 1
-            if animal.user_id != user_id:
+        db_session.commit()
+
+        # 通知（commitの後・自分以外・1分以内の重複チェック）
+        if animal and animal.user_id != user_id:
+            from datetime import timedelta
+            one_min_ago = datetime.now() - timedelta(minutes=1)
+            recent_notif = Notification.query.filter_by(
+                user_id=animal.user_id,
+                link=f'/date/{animal.id}'
+            ).filter(Notification.created_at >= one_min_ago).first()
+            if not recent_notif:
                 try:
                     liker = User.query.get(user_id)
                     notif = Notification(
@@ -1370,19 +1383,11 @@ def like(id):
                         link=f'/date/{animal.id}'
                     )
                     db.session.add(notif)
-                    db.session.flush()
+                    db.session.commit()
                 except Exception as e:
                     db.session.rollback()
-                    app.logger.error(f'通知作成エラー: {e}')
-            if animal.user_id != user_id:
-                liker = User.query.get(user_id)
-                notif = Notification(
-                    user_id=animal.user_id,
-                    message=f'{liker.name}さんが「{animal.name}」にいいねしました！',
-                    link=f'/date/{animal.id}'
-                )
-                db.session.add(notif)
-    db_session.commit()
+                    app.logger.error(f'通知エラー: {e}')
+
     return redirect('/user')
 
 

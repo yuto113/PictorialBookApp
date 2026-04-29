@@ -167,6 +167,17 @@
                         type="submit">検索</button>
                     <a href="/user" class="btn btn-outline-secondary">クリア</a>
                 </form>
+                {% if all_tags %}
+                <div class="mt-2 d-flex flex-wrap gap-1 align-items-center">
+                    <span class="text-muted small">🏷 タグ：</span>
+                    <a href="/user" class="badge text-decoration-none {{ 'bg-danger' if not tag_search else 'bg-secondary' }}">すべて</a>
+                    {% for tag in all_tags %}
+                    <a href="/user?tag={{ tag.name }}" class="badge text-decoration-none {{ 'bg-danger' if tag_search == tag.name else 'bg-secondary' }}">
+                        {{ tag.name }}
+                    </a>
+                    {% endfor %}
+                </div>
+                {% endif %}
             </div>
             {% if not is_school_user %}
             <div class="col-md-6 text-md-end mt-3 mt-md-0">
