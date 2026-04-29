@@ -10,277 +10,70 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js" defer></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/js/lightbox.min.js" defer></script>
     <style>
-        body {
-            background: linear-gradient(135deg, #fff7f0 0%, #f0f9ff 100%);
-            color: #333;
-            overflow-x: hidden;
-        }
-
-        .brand-color {
-            color: #ff6b6b;
-        }
-
-        .hero {
-            background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 50%, #ffd1ff 100%);
-            color: white;
-            padding: 6rem 0 4rem;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-image:
-                radial-gradient(circle at 20% 30%, rgba(255, 255, 255, 0.3) 0%, transparent 50%),
-                radial-gradient(circle at 80% 70%, rgba(255, 255, 255, 0.3) 0%, transparent 50%);
-            pointer-events: none;
-        }
-
-        .hero h1 {
-            font-size: 3.5rem;
-            font-weight: 900;
-            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.15);
-            animation: fadeInUp 1s ease;
-        }
-
-        .hero p {
-            font-size: 1.3rem;
-            animation: fadeInUp 1s 0.2s ease backwards;
-        }
-
-        .hero .cta-buttons {
-            animation: fadeInUp 1s 0.4s ease backwards;
-        }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes float {
-
-            0%,
-            100% {
-                transform: translateY(0);
-            }
-
-            50% {
-                transform: translateY(-15px);
-            }
-        }
-
-        @keyframes pulse {
-
-            0%,
-            100% {
-                transform: scale(1);
-            }
-
-            50% {
-                transform: scale(1.05);
-            }
-        }
-
-        .hero-emoji {
-            display: inline-block;
-            animation: float 3s ease-in-out infinite;
-            font-size: 5rem;
-            margin: 1rem;
-        }
-
-        .btn-hero {
-            padding: 1rem 2.5rem;
-            font-size: 1.2rem;
-            font-weight: bold;
-            border-radius: 50px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-            transition: all 0.3s;
-        }
-
-        .btn-hero:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
-        }
-
-        .btn-hero-primary {
-            background: white;
-            color: #ff6b6b;
-        }
-
-        .btn-hero-primary:hover {
-            background: #fff;
-            color: #ff4757;
-            animation: pulse 1s infinite;
-        }
-
-        .stats-section {
-            background: white;
-            padding: 3rem 0;
-            margin: -2rem 0 0;
-            border-radius: 2rem 2rem 0 0;
-            position: relative;
-            box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.05);
-        }
-
-        .stat-card {
-            text-align: center;
-            padding: 1rem;
-        }
-
-        .stat-number {
-            font-size: 3rem;
-            font-weight: 900;
-            background: linear-gradient(135deg, #ff6b6b, #ff9a9e);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .stat-label {
-            color: #666;
-            font-weight: bold;
-            font-size: 1rem;
-        }
-
-        .feature-section {
-            padding: 4rem 0;
-        }
-
-        .feature-card {
-            background: white;
-            padding: 2rem;
-            border-radius: 1.5rem;
-            text-align: center;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
-            height: 100%;
-            transition: all 0.3s;
-            border: 3px solid transparent;
-        }
-
-        .feature-card:hover {
-            transform: translateY(-10px);
-            border-color: #ff9a9e;
-            box-shadow: 0 15px 40px rgba(255, 107, 107, 0.15);
-        }
-
-        .feature-icon {
-            font-size: 3.5rem;
-            margin-bottom: 1rem;
-            display: inline-block;
-        }
-
-        .feature-card:hover .feature-icon {
-            animation: pulse 1s ease infinite;
-        }
-
-        .reviews-section {
-            background: linear-gradient(135deg, #fafafa 0%, #fff 100%);
-            padding: 4rem 0;
-        }
-
-        .review-card {
-            background: white;
-            padding: 2rem;
-            border-radius: 1.5rem;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
-            height: 100%;
-            position: relative;
-            transition: transform 0.3s;
-        }
-
-        .review-card:hover {
-            transform: translateY(-5px);
-        }
-
-        .review-stars {
-            color: #ffc107;
-            font-size: 1.2rem;
-        }
-
-        .review-avatar {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #ff9a9e, #fad0c4);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 1.5rem;
-            font-weight: bold;
-        }
-
-        .collection-section {
-            padding: 4rem 0;
-            background: linear-gradient(135deg, #fff7f0 0%, #f0f9ff 100%);
-        }
-
-        .card-tilt {
-            transform: rotate(-0.5deg);
-            transition: transform 0.3s;
-        }
-
-        .card-tilt:hover {
-            transform: rotate(0deg) scale(1.03);
-        }
-
-        .cta-section {
-            background: linear-gradient(135deg, #ff6b6b 0%, #ff9a9e 100%);
-            color: white;
-            padding: 5rem 0;
-            text-align: center;
-        }
-
-        .cta-section h2 {
-            font-size: 2.5rem;
-            font-weight: 900;
-            margin-bottom: 1rem;
-        }
-
-        .footer {
-            color: #666;
-            padding: 2rem 0;
-            background: white;
-        }
-
+        body { background: linear-gradient(135deg, #fff7f0 0%, #f0f9ff 100%); color: #333; overflow-x: hidden; }
+        .brand-color { color: #ff6b6b; }
+        .hero { background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 50%, #ffd1ff 100%); color: white; padding: 6rem 0 4rem; text-align: center; position: relative; overflow: hidden; }
+        .hero::before { content: \'\'; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-image: radial-gradient(circle at 20% 30%, rgba(255, 255, 255, 0.3) 0%, transparent 50%), radial-gradient(circle at 80% 70%, rgba(255, 255, 255, 0.3) 0%, transparent 50%); pointer-events: none; }
+        .hero h1 { font-size: 3.5rem; font-weight: 900; text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.15); animation: fadeInUp 1s ease; }
+        .hero p { font-size: 1.3rem; animation: fadeInUp 1s 0.2s ease backwards; }
+        .hero .cta-buttons { animation: fadeInUp 1s 0.4s ease backwards; }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+        .hero-emoji { display: inline-block; animation: float 3s ease-in-out infinite; font-size: 5rem; margin: 1rem; }
+        .btn-hero { padding: 1rem 2.5rem; font-size: 1.2rem; font-weight: bold; border-radius: 50px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); transition: all 0.3s; }
+        .btn-hero:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3); }
+        .btn-hero-primary { background: white; color: #ff6b6b; }
+        .btn-hero-primary:hover { background: #fff; color: #ff4757; animation: pulse 1s infinite; }
+        .stats-section { background: white; padding: 3rem 0; margin: -2rem 0 0; border-radius: 2rem 2rem 0 0; position: relative; box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.05); }
+        .stat-card { text-align: center; padding: 1rem; border-radius: 1rem; transition: transform 0.2s; }
+        .stat-card:hover { transform: translateY(-4px); }
+        .stat-number { font-size: 3rem; font-weight: 900; background: linear-gradient(135deg, #ff6b6b, #ff9a9e); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .stat-label { color: #666; font-weight: bold; font-size: 1rem; }
+        .feature-section { padding: 4rem 0; }
+        .feature-card { background: white; padding: 2rem; border-radius: 1.5rem; text-align: center; box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05); height: 100%; transition: all 0.3s; border: 3px solid transparent; }
+        .feature-card:hover { transform: translateY(-10px); border-color: #ff9a9e; box-shadow: 0 15px 40px rgba(255, 107, 107, 0.15); }
+        .feature-icon { font-size: 3.5rem; margin-bottom: 1rem; display: inline-block; }
+        .feature-card:hover .feature-icon { animation: pulse 1s ease infinite; }
+        .reviews-section { background: linear-gradient(135deg, #fafafa 0%, #fff 100%); padding: 4rem 0; }
+        .review-card { background: white; padding: 2rem; border-radius: 1.5rem; box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05); height: 100%; position: relative; transition: transform 0.3s; }
+        .review-card:hover { transform: translateY(-5px); }
+        .review-stars { color: #ffc107; font-size: 1.2rem; }
+        .review-avatar { width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(135deg, #ff9a9e, #fad0c4); display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem; font-weight: bold; }
+        .collection-section { padding: 4rem 0; background: linear-gradient(135deg, #fff7f0 0%, #f0f9ff 100%); }
+        .card-tilt { transform: rotate(-0.5deg); transition: transform 0.3s; }
+        .card-tilt:hover { transform: rotate(0deg) scale(1.03); }
+        .cta-section { background: linear-gradient(135deg, #ff6b6b 0%, #ff9a9e 100%); color: white; padding: 5rem 0; text-align: center; }
+        .cta-section h2 { font-size: 2.5rem; font-weight: 900; margin-bottom: 1rem; }
+        .footer { color: #666; padding: 2rem 0; background: white; }
         @media (max-width: 768px) {
-            .hero h1 {
-                font-size: 2.2rem;
-            }
-
-            .hero p {
-                font-size: 1rem;
-            }
-
-            .hero-emoji {
-                font-size: 3rem;
-            }
-
-            .stat-number {
-                font-size: 2rem;
-            }
-
-            .cta-section h2 {
-                font-size: 1.8rem;
-            }
+            .hero h1 { font-size: 2.2rem; }
+            .hero p { font-size: 1rem; }
+            .hero-emoji { font-size: 3rem; }
+            .stat-number { font-size: 2rem; }
+            .cta-section h2 { font-size: 1.8rem; }
+            .step-arrow { display: none; }
         }
+        /* === 追加デザイン === */
+        .announce-bar { background: linear-gradient(90deg, #ff6b6b, #ff9a9e, #ffd1ff, #ff9a9e, #ff6b6b); background-size: 300% 100%; animation: shimmer 4s linear infinite; color: white; text-align: center; padding: 0.5rem; font-size: 0.9rem; font-weight: bold; }
+        @keyframes shimmer { 0% { background-position: 0% 50%; } 100% { background-position: 300% 50%; } }
+        .hero-badge { display: inline-block; background: rgba(255,255,255,0.25); border: 1.5px solid rgba(255,255,255,0.6); border-radius: 50px; padding: 0.3rem 1.2rem; font-size: 0.9rem; font-weight: bold; margin-bottom: 1rem; animation: fadeInUp 0.6s ease both; }
+        .steps-section { background: white; padding: 4rem 0; border-top: 1px solid #f0f0f0; }
+        .step-item { text-align: center; padding: 1rem; }
+        .step-number { width: 3.5rem; height: 3.5rem; border-radius: 50%; background: linear-gradient(135deg, #ff6b6b, #ff9a9e); color: white; font-size: 1.5rem; font-weight: 900; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; box-shadow: 0 4px 15px rgba(255,107,107,0.3); }
+        .step-arrow { font-size: 2rem; color: #ffb3b3; line-height: 6rem; }
+        @keyframes glow { 0%, 100% { box-shadow: 0 4px 15px rgba(255,255,255,0.3); } 50% { box-shadow: 0 4px 30px rgba(255,255,255,0.7); } }
+        .btn-hero-primary { animation: glow 2s ease-in-out infinite; }
+        .btn-hero-primary:hover { animation: pulse 0.5s ease infinite; }
     </style>
 </head>
 
 <body>
+
+    <div class="announce-bar">
+        🎉 完全無料で参加できます！登録は30秒で完了 🌿
+    </div>
+
     <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top">
         <div class="container">
             <a class="navbar-brand d-flex align-items-center" href="/">
@@ -297,11 +90,12 @@
 
     <div class="hero">
         <div class="container position-relative">
+            <div class="hero-badge">🌿 みんなで作るオンライン図鑑</div>
             <div class="hero-emoji">🌸</div>
             <div class="hero-emoji">🦋</div>
             <div class="hero-emoji">🌿</div>
-            <h1 class="mb-3">みんなで図鑑を作っていこう！</h1>
-            <p class="mb-4">見つけた植物・動物の写真と情報を、みんなと共有・コレクション！</p>
+            <h1 class="mb-3">みんなで作る、世界にひとつの生き物図鑑！</h1>
+            <p class="mb-4">あなたが見つけた植物・動物の写真を投稿するだけ。<br>みんなの力が合わさって、どんどん大きな図鑑になっていく！</p>
             <div class="cta-buttons d-flex gap-3 justify-content-center flex-wrap">
                 <a href="/signup" class="btn btn-hero btn-hero-primary">🎉 無料で始める</a>
                 <a href="/login" class="btn btn-hero btn-outline-light">ログイン</a>
@@ -315,70 +109,109 @@
                 <div class="col-6 col-md-4">
                     <div class="stat-card">
                         <div class="stat-number">{{ stats.users }}</div>
-                        <div class="stat-label">👥 ユーザー数</div>
+                        <div class="stat-label">👥 みんなの仲間</div>
                     </div>
                 </div>
                 <div class="col-6 col-md-4">
                     <div class="stat-card">
                         <div class="stat-number">{{ stats.posts }}</div>
-                        <div class="stat-label">📷 投稿数</div>
+                        <div class="stat-label">📷 みんなの投稿</div>
                     </div>
                 </div>
                 <div class="col-6 col-md-4">
                     <div class="stat-card">
                         <div class="stat-number">{{ stats.likes }}</div>
-                        <div class="stat-label">❤️ いいね数</div>
+                        <div class="stat-label">❤️ みんなのいいね</div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
+    <div class="steps-section">
+        <div class="container">
+            <h2 class="text-center fw-bold mb-2">🚀 かんたん3ステップで参加できる！</h2>
+            <p class="text-center text-muted mb-5">難しい操作は一切なし。今すぐみんなの図鑑づくりに加わろう！</p>
+            <div class="row align-items-center justify-content-center g-2">
+                <div class="col-12 col-md-3">
+                    <div class="step-item">
+                        <div class="step-number">1</div>
+                        <h5 class="fw-bold">無料登録</h5>
+                        <p class="text-muted small">メールアドレスだけでOK！<br>30秒で完了します。</p>
+                    </div>
+                </div>
+                <div class="col-1 d-none d-md-block">
+                    <div class="step-arrow text-center">→</div>
+                </div>
+                <div class="col-12 col-md-3">
+                    <div class="step-item">
+                        <div class="step-number">2</div>
+                        <h5 class="fw-bold">写真を投稿</h5>
+                        <p class="text-muted small">見つけた生き物を<br>スマホで撮って投稿！</p>
+                    </div>
+                </div>
+                <div class="col-1 d-none d-md-block">
+                    <div class="step-arrow text-center">→</div>
+                </div>
+                <div class="col-12 col-md-3">
+                    <div class="step-item">
+                        <div class="step-number">3</div>
+                        <h5 class="fw-bold">みんなとつながる</h5>
+                        <p class="text-muted small">いいね・コメントで<br>仲間と盛り上がろう！</p>
+                    </div>
+                </div>
+            </div>
+            <div class="text-center mt-4">
+                <a href="/signup" class="btn btn-danger btn-lg rounded-pill px-5">🌿 今すぐ参加する（無料）</a>
+            </div>
+        </div>
+    </div>
+
     <div class="feature-section">
         <div class="container">
-            <h2 class="text-center fw-bold mb-2">✨ 図鑑でできること</h2>
-            <p class="text-center text-muted mb-5">かんたん3ステップであなたの知っていることをみんなと共有！</p>
+            <h2 class="text-center fw-bold mb-2">✨ みんなで図鑑を作ろう！</h2>
+            <p class="text-center text-muted mb-5">写真を撮って投稿するだけ！みんなの力で図鑑がどんどん広がっていく。</p>
             <div class="row g-4">
                 <div class="col-md-4">
                     <div class="feature-card">
                         <div class="feature-icon">📷</div>
                         <h5 class="fw-bold">写真をアップロード</h5>
-                        <p class="text-muted">見つけた生き物の写真を投稿して、自分だけの図鑑にコレクション！</p>
+                        <p class="text-muted">あなたが見つけた生き物を写真に撮って投稿！みんなの図鑑にどんどん加わっていくよ。</p>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="feature-card">
                         <div class="feature-icon">🗺</div>
                         <h5 class="fw-bold">地図で記録</h5>
-                        <p class="text-muted">どこで見つけたかを地図に記録。後で振り返るのも楽しい！</p>
+                        <p class="text-muted">どこで見つけたかを地図に記録。みんなの記録が集まって、発見マップが完成！</p>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="feature-card">
                         <div class="feature-icon">💬</div>
                         <h5 class="fw-bold">みんなと交流</h5>
-                        <p class="text-muted">いいね・コメント・フレンド機能で同じ趣味の人とつながろう！</p>
+                        <p class="text-muted">いいね・コメントでみんなと盛り上がろう！同じ生き物に興味がある仲間が見つかるかも！</p>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="feature-card">
                         <div class="feature-icon">🏫</div>
                         <h5 class="fw-bold">学校でも使える</h5>
-                        <p class="text-muted">クラスごとに課題を出したり、学校全体で観察記録を共有しよう！</p>
+                        <p class="text-muted">クラスや学校のみんなで観察記録を共有！先生も課題を出せる、みんなで使える図鑑。</p>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="feature-card">
                         <div class="feature-icon">🎯</div>
                         <h5 class="fw-bold">完全無料</h5>
-                        <p class="text-muted">登録も使い方も全部無料！</p>
+                        <p class="text-muted">登録も投稿も全部無料！まずは気軽に参加して、みんなで図鑑を作ろう。</p>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="feature-card">
                         <div class="feature-icon">📱</div>
                         <h5 class="fw-bold">スマホでも</h5>
-                        <p class="text-muted">スマホ・パソコンどちらでもサクサク使える！</p>
+                        <p class="text-muted">外で見つけたらその場で投稿！スマホ・パソコンどちらでもサクサク使える！</p>
                     </div>
                 </div>
             </div>
@@ -389,7 +222,7 @@
     <div class="reviews-section">
         <div class="container">
             <h2 class="text-center fw-bold mb-2">🌟 みんなの声</h2>
-            <p class="text-center text-muted mb-5">利用者の方々から嬉しいお声をいただいています！</p>
+            <p class="text-center text-muted mb-5">図鑑づくりに参加しているみんなの声をご紹介！</p>
             <div class="row g-4">
                 {% for review in reviews %}
                 <div class="col-md-4">
@@ -417,7 +250,7 @@
     <div class="collection-section">
         <div class="container">
             <h2 class="text-center brand-color fw-bold mb-2">🌸 みんなのコレクション</h2>
-            <p class="text-center text-muted mb-5">こんな素敵な投稿がたくさん！登録してあなたも投稿しよう！</p>
+            <p class="text-center text-muted mb-5">みんなが投稿した生き物たち。あなたもこのコレクションに加わろう！</p>
             <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
                 {% for date in dates %}
                 <div class="col">
@@ -456,8 +289,8 @@
 
     <div class="cta-section">
         <div class="container">
-            <h2>🎉 さあ、はじめよう！</h2>
-            <p class="fs-5 mb-4">無料登録は30秒で完了。あなたの図鑑作りがはじまります！</p>
+            <h2>🎉 あなたの投稿で、図鑑を豊かに！</h2>
+            <p class="fs-5 mb-4">無料登録はたったの30秒。みんなの図鑑づくりに今すぐ参加しよう！</p>
             <div class="d-flex gap-3 justify-content-center flex-wrap">
                 <a href="/signup" class="btn btn-hero btn-hero-primary">🚀 無料で登録する</a>
                 <a href="/login" class="btn btn-hero btn-outline-light">ログイン</a>
