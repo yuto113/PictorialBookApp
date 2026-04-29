@@ -471,6 +471,23 @@ def edit_date(id):
         date_obj.knowledge = data['knowledge']
     
     db_session.commit()
+
+    # タグを更新
+    if 'tags' in data:
+        DateTag.query.filter_by(date_id=date_obj.id).delete()
+        for name in data['tags']:
+            name = name.strip()
+            if not name:
+                continue
+            tag = Tag.query.filter_by(name=name).first()
+            if not tag:
+                tag = Tag(name=name)
+                db.session.add(tag)
+                db.session.flush()
+            dt = DateTag(date_id=date_obj.id, tag_id=tag.id)
+            db.session.add(dt)
+        db.session.commit()
+
     return {'success': True}
 
 @app.route('/map')
@@ -1736,19 +1753,38 @@ def upload():
                         db_session.add(new_submission)
                         db_session.commit()
             
-            return render_template('upload.html', 
+            # タグを保存
+            tag_names = request.form.getlist('tags')
+            for name in tag_names:
+                name = name.strip()
+                if not name:
+                    continue
+                tag = Tag.query.filter_by(name=name).first()
+                if not tag:
+                    tag = Tag(name=name)
+                    db.session.add(tag)
+                    db.session.flush()
+                dt = DateTag(date_id=save_date.id, tag_id=tag.id)
+                db.session.add(dt)
+            db.session.commit()
+
+            all_tags = Tag.query.order_by(Tag.name).all()
+            return render_template('upload.html',
                                     upload=file.filename,
                                     my_school=my_school,
                                     my_classes=my_classes,
                                     available_assignments=available_assignments,
-                                    school_use_map=school_use_map)
+                                    school_use_map=school_use_map,
+                                    all_tags=all_tags)
         # ↑↑↑ここまで↑↑↑
     
+    all_tags = Tag.query.order_by(Tag.name).all()
     return render_template('upload.html',
                             my_school=my_school,
                             my_classes=my_classes,
                             available_assignments=available_assignments,
-                            school_use_map=school_use_map)
+                            school_use_map=school_use_map,
+                            all_tags=all_tags)
     
     # fileを受け取る
     return render_template('upload.html')

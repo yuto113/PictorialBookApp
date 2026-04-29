@@ -48,6 +48,17 @@
             width: 100%;
             height: 300px;
         }
+
+        .tag-badge {
+            background: #f8f9fa;
+            transition: all 0.15s;
+        }
+
+        .tag-badge.selected {
+            background: #ff6b6b;
+            color: white;
+            border-color: #ff6b6b !important;
+        }
     </style>
 </head>
 
@@ -159,7 +170,25 @@
                             <label for="file" class="form-label">画像</label>
                             <input type="file" id="file" name="file" class="form-control" required />
                         </div>
-
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">🏷 タグ</label>
+                            <div class="d-flex flex-wrap gap-2 mb-2" id="tag_checkboxes">
+                                {% for tag in all_tags %}
+                                <label class="tag-badge border rounded-pill px-3 py-1 small"
+                                    style="cursor:pointer; user-select:none;">
+                                    <input type="checkbox" name="tags" value="{{ tag.name }}" class="d-none">
+                                    {{ tag.name }}
+                                </label>
+                                {% endfor %}
+                            </div>
+                            <div class="d-flex gap-2 mt-1">
+                                <input type="text" id="new_tag_input" class="form-control form-control-sm"
+                                    placeholder="新しいタグを追加..." style="max-width:180px;">
+                                <button type="button" class="btn btn-sm btn-outline-secondary" onclick="addTag()">＋
+                                    追加</button>
+                            </div>
+                            <div id="new_tags_container" class="d-flex flex-wrap gap-2 mt-2"></div>
+                        </div>
                         <input type="hidden" id="lat" name="lat" />
                         <input type="hidden" id="lng" name="lng" />
 
@@ -220,52 +249,94 @@
         integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
         crossorigin="anonymous"></script>
 
-<div id="maintenance_overlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(255,247,240,0.97); z-index:99999; display:none; align-items:center; justify-content:center; flex-direction:column;">
-    <div style="text-align:center; background:white; border-radius:2rem; padding:3rem; box-shadow:0 10px 40px rgba(0,0,0,0.1); max-width:400px;">
-        <div style="font-size:4rem; animation:spin 2s linear infinite; display:inline-block;">🔧</div>
-        <h2 style="color:#ff6b6b; margin-top:1rem;">メンテナンス中</h2>
-        <p style="color:#666;">ただいまシステムのメンテナンスを行っています。</p>
-        <div style="background:#fff3cd; border-radius:0.5rem; padding:0.5rem 1rem; font-size:0.85rem;">
-            <span id="maintenance_check_count">復旧確認中...</span>
+    <div id="maintenance_overlay"
+        style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(255,247,240,0.97); z-index:99999; display:none; align-items:center; justify-content:center; flex-direction:column;">
+        <div
+            style="text-align:center; background:white; border-radius:2rem; padding:3rem; box-shadow:0 10px 40px rgba(0,0,0,0.1); max-width:400px;">
+            <div style="font-size:4rem; animation:spin 2s linear infinite; display:inline-block;">🔧</div>
+            <h2 style="color:#ff6b6b; margin-top:1rem;">メンテナンス中</h2>
+            <p style="color:#666;">ただいまシステムのメンテナンスを行っています。</p>
+            <div style="background:#fff3cd; border-radius:0.5rem; padding:0.5rem 1rem; font-size:0.85rem;">
+                <span id="maintenance_check_count">復旧確認中...</span>
+            </div>
         </div>
     </div>
-</div>
-<style>
-@keyframes spin { 0% { transform:rotate(0deg); } 100% { transform:rotate(360deg); } }
-</style>
-<script>
-(function() {
-    const IS_MAINTENANCE_PAGE = window.location.pathname.startsWith('/maintenance');
-    if (IS_MAINTENANCE_PAGE) return;
-    
-    const overlay = document.getElementById('maintenance_overlay');
-    let isMaintenance = false;
-    let checkCount = 0;
-
-    async function checkMaintenance() {
-        try {
-            const res = await fetch('/api/health', { cache: 'no-store' });
-            if (!res.ok) {
-                // メンテナンス中 → オーバーレイ表示
-                if (!isMaintenance) {
-                    isMaintenance = true;
-                    overlay.style.display = 'flex';
-                }
-                checkCount++;
-                document.getElementById('maintenance_check_count').textContent = `復旧確認中... (${checkCount}回目)`;
-            } else {
-                // 復旧 → オーバーレイ非表示
-                if (isMaintenance) {
-                    isMaintenance = false;
-                    overlay.style.display = 'none';
-                    checkCount = 0;
-                }
+    <style>
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
             }
-        } catch(e) {}
-    }
-    setInterval(checkMaintenance, 300);
-})();
-</script>
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+    <script>
+        (function () {
+            const IS_MAINTENANCE_PAGE = window.location.pathname.startsWith('/maintenance');
+            if (IS_MAINTENANCE_PAGE) return;
+
+            const overlay = document.getElementById('maintenance_overlay');
+            let isMaintenance = false;
+            let checkCount = 0;
+
+            async function checkMaintenance() {
+                try {
+                    const res = await fetch('/api/health', { cache: 'no-store' });
+                    if (!res.ok) {
+                        // メンテナンス中 → オーバーレイ表示
+                        if (!isMaintenance) {
+                            isMaintenance = true;
+                            overlay.style.display = 'flex';
+                        }
+                        checkCount++;
+                        document.getElementById('maintenance_check_count').textContent = `復旧確認中... (${checkCount}回目)`;
+                    } else {
+                        // 復旧 → オーバーレイ非表示
+                        if (isMaintenance) {
+                            isMaintenance = false;
+                            overlay.style.display = 'none';
+                            checkCount = 0;
+                        }
+                    }
+                } catch (e) { }
+            }
+            setInterval(checkMaintenance, 300);
+        })();
+    </script>
+
+    <script>
+        document.querySelectorAll('.tag-badge').forEach(label => {
+            label.addEventListener('click', () => {
+                const checkbox = label.querySelector('input');
+                checkbox.checked = !checkbox.checked;
+                label.classList.toggle('selected', checkbox.checked);
+            });
+        });
+
+        function addTag() {
+            const input = document.getElementById('new_tag_input');
+            const name = input.value.trim();
+            if (!name) return;
+            const container = document.getElementById('new_tags_container');
+            const hidden = document.createElement('input');
+            hidden.type = 'hidden';
+            hidden.name = 'tags';
+            hidden.value = name;
+            const badge = document.createElement('span');
+            badge.className = 'badge rounded-pill px-3 py-2 d-flex align-items-center gap-1';
+            badge.style.background = '#ff6b6b';
+            badge.innerHTML = name + ' <span style="cursor:pointer;" onclick="this.parentElement.remove()">✕</span>';
+            badge.appendChild(hidden);
+            container.appendChild(badge);
+            input.value = '';
+        }
+
+        document.getElementById('new_tag_input').addEventListener('keydown', e => {
+            if (e.key === 'Enter') { e.preventDefault(); addTag(); }
+        });
+    </script>
 </body>
 
 </html>
