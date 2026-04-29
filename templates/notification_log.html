@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>通知ログ - 図鑑</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background: linear-gradient(135deg, #fff7f0 0%, #f0f9ff 100%); color: #333; }
+        .brand-color { color: #ff6b6b; }
+        .notif-card {
+            background: white;
+            border-radius: 1rem;
+            padding: 1rem 1.2rem;
+            margin-bottom: 0.6rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            border-left: 4px solid #dee2e6;
+            transition: transform 0.15s;
+        }
+        .notif-card:hover { transform: translateX(4px); }
+        .notif-card.unread { border-left-color: #ff6b6b; background: #fff5f5; }
+        .notif-time { font-size: 0.78rem; color: #999; }
+        .footer { color: #666; padding: 1.5rem 0; background: white; }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-light bg-white shadow-sm sticky-top">
+        <div class="container">
+            <a class="navbar-brand brand-color fw-bold" href="/user">📚 図鑑</a>
+            <a class="btn btn-sm btn-outline-secondary" href="/user">← 戻る</a>
+        </div>
+    </nav>
+
+    <div class="container py-4" style="max-width:680px;">
+        <h4 class="fw-bold mb-1">🔔 通知ログ</h4>
+        <p class="text-muted small mb-4">最新の通知が上に表示されます。このページを開くと全て既読になります。</p>
+
+        {% if pagination.total == 0 %}
+        <div class="text-center text-muted py-5">
+            <div style="font-size:3rem;">🔔</div>
+            <p class="mt-2">まだ通知はありません</p>
+        </div>
+        {% else %}
+        <p class="text-muted small mb-3">全 {{ pagination.total }} 件</p>
+
+        {% for n in pagination.items %}
+        <div class="notif-card {% if not n.is_read %}unread{% endif %}">
+            <div class="d-flex justify-content-between align-items-start">
+                <div>
+                    {% if n.link %}
+                    <a href="{{ n.link }}" class="text-decoration-none text-dark fw-bold">{{ n.message }}</a>
+                    {% else %}
+                    <span class="fw-bold">{{ n.message }}</span>
+                    {% endif %}
+                    {% if not n.is_read %}
+                    <span class="badge bg-danger ms-2" style="font-size:0.65rem;">新着</span>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="notif-time mt-1">
+                🕐 {{ (n.created_at.replace(tzinfo=none) + timedelta(hours=9)).strftime('%Y/%m/%d %H:%M') }}
+            </div>
+        </div>
+        {% endfor %}
+
+        <!-- ページネーション -->
+        <nav class="mt-4">
+            <ul class="pagination justify-content-center flex-wrap">
+                {% if pagination.has_prev %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ pagination.prev_num }}">← 前</a>
+                </li>
+                {% endif %}
+                {% for p in pagination.iter_pages(left_edge=2, right_edge=2, left_current=2, right_current=2) %}
+                    {% if p %}
+                    <li class="page-item {% if p == pagination.page %}active{% endif %}">
+                        <a class="page-link" href="?page={{ p }}">{{ p }}</a>
+                    </li>
+                    {% else %}
+                    <li class="page-item disabled"><span class="page-link">…</span></li>
+                    {% endif %}
+                {% endfor %}
+                {% if pagination.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ pagination.next_num }}">次 →</a>
+                </li>
+                {% endif %}
+            </ul>
+            <p class="text-center text-muted small">
+                {{ pagination.pages }} ページ中 {{ pagination.page }} ページ目
+            </p>
+        </nav>
+        {% endif %}
+    </div>
+
+    <footer class="footer text-center">
+        <div class="container">
+            <small>© {{ now().year }} 図鑑</small>
+        </div>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

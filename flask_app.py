@@ -950,7 +950,20 @@ def post_chat(date_id):
     db_session.add(new_chat)
     db_session.commit()
 
-    # 投稿者に通知（自分のコメント以外）
+    try:
+        date_obj = Date.query.get(date_id)
+        if date_obj and date_obj.user_id != user_id:
+            commenter = User.query.get(user_id)
+            notif = Notification(
+                user_id=date_obj.user_id,
+                message=f'{commenter.name}さんが「{date_obj.name}」にコメントしました！',
+                link=f'/date/{date_obj.id}'
+            )
+            db.session.add(notif)
+            db.session.commit()
+    except Exception as e:
+        db.session.rollback()
+        app.logger.error(f'通知作成エラー: {e}')
     date_obj = Date.query.get(date_id)
     if date_obj and date_obj.user_id != user_id:
         commenter = User.query.get(user_id)
@@ -1314,6 +1327,20 @@ def update_verj():
     
     return redirect('/users')
 
+@app.route('/notifications')
+def notification_log():
+    user_id = session.get('user_id')
+    if not user_id:
+        return redirect('/login')
+    page = request.args.get('page', 1, type=int)
+    pagination = Notification.query.filter_by(user_id=user_id)\
+        .order_by(Notification.created_at.desc())\
+        .paginate(page=page, per_page=20, error_out=False)
+    # 全部既読にする
+    Notification.query.filter_by(user_id=user_id, is_read=0).update({'is_read': 1})
+    db.session.commit()
+    from datetime import timedelta
+    return render_template('notification_log.html', pagination=pagination, timedelta=timedelta)
 
 @app.route('/like/<int:id>', methods=['GET','POST'])
 def like(id):
@@ -1334,7 +1361,19 @@ def like(id):
         db_session.add(new_like)
         if animal:
             animal.goodpoint += 1
-            # 自分の投稿以外にいいねしたとき通知
+            if animal.user_id != user_id:
+                try:
+                    liker = User.query.get(user_id)
+                    notif = Notification(
+                        user_id=animal.user_id,
+                        message=f'{liker.name}さんが「{animal.name}」にいいねしました！',
+                        link=f'/date/{animal.id}'
+                    )
+                    db.session.add(notif)
+                    db.session.flush()
+                except Exception as e:
+                    db.session.rollback()
+                    app.logger.error(f'通知作成エラー: {e}')
             if animal.user_id != user_id:
                 liker = User.query.get(user_id)
                 notif = Notification(
