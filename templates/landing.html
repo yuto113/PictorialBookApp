@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>蝗ｳ髑・ 縺ｿ繧薙↑縺ｧ菴懊ｋ繧ｪ繝ｳ繝ｩ繧､繝ｳ蝗ｳ髑・title>
+    <title>図鑑 - みんなで作るオンライン図鑑</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/css/lightbox.css" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js" defer></script>
@@ -284,27 +284,27 @@
     <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top">
         <div class="container">
             <a class="navbar-brand d-flex align-items-center" href="/">
-                <span class="fs-4 brand-color fw-bold">答 蝗ｳ髑・span>
-                <small class="text-muted ms-2 d-none d-md-inline">繧ｪ繝ｳ繝ｩ繧､繝ｳ蝗ｳ髑・small>
+                <span class="fs-4 brand-color fw-bold">📚 図鑑</span>
+                <small class="text-muted ms-2 d-none d-md-inline">オンライン図鑑</small>
             </a>
             <div class="d-flex gap-2">
-                <a class="btn btn-outline-info" href="/help">笶・繝倥Ν繝・ヨ/a>
-                <a class="btn btn-outline-danger" href="/login">繝ｭ繧ｰ繧､繝ｳ</a>
-                <a class="btn btn-danger" href="/signup">譁ｰ隕冗匳骭ｲ</a>
+                <a class="btn btn-outline-info" href="/help">❓ ヘルプ</a>
+                <a class="btn btn-outline-danger" href="/login">ログイン</a>
+                <a class="btn btn-danger" href="/signup">新規登録</a>
             </div>
         </div>
     </nav>
 
     <div class="hero">
         <div class="container position-relative">
-            <div class="hero-emoji">減</div>
-            <div class="hero-emoji">ｦ・/div>
-            <div class="hero-emoji">諺</div>
-            <h1 class="mb-3">縺ｿ繧薙↑縺ｧ蝗ｳ髑代ｒ菴懊▲縺ｦ縺・ｿｽ・ｽ縺・ｿｽ・ｽE/h1>
-            <p class="mb-4">隕九▽縺代◆讀咲黄繝ｻ蜍慕黄縺ｮ蜀咏悄縺ｨ諠・ｱ・ｽ・ｽ繧偵√∩繧薙↑縺ｨ蜈ｱ譛会ｿｽE繧ｳ繝ｬ繧ｯ繧ｷ繝ｧ繝ｳ・ｽE・ｽE/p>
+            <div class="hero-emoji">🌸</div>
+            <div class="hero-emoji">🦋</div>
+            <div class="hero-emoji">🌿</div>
+            <h1 class="mb-3">みんなで図鑑を作っていこう！</h1>
+            <p class="mb-4">見つけた植物・動物の写真と情報を、みんなと共有・コレクション！</p>
             <div class="cta-buttons d-flex gap-3 justify-content-center flex-wrap">
-                <a href="/signup" class="btn btn-hero btn-hero-primary">脂 辟｡譁吶〒蟋九ａ繧・/a>
-                <a href="/login" class="btn btn-hero btn-outline-light">繝ｭ繧ｰ繧､繝ｳ</a>
+                <a href="/signup" class="btn btn-hero btn-hero-primary">🎉 無料で始める</a>
+                <a href="/login" class="btn btn-hero btn-outline-light">ログイン</a>
             </div>
         </div>
     </div>
@@ -315,19 +315,19 @@
                 <div class="col-6 col-md-4">
                     <div class="stat-card">
                         <div class="stat-number">{{ stats.users }}</div>
-                        <div class="stat-label">則 繝ｦ繝ｼ繧ｶ繝ｼ謨ｰ</div>
+                        <div class="stat-label">👥 ユーザー数</div>
                     </div>
                 </div>
                 <div class="col-6 col-md-4">
                     <div class="stat-card">
                         <div class="stat-number">{{ stats.posts }}</div>
-                        <div class="stat-label">胴 謚慕ｨｿ謨ｰ</div>
+                        <div class="stat-label">📷 投稿数</div>
                     </div>
                 </div>
                 <div class="col-6 col-md-4">
                     <div class="stat-card">
                         <div class="stat-number">{{ stats.likes }}</div>
-                        <div class="stat-label">笶､・ｽE・ｽE縺・ｿｽ・ｽ縺ｭ謨ｰ</div>
+                        <div class="stat-label">❤️ いいね数</div>
                     </div>
                 </div>
             </div>
@@ -336,49 +336,49 @@
 
     <div class="feature-section">
         <div class="container">
-            <h2 class="text-center fw-bold mb-2">笨ｨ 蝗ｳ髑代〒縺ｧ縺阪ｋ縺薙→</h2>
-            <p class="text-center text-muted mb-5">縺九ｓ縺溘ｓ3繧ｹ繝・ヨ・ｽ・ｽ繝励〒縺ゅ↑縺滂ｿｽE繝・ヨ・ｽE繧ｿ繧偵∩繧薙↑縺ｫ蜈ｱ譛会ｼ・p>
+            <h2 class="text-center fw-bold mb-2">✨ 図鑑でできること</h2>
+            <p class="text-center text-muted mb-5">かんたん3ステップであなたの知っていることをみんなと共有！</p>
             <div class="row g-4">
                 <div class="col-md-4">
                     <div class="feature-card">
-                        <div class="feature-icon">胴</div>
-                        <h5 class="fw-bold">蜀咏悄繧偵い繝・ヨ・ｽE繝ｭ繝ｼ繝・ヨ/h5>
-                        <p class="text-muted">隕九▽縺代◆逕溘″迚ｩ縺ｮ蜀咏悄繧呈兜遞ｿ縺励※縲・ｿｽE蛻・・ｽ・ｽ縺托ｿｽE蝗ｳ髑代↓繧ｳ繝ｬ繧ｯ繧ｷ繝ｧ繝ｳ・ｽE・ｽE/p>
+                        <div class="feature-icon">📷</div>
+                        <h5 class="fw-bold">写真をアップロード</h5>
+                        <p class="text-muted">見つけた生き物の写真を投稿して、自分だけの図鑑にコレクション！</p>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="feature-card">
-                        <div class="feature-icon">亮・ｽE・ｽE/div>
-                        <h5 class="fw-bold">蝨ｰ蝗ｳ縺ｧ險倬鹸</h5>
-                        <p class="text-muted">縺ｩ縺薙〒隕九▽縺代◆縺句慍蝗ｳ縺ｫ險倬鹸縲ょｾ後〒謖ｯ繧願ｿ斐ｋ縺ｮ繧よ･ｽ縺励＞・ｽE・ｽE/p>
+                        <div class="feature-icon">🗺</div>
+                        <h5 class="fw-bold">地図で記録</h5>
+                        <p class="text-muted">どこで見つけたかを地図に記録。後で振り返るのも楽しい！</p>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="feature-card">
-                        <div class="feature-icon">町</div>
-                        <h5 class="fw-bold">縺ｿ繧薙↑縺ｨ莠､豬・/h5>
-                        <p class="text-muted">縺・ｿｽ・ｽ縺ｭ繝ｻ繧ｳ繝｡繝ｳ繝茨ｿｽE繝輔Ξ繝ｳ繝画ｩ滂ｿｽE縺ｧ莉厄ｿｽE莠ｺ縺ｨ縺､縺ｪ縺後ｍ縺・ｿｽ・ｽE/p>
+                        <div class="feature-icon">💬</div>
+                        <h5 class="fw-bold">みんなと交流</h5>
+                        <p class="text-muted">いいね・コメント・フレンド機能で同じ趣味の人とつながろう！</p>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="feature-card">
-                        <div class="feature-icon">将</div>
-                        <h5 class="fw-bold">蟄ｦ譬｡縺ｧ繧ゆｽｿ縺医ｋ</h5>
-                        <p class="text-muted">繧ｯ繝ｩ繧ｹ縺斐→縺ｫ隱ｲ鬘後ｒ蜃ｺ縺励◆繧翫∝ｭｦ譬｡蜈ｨ菴薙〒隕ｳ蟇溯ｨ倬鹸繧抵ｿｽE譛会ｼ・p>
+                        <div class="feature-icon">🏫</div>
+                        <h5 class="fw-bold">学校でも使える</h5>
+                        <p class="text-muted">クラスごとに課題を出したり、学校全体で観察記録を共有しよう！</p>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="feature-card">
-                        <div class="feature-icon">識</div>
-                        <h5 class="fw-bold">螳鯉ｿｽE辟｡譁・/h5>
-                        <p class="text-muted">逋ｻ骭ｲ繧ゆｽｿ縺・ｿｽE繧ゑｿｽE驛ｨ辟｡譁呻ｼ・p>
+                        <div class="feature-icon">🎯</div>
+                        <h5 class="fw-bold">完全無料</h5>
+                        <p class="text-muted">登録も使い方も全部無料！</p>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="feature-card">
-                        <div class="feature-icon">導</div>
-                        <h5 class="fw-bold">繧ｹ繝橸ｿｽE縺ｧ繧・/h5>
-                        <p class="text-muted">繧ｹ繝橸ｿｽE繝ｻ繝代た繧ｳ繝ｳ縺ｩ縺｡繧峨〒繧ゅし繧ｯ繧ｵ繧ｯ菴ｿ縺医ｋ・ｽE・ｽE/p>
+                        <div class="feature-icon">📱</div>
+                        <h5 class="fw-bold">スマホでも</h5>
+                        <p class="text-muted">スマホ・パソコンどちらでもサクサク使える！</p>
                     </div>
                 </div>
             </div>
@@ -388,8 +388,8 @@
     {% if reviews %}
     <div class="reviews-section">
         <div class="container">
-            <h2 class="text-center fw-bold mb-2">検 縺ｿ繧薙↑縺ｮ螢ｰ</h2>
-            <p class="text-center text-muted mb-5">蛻ｩ逕ｨ閠・ｿｽE譁ｹ縲・ｿｽ・ｽ繧牙ｬ峨＠縺・ｿｽ・ｽ螢ｰ繧偵＞縺溘□縺・ｿｽ・ｽ縺・ｿｽ・ｽ縺呻ｼ・p>
+            <h2 class="text-center fw-bold mb-2">🌟 みんなの声</h2>
+            <p class="text-center text-muted mb-5">利用者の方々から嬉しいお声をいただいています！</p>
             <div class="row g-4">
                 {% for review in reviews %}
                 <div class="col-md-4">
@@ -397,7 +397,7 @@
                         <div class="d-flex align-items-center mb-3">
                             <div class="review-avatar">{{ review.user.name[0] }}</div>
                             <div class="ms-3">
-                                <h6 class="mb-0 fw-bold">{{ review.user.name }}縺輔ｓ</h6>
+                                <h6 class="mb-0 fw-bold">{{ review.user.name }}さん</h6>
                                 {% if review.role_label %}
                                 <small class="text-muted">{{ review.role_label }}</small>
                                 {% endif %}
@@ -416,8 +416,8 @@
     {% if dates %}
     <div class="collection-section">
         <div class="container">
-            <h2 class="text-center brand-color fw-bold mb-2">減 縺ｿ繧薙↑縺ｮ繧ｳ繝ｬ繧ｯ繧ｷ繝ｧ繝ｳ</h2>
-            <p class="text-center text-muted mb-5">縺薙ｓ縺ｪ邏謨ｵ縺ｪ謚慕ｨｿ縺後◆縺上＆繧・逋ｻ骭ｲ縺励※縺ゅ↑縺溘ｂ謚慕ｨｿ縺励ｈ縺・/p>
+            <h2 class="text-center brand-color fw-bold mb-2">🌸 みんなのコレクション</h2>
+            <p class="text-center text-muted mb-5">こんな素敵な投稿がたくさん！登録してあなたも投稿しよう！</p>
             <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
                 {% for date in dates %}
                 <div class="col">
@@ -432,18 +432,18 @@
                         <div class="card-body">
                             <h5 class="card-title mb-1">{{ date.name }}</h5>
                             {% if date.subject %}
-                            <p class="card-text text-muted small mb-1">遞ｮ鬘・ {{ date.subject }}</p>
+                            <p class="card-text text-muted small mb-1">種類: {{ date.subject }}</p>
                             {% endif %}
                             <p class="card-text text-muted small">{{ date.place }}</p>
                             <div class="d-flex justify-content-between align-items-center">
                                 <div>
                                     {% if date.user_id == 2 %}
-                                    <span class="badge bg-warning text-dark">蜈ｬ蠑・/span>
+                                    <span class="badge bg-warning text-dark">公式</span>
                                     {% else %}
-                                    <small class="text-muted">謚慕ｨｿ閠・{{ date.user.name }}</small>
+                                    <small class="text-muted">投稿者: {{ date.user.name }}</small>
                                     {% endif %}
                                 </div>
-                                <span class="badge bg-info text-dark">笶､・ｽE・ｽE{{ date.goodpoint }}</span>
+                                <span class="badge bg-info text-dark">❤️ {{ date.goodpoint }}</span>
                             </div>
                         </div>
                     </div>
@@ -456,11 +456,11 @@
 
     <div class="cta-section">
         <div class="container">
-            <h2>脂 縺輔≠縲・ｿｽE縺倥ａ繧医≧・ｽE・ｽE/h2>
-            <p class="fs-5 mb-4">辟｡譁咏匳骭ｲ縺ｯ30遘偵〒螳御ｺ・・ｽ・ｽ縺ゅ↑縺滂ｿｽE蝗ｳ髑台ｽ懊ｊ縺鯉ｿｽE縺倥∪繧翫∪縺・/p>
+            <h2>🎉 さあ、はじめよう！</h2>
+            <p class="fs-5 mb-4">無料登録は30秒で完了。あなたの図鑑作りがはじまります！</p>
             <div class="d-flex gap-3 justify-content-center flex-wrap">
-                <a href="/signup" class="btn btn-hero btn-hero-primary">噫 辟｡譁吶〒逋ｻ骭ｲ縺吶ｋ</a>
-                <a href="/login" class="btn btn-hero btn-outline-light">繝ｭ繧ｰ繧､繝ｳ</a>
+                <a href="/signup" class="btn btn-hero btn-hero-primary">🚀 無料で登録する</a>
+                <a href="/login" class="btn btn-hero btn-outline-light">ログイン</a>
             </div>
         </div>
     </div>
@@ -468,13 +468,12 @@
     <footer class="footer text-center">
         <div class="container">
             <div class="mb-2">
-                <a href="/help" class="text-decoration-none text-muted me-3">笶・繝倥Ν繝・ヨ/a>
-                <a href="/terms" class="text-decoration-none text-muted me-3">糖 蛻ｩ逕ｨ隕冗ｴ・a>
-                <a href="/privacy" class="text-decoration-none text-muted">柏 繝励Λ繧､繝舌す繝ｼ繝昴Μ繧ｷ繝ｼ</a>
+                <a href="/help" class="text-decoration-none text-muted me-3">❓ ヘルプ</a>
+                <a href="/terms" class="text-decoration-none text-muted me-3">📜 利用規約</a>
+                <a href="/privacy" class="text-decoration-none text-muted">🔐 プライバシーポリシー</a>
             </div>
-            <small>ﾂｩ {{ now.year }} 蝗ｳ髑鯛・繧ｪ繝ｳ繝ｩ繧､繝ｳ蝗ｳ髑代ｒ縺ｿ繧薙↑縺ｧ菴懊ｍ縺・small>
+            <small>© {{ now.year }} 図鑑 — オンライン図鑑をみんなで作ろう</small>
         </div>
-    </footer>
     </footer>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
