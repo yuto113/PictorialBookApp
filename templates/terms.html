@@ -3,20 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>利用規約</title>
+    <title>利用規約 - 図鑑</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body { background: linear-gradient(135deg, #fff7f0 0%, #f0f9ff 100%); color: #333; min-height: 100vh; }
         .brand-color { color: #ff6b6b; }
         .footer { color: #666; padding: 1rem 0; }
-        .terms-section { background: white; border-radius: 1.5rem; padding: 2rem; margin-bottom: 1.5rem; box-shadow: 0 5px 20px rgba(0,0,0,0.05); }
+        .terms-section { background: white; border-radius: 1.5rem; padding: 2rem; margin-bottom: 1.5rem; box-shadow: 0 5px 20px rgba(0,0,0,0.05); scroll-margin-top: 80px; }
         .terms-section h3 { color: #ff6b6b; border-bottom: 3px solid #ffd4d4; padding-bottom: 0.5rem; margin-bottom: 1.5rem; }
         .article { background: #fafafa; padding: 1rem 1.5rem; border-left: 4px solid #ff9a9e; border-radius: 0.5rem; margin-bottom: 1rem; }
         .article-title { font-weight: bold; color: #ff6b6b; margin-bottom: 0.5rem; }
+        .toc { background: white; border-radius: 1.5rem; padding: 2rem; margin-bottom: 1.5rem; box-shadow: 0 5px 20px rgba(0,0,0,0.05); }
+        .toc a { color: #ff6b6b; text-decoration: none; }
+        .toc a:hover { text-decoration: underline; }
+        .toc ol { margin-bottom: 0; columns: 2; }
+        @media (max-width: 768px) { .toc ol { columns: 1; } }
+        .important-box { background: #fff3cd; border: 1px solid #ffc107; border-radius: 0.75rem; padding: 1rem 1.5rem; margin-bottom: 1rem; }
+        .law-ref { font-size: 0.78rem; color: #999; margin-top: 0.3rem; font-style: italic; }
+        .back-to-top { position: fixed; bottom: 2rem; right: 2rem; background: #ff6b6b; color: white; width: 3rem; height: 3rem; border-radius: 50%; display: flex; align-items: center; justify-content: center; text-decoration: none; box-shadow: 0 4px 15px rgba(0,0,0,0.2); z-index: 9998; }
+        .back-to-top:hover { background: #ff4757; color: white; }
     </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top">
         <div class="container">
             <a class="navbar-brand d-flex align-items-center" href="/">
                 <span class="fs-4 brand-color">📖 図鑑</span>
@@ -26,160 +35,620 @@
         </div>
     </nav>
 
-    <div class="container py-4">
-        <h2 class="brand-color text-center fw-bold mb-2">📄 利用規約</h2>
-        <p class="text-center text-muted mb-4">最終更新日：2026年4月</p>
+    <div class="container py-4" style="max-width: 880px;">
+        <h2 class="brand-color text-center fw-bold mb-2" id="top">📄 利用規約（全50条）</h2>
+        <p class="text-center text-muted mb-4">最終更新日：2026年4月　／　制定日：2025年1月</p>
+
+        <div class="important-box">
+            <strong>⚠️ ご利用前に必ずお読みください</strong><br>
+            本規約は、オンライン図鑑（以下「本サービス」）のすべての機能（写真投稿・いいね・コメント・フレンド・タグ・地図・学校機能・通知・チャット・課題等）に適用されます。本サービスを利用した時点で、本規約に同意したものとみなされます。未成年者の方は、保護者の同意を得た上でご利用ください。
+        </div>
+
+        <div class="toc">
+            <h5 class="fw-bold mb-3">📋 目次（全50条）</h5>
+            <ol>
+                <li><a href="#s1">第1条（適用）</a></li>
+                <li><a href="#s2">第2条（定義）</a></li>
+                <li><a href="#s3">第3条（規約の同意）</a></li>
+                <li><a href="#s4">第4条（個別規定）</a></li>
+                <li><a href="#s5">第5条（未成年者の利用）</a></li>
+                <li><a href="#s6">第6条（利用登録）</a></li>
+                <li><a href="#s7">第7条（登録の拒否・取消）</a></li>
+                <li><a href="#s8">第8条（学校アカウント）</a></li>
+                <li><a href="#s9">第9条（パスワード管理）</a></li>
+                <li><a href="#s10">第10条（なりすましの禁止）</a></li>
+                <li><a href="#s11">第11条（不正利用の報告義務）</a></li>
+                <li><a href="#s12">第12条（アカウントの譲渡禁止）</a></li>
+                <li><a href="#s13">第13条（強制パスワード変更）</a></li>
+                <li><a href="#s14">第14条（退会）</a></li>
+                <li><a href="#s15">第15条（禁止事項：法令違反）</a></li>
+                <li><a href="#s16">第16条（禁止事項：他者の権利侵害）</a></li>
+                <li><a href="#s17">第17条（禁止事項：有害コンテンツ）</a></li>
+                <li><a href="#s18">第18条（禁止事項：サービス妨害）</a></li>
+                <li><a href="#s19">第19条（禁止事項：学校機能）</a></li>
+                <li><a href="#s20">第20条（投稿コンテンツの責任）</a></li>
+                <li><a href="#s21">第21条（投稿コンテンツの著作権）</a></li>
+                <li><a href="#s22">第22条（運営者へのライセンス付与）</a></li>
+                <li><a href="#s23">第23条（コンテンツの公開範囲）</a></li>
+                <li><a href="#s24">第24条（公式コンテンツ）</a></li>
+                <li><a href="#s25">第25条（写真の自撮り原則）</a></li>
+                <li><a href="#s26">第26条（肖像権への配慮）</a></li>
+                <li><a href="#s27">第27条（禁止画像）</a></li>
+                <li><a href="#s28">第28条（画像の外部保存）</a></li>
+                <li><a href="#s29">第29条（著作権確認チェック）</a></li>
+                <li><a href="#s30">第30条（いいね機能）</a></li>
+                <li><a href="#s31">第31条（コメント機能）</a></li>
+                <li><a href="#s32">第32条（フレンド機能）</a></li>
+                <li><a href="#s33">第33条（タグ機能）</a></li>
+                <li><a href="#s34">第34条（地図・位置情報）</a></li>
+                <li><a href="#s35">第35条（通知機能）</a></li>
+                <li><a href="#s36">第36条（学校機能の概要）</a></li>
+                <li><a href="#s37">第37条（学校管理者の責任）</a></li>
+                <li><a href="#s38">第38条（生徒の個人情報保護）</a></li>
+                <li><a href="#s39">第39条（課題機能）</a></li>
+                <li><a href="#s40">第40条（学校チャット）</a></li>
+                <li><a href="#s41">第41条（個人情報の収集）</a></li>
+                <li><a href="#s42">第42条（個人情報の利用目的）</a></li>
+                <li><a href="#s43">第43条（アクセスログ）</a></li>
+                <li><a href="#s44">第44条（セキュリティ）</a></li>
+                <li><a href="#s45">第45条（運営者の権限）</a></li>
+                <li><a href="#s46">第46条（メンテナンス）</a></li>
+                <li><a href="#s47">第47条（免責事項）</a></li>
+                <li><a href="#s48">第48条（サービスの変更・終了）</a></li>
+                <li><a href="#s49">第49条（規約の変更）</a></li>
+                <li><a href="#s50">第50条（準拠法・管轄裁判所）</a></li>
+            </ol>
+        </div>
 
         <div class="terms-section">
             <h3>はじめに</h3>
-            <p>この利用規約（以下「本規約」といいます）は、オンライン図鑑（以下「本サービス」といいます）の利用条件を定めるものです。本サービスを利用するすべてのユーザー（以下「利用者」といいます）は、本規約に同意したとみなされます。</p>
+            <p>本利用規約（以下「本規約」）は、オンライン図鑑（以下「本サービス」または「図鑑」）を運営する管理者（以下「運営者」）と、本サービスを利用するすべての方（以下「利用者」）との間の権利義務関係を定めるものです。</p>
+            <p>本サービスは、利用者が撮影した植物・動物・自然物などの写真を投稿し、みんなで共有・コレクションするオンラインプラットフォームです。写真投稿、いいね、コメント、フレンド、タグ、地図記録、学校機能、通知、チャット、課題機能など多様な機能を提供します。</p>
+            <p class="mb-0">本規約は、日本国の法令（個人情報保護法・著作権法・プロバイダ責任制限法・不正アクセス禁止法・刑法・民法・消費者契約法等）に基づき定められています。</p>
         </div>
 
-        <div class="terms-section">
+        <div class="terms-section" id="s1">
             <h3>第1条（適用）</h3>
             <div class="article">
-                <div class="article-title">1. 規約の適用</div>
-                <p class="mb-0">本規約は、利用者と本サービスの運営者との間の本サービスの利用に関わる一切の関係に適用されます。</p>
-            </div>
-            <div class="article">
-                <div class="article-title">2. 個別規定</div>
-                <p class="mb-0">運営者は、本サービスに関して別途ガイドラインや個別規定を定めることがあります。これらも本規約の一部を構成するものとします。</p>
+                <p class="mb-0">本規約は、利用者と運営者との間の本サービスの利用に関わる一切の関係に適用されます。登録の有無・利用形態（閲覧のみを含む）に関わらず適用されます。本サービスにアクセスした全ての方が本規約の対象となります。</p>
             </div>
         </div>
 
-        <div class="terms-section">
-            <h3>第2条（利用登録）</h3>
+        <div class="terms-section" id="s2">
+            <h3>第2条（定義）</h3>
             <div class="article">
-                <div class="article-title">1. 登録</div>
-                <p class="mb-0">本サービスの利用を希望する方は、本規約に同意の上、所定の方法により利用登録を行ってください。</p>
+                <div class="article-title">本サービス</div>
+                <p class="mb-0">「オンライン図鑑」として運営者が提供するウェブアプリケーション全体（投稿・いいね・コメント・フレンド・タグ・地図・学校機能・通知・API等を含む）を指します。</p>
             </div>
             <div class="article">
-                <div class="article-title">2. 登録の拒否</div>
-                <p class="mb-2">運営者は、以下の場合に利用登録を拒否することがあります。</p>
+                <div class="article-title">利用者</div>
+                <p class="mb-0">本サービスにアクセスし、利用するすべての方（登録済み・未登録を問わず）を指します。</p>
+            </div>
+            <div class="article">
+                <div class="article-title">登録ユーザー</div>
+                <p class="mb-0">所定の方法で利用登録を完了し、アカウントを持つ利用者を指します。</p>
+            </div>
+            <div class="article">
+                <div class="article-title">投稿コンテンツ</div>
+                <p class="mb-0">利用者が本サービス上に投稿・送信した写真・テキスト・コメント・タグ・位置情報などすべてのデータを指します。</p>
+            </div>
+            <div class="article">
+                <div class="article-title">学校アカウント</div>
+                <p class="mb-0">運営者が認可した学校・教育機関に紐づくアカウント（学校管理者・教師・生徒）を指します。</p>
+            </div>
+            <div class="article">
+                <div class="article-title">運営者</div>
+                <p class="mb-0">本サービスを管理・運営する個人または団体を指します。本サービスにおける管理者ロール（ユーザーID=2）を保有します。</p>
+            </div>
+        </div>
+
+        <div class="terms-section" id="s3">
+            <h3>第3条（規約の同意）</h3>
+            <div class="article">
+                <p class="mb-0">利用者は、本サービスを利用することにより、本規約の全ての条項に同意したものとみなされます。本規約に同意できない場合、本サービスの利用をお控えください。</p>
+            </div>
+        </div>
+
+        <div class="terms-section" id="s4">
+            <h3>第4条（個別規定）</h3>
+            <div class="article">
+                <p class="mb-0">運営者は、本サービスに関して個別のガイドライン・注意事項・ヘルプページ等を定めることがあります。これらも本規約の一部を構成し、本規約と矛盾する場合は個別規定が優先される場合があります。</p>
+            </div>
+        </div>
+
+        <div class="terms-section" id="s5">
+            <h3>第5条（未成年者の利用）</h3>
+            <div class="article">
+                <p class="mb-0">未成年者（18歳未満）が本サービスを利用する場合は、保護者の同意を得るものとします。保護者の同意なく利用した場合、運営者はいかなる責任も負いません。学校アカウントとして利用する場合は、所属する学校の管理者を通じて利用するものとします。</p>
+                <p class="law-ref mb-0">参照：民法第5条（未成年者の法律行為）</p>
+            </div>
+        </div>
+
+        <div class="terms-section" id="s6">
+            <h3>第6条（利用登録）</h3>
+            <div class="article">
+                <div class="article-title">1. 登録方法</div>
+                <p class="mb-0">本サービスへの登録は、所定のフォームに正確な情報を入力し、本規約に同意の上で完了します。虚偽の情報を入力することは禁止されています。</p>
+            </div>
+            <div class="article">
+                <div class="article-title">2. 1人1アカウント</div>
+                <p class="mb-0">利用者1人につき1つのアカウントのみ保有できます。同一人物が複数のアカウントを作成することは禁止されています。</p>
+            </div>
+        </div>
+
+        <div class="terms-section" id="s7">
+            <h3>第7条（登録の拒否・取消）</h3>
+            <div class="article">
+                <p class="mb-2">運営者は、以下の場合に利用登録を拒否または取り消すことができます。</p>
                 <ul class="mb-0">
-                    <li>虚偽の情報を登録した場合</li>
-                    <li>過去に本規約に違反したことがある場合</li>
+                    <li>虚偽・不正確な情報を登録した場合</li>
+                    <li>過去に本規約に違反しアカウント停止・削除された場合</li>
+                    <li>反社会的勢力と関係があると判断された場合</li>
                     <li>その他運営者が不適当と判断した場合</li>
                 </ul>
             </div>
         </div>
 
-        <div class="terms-section">
-            <h3>第3条（禁止事項）</h3>
-            <p>利用者は、本サービスの利用にあたり、以下の行為をしてはなりません。</p>
+        <div class="terms-section" id="s8">
+            <h3>第8条（学校アカウント）</h3>
             <div class="article">
+                <p class="mb-0">学校アカウント（学校管理者・教師・生徒）への変更・登録は、運営者の承認を必要とします。学校名・所属クラス等は正確に登録してください。学校アカウントは、所属する学校・教育機関の指導の下で利用するものとします。</p>
+            </div>
+        </div>
+
+        <div class="terms-section" id="s9">
+            <h3>第9条（パスワード管理）</h3>
+            <div class="article">
+                <p class="mb-0">登録ユーザーは、自己のパスワードを自己の責任で厳重に管理するものとします。パスワードを第三者に開示・貸与・譲渡してはなりません。なお、パスワードはハッシュ化（werkzeug.security）して保管されており、運営者であっても元のパスワードを知ることはできません。</p>
+            </div>
+        </div>
+
+        <div class="terms-section" id="s10">
+            <h3>第10条（なりすましの禁止）</h3>
+            <div class="article">
+                <p class="mb-0">他の利用者のアカウントを使用する行為、または他者になりすます行為は、不正アクセス禁止法・刑法の規定により犯罪となる場合があります。発覚した場合、即時アカウント停止および法的措置を講じる場合があります。</p>
+                <p class="law-ref mb-0">参照：不正アクセス行為の禁止等に関する法律第3条、刑法第156条</p>
+            </div>
+        </div>
+
+        <div class="terms-section" id="s11">
+            <h3>第11条（不正利用の報告義務）</h3>
+            <div class="article">
+                <p class="mb-0">アカウントの不正利用・パスワードの漏えいが判明した場合は、直ちに運営者に報告してください。報告前に生じた損害について、運営者は責任を負いません。</p>
+            </div>
+        </div>
+
+        <div class="terms-section" id="s12">
+            <h3>第12条（アカウントの譲渡禁止）</h3>
+            <div class="article">
+                <p class="mb-0">アカウントの権利を第三者に売買・譲渡・貸与することは禁止されています。違反した場合、両者のアカウントを停止する場合があります。</p>
+            </div>
+        </div>
+
+        <div class="terms-section" id="s13">
+            <h3>第13条（強制パスワード変更）</h3>
+            <div class="article">
+                <p class="mb-0">セキュリティ上の理由により、運営者は利用者にパスワードの変更を強制する場合があります（must_change_password）。この場合、利用者は次回ログイン時に新しいパスワードを設定する必要があります。これに従わない場合、本サービスを利用できなくなる場合があります。</p>
+            </div>
+        </div>
+
+        <div class="terms-section" id="s14">
+            <h3>第14条（退会）</h3>
+            <div class="article">
+                <p class="mb-0">退会を希望する場合は、運営者に申請してください。退会後は投稿データ等が削除される場合があります。退会後の復元には応じられません。なお、退会後も法令に基づく保存義務がある情報は一定期間保管される場合があります。</p>
+            </div>
+        </div>
+
+        <div class="terms-section" id="s15">
+            <h3>第15条（禁止事項：法令違反）</h3>
+            <div class="article">
+                <p class="mb-2">利用者は、以下の法令違反・犯罪に関する行為をしてはなりません。</p>
                 <ul class="mb-0">
-                    <li>法令または公序良俗に違反する行為</li>
-                    <li>犯罪行為に関連する行為</li>
-                    <li>他の利用者の知的財産権、肖像権などの権利を侵害する行為</li>
-                    <li>他の利用者を誹謗中傷する行為</li>
-                    <li>本サービスの運営を妨害する行為</li>
-                    <li>本人以外が撮影した画像をアップロードする行為</li>
-                    <li>不正アクセスを試みる行為</li>
-                    <li>本サービスを営利目的で利用する行為</li>
-                    <li>なりすまし行為</li>
-                    <li>その他運営者が不適当と判断する行為</li>
+                    <li>刑法・民法その他法令に違反する行為</li>
+                    <li>公序良俗に反する行為</li>
+                    <li>犯罪行為またはそれを助長・予告する行為</li>
+                    <li>不正アクセス・クラッキング・サーバー攻撃などの行為</li>
+                    <li>本サービスのシステムに過度な負荷をかける行為（DoS攻撃等）</li>
+                    <li>マネーロンダリング・違法な金銭取引</li>
+                    <li>賭博・違法薬物・武器売買に関する行為</li>
+                </ul>
+                <p class="law-ref mb-0">参照：不正アクセス禁止法第3条、刑法第234条の2</p>
+            </div>
+        </div>
+
+        <div class="terms-section" id="s16">
+            <h3>第16条（禁止事項：他者の権利侵害）</h3>
+            <div class="article">
+                <p class="mb-2">利用者は、以下の他者の権利を侵害する行為をしてはなりません。</p>
+                <ul class="mb-0">
+                    <li>他者の著作権・商標権・特許権等の知的財産権を侵害する行為</li>
+                    <li>他者の肖像権・プライバシーを侵害する行為</li>
+                    <li>他の利用者・第三者を誹謗中傷・差別・脅迫する行為</li>
+                    <li>他者のプライバシー情報（住所・電話番号・学校名等）を無断で公開する行為</li>
+                    <li>本人以外が撮影・作成した写真・画像を無断でアップロードする行為</li>
+                    <li>他者の名誉を毀損する行為</li>
+                    <li>ストーキング行為</li>
+                </ul>
+                <p class="law-ref mb-0">参照：著作権法第119条、刑法第230条、ストーカー規制法</p>
+            </div>
+        </div>
+
+        <div class="terms-section" id="s17">
+            <h3>第17条（禁止事項：有害コンテンツ）</h3>
+            <div class="article">
+                <p class="mb-2">利用者は、以下の有害コンテンツを投稿・送信してはなりません。</p>
+                <ul class="mb-0">
+                    <li>性的・暴力的・差別的なコンテンツの投稿・送信</li>
+                    <li>児童ポルノ・児童虐待に関するコンテンツの投稿（厳重対処・警察通報）</li>
+                    <li>自殺・自傷行為を促進・賛美するコンテンツ</li>
+                    <li>フィッシング詐欺・マルウェア等の有害プログラムの配布</li>
+                    <li>スパム・広告・勧誘目的のコメント・メッセージを送信する行為</li>
+                    <li>差別・ヘイトスピーチを含むコンテンツ</li>
+                    <li>残虐な描写・グロテスクなコンテンツ</li>
+                </ul>
+                <p class="law-ref mb-0">参照：児童ポルノ禁止法、ヘイトスピーチ解消法</p>
+            </div>
+        </div>
+
+        <div class="terms-section" id="s18">
+            <h3>第18条（禁止事項：サービス妨害）</h3>
+            <div class="article">
+                <p class="mb-2">利用者は、以下のサービス妨害・不正利用に関する行為をしてはなりません。</p>
+                <ul class="mb-0">
+                    <li>本サービスの運営を妨害・破壊する行為</li>
+                    <li>複数アカウントを作成する行為</li>
+                    <li>ボット・スクリプト等を用いた自動操作（自動いいね・自動投稿等）</li>
+                    <li>本サービスを無断で商業目的・営利目的に利用する行為</li>
+                    <li>本サービスのソースコード・データベースを無断で複製・改変する行為</li>
+                    <li>運営者・他の利用者に虚偽の情報を提供する行為</li>
+                    <li>API・エンドポイントへの不正なリクエストの送信</li>
+                    <li>システムの脆弱性を発見した場合に運営者に報告せず悪用する行為</li>
                 </ul>
             </div>
         </div>
 
-        <div class="terms-section">
-            <h3>第4条（投稿コンテンツ）</h3>
+        <div class="terms-section" id="s19">
+            <h3>第19条（禁止事項：学校機能）</h3>
             <div class="article">
-                <div class="article-title">1. 投稿の責任</div>
-                <p class="mb-0">利用者は、自ら投稿したコンテンツ（画像・文章・コメント等）について、すべての責任を負うものとします。</p>
+                <p class="mb-2">学校機能の利用において、以下の行為を禁止します。</p>
+                <ul class="mb-0">
+                    <li>所属していない学校・クラスへの不正アクセス</li>
+                    <li>生徒の個人情報を無断で収集・利用する行為</li>
+                    <li>課題への不正提出・なりすまし提出</li>
+                    <li>学校機能を通じた生徒へのハラスメント・いじめ</li>
+                    <li>教育目的以外での学校機能の使用</li>
+                    <li>クラスチャット・学校メッセージでの不適切な発言</li>
+                    <li>教師・学校管理者を装う行為</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="terms-section" id="s20">
+            <h3>第20条（投稿コンテンツの責任）</h3>
+            <div class="article">
+                <p class="mb-0">利用者は、自ら投稿したコンテンツ（写真・テキスト・コメント・タグ等）について、その内容・合法性・真正性に関するすべての責任を負います。投稿コンテンツによって生じた一切の損害・トラブルについて、利用者自身が解決するものとします。</p>
+            </div>
+        </div>
+
+        <div class="terms-section" id="s21">
+            <h3>第21条（投稿コンテンツの著作権）</h3>
+            <div class="article">
+                <p class="mb-0">投稿コンテンツの著作権は、投稿した利用者に帰属します。ただし、本規約第22条に定めるライセンスを運営者に付与することに同意するものとします。</p>
+                <p class="law-ref mb-0">参照：著作権法第2条、第63条</p>
+            </div>
+        </div>
+
+        <div class="terms-section" id="s22">
+            <h3>第22条（運営者へのライセンス付与）</h3>
+            <div class="article">
+                <p class="mb-0">利用者は運営者に対し、本サービスの運営・改善・宣伝等の目的で投稿コンテンツを無償で使用（複製・改変・公衆送信・展示等）する非独占的・無期限・全世界的なライセンスを付与するものとします。このライセンスは利用者の退会後も継続することがあります。</p>
+            </div>
+        </div>
+
+        <div class="terms-section" id="s23">
+            <h3>第23条（コンテンツの公開範囲）</h3>
+            <div class="article">
+                <p class="mb-0">投稿コンテンツは、本サービスの利用者に公開されます。学校アカウントの場合は、所属学校内のみに公開が制限されます。非表示設定（is_hidden）のコンテンツは一般利用者には表示されません。公開範囲は機能・設定によって異なります。</p>
+            </div>
+        </div>
+
+        <div class="terms-section" id="s24">
+            <h3>第24条（公式コンテンツ）</h3>
+            <div class="article">
+                <p class="mb-0">「公式」バッジが表示されたコンテンツは運営者（ID=2）が作成・監修したものです。公式コンテンツの無断転用・商業利用は禁止されています。学習目的での閲覧・本サービス内での共有は自由です。</p>
+            </div>
+        </div>
+
+        <div class="terms-section" id="s25">
+            <h3>第25条（写真の自撮り原則）</h3>
+            <div class="article">
+                <p class="mb-0">アップロードできる写真は、利用者本人が撮影したものに限ります。他者が撮影した写真を無断でアップロードすることは著作権法・プライバシー権の侵害となります。インターネットからダウンロードした画像のアップロードも厳禁です。</p>
+            </div>
+        </div>
+
+        <div class="terms-section" id="s26">
+            <h3>第26条（肖像権への配慮）</h3>
+            <div class="article">
+                <p class="mb-0">写真に他者の顔・個人を特定できる情報が写り込んでいる場合は、当該人物の同意を得てください。無断で他者の顔・姿を公開することは肖像権の侵害です。特に未成年者が写り込む場合は、保護者の同意を得てください。</p>
+                <p class="law-ref mb-0">参照：民法第709条（不法行為）、最高裁判例（肖像権）</p>
+            </div>
+        </div>
+
+        <div class="terms-section" id="s27">
+            <h3>第27条（禁止画像）</h3>
+            <div class="article">
+                <p class="mb-2">以下の画像のアップロードは禁止されています。</p>
+                <ul class="mb-0">
+                    <li>性的・暴力的・グロテスクな内容を含む画像</li>
+                    <li>未成年者の性的な画像（厳格に対処し、警察に通報します）</li>
+                    <li>他者の著作物（絵画・イラスト・写真集等）を撮影したもの</li>
+                    <li>個人情報（住所・電話番号等）が写り込んだ画像</li>
+                    <li>差別・ヘイトを助長する内容を含む画像</li>
+                    <li>本サービスの趣旨と無関係な画像</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="terms-section" id="s28">
+            <h3>第28条（画像の外部保存）</h3>
+            <div class="article">
+                <p class="mb-0">アップロードされた画像は、外部サービス（Cloudinary）のサーバーに保存されます。当該サービスの利用規約・プライバシーポリシーも適用されます。運営者はサービス終了等により画像が削除された場合の責任を負いません。</p>
+            </div>
+        </div>
+
+        <div class="terms-section" id="s29">
+            <h3>第29条（著作権確認チェック）</h3>
+            <div class="article">
+                <p class="mb-0">アップロード時に表示される著作権確認のチェックボックスへの同意は、投稿者自身が著作権等の権利を有することの法的な表明です。虚偽の同意は法的責任（民事・刑事）を生じさせる場合があります。</p>
+            </div>
+        </div>
+
+        <div class="terms-section" id="s30">
+            <h3>第30条（いいね機能）</h3>
+            <div class="article">
+                <p class="mb-0">登録ユーザーは他の利用者の投稿にいいね（❤️）をつけることができます。いいねをすると、投稿者に通知が送られます。自分の投稿へのいいねでは通知は送られません。いいねの解除も自由に行えます。連続したいいね・いいね解除によるスパム行為は禁止されています。</p>
+            </div>
+        </div>
+
+        <div class="terms-section" id="s31">
+            <h3>第31条（コメント機能）</h3>
+            <div class="article">
+                <p class="mb-0">登録ユーザーは投稿にコメントを送信できます。コメント投稿時は投稿者に通知が送られます。コメントの内容に関するすべての責任はコメント投稿者が負います。誹謗中傷・スパム・個人情報を含むコメントは削除対象となります。コメントは投稿者本人または管理者が削除できます。</p>
+                <p class="law-ref mb-0">参照：プロバイダ責任制限法</p>
+            </div>
+        </div>
+
+        <div class="terms-section" id="s32">
+            <h3>第32条（フレンド機能）</h3>
+            <div class="article">
+                <p class="mb-0">登録ユーザーは他の利用者にフレンド申請を送ることができます。申請を受け取った利用者は承認・拒否を選択できます。承認された場合のみフレンド関係が成立します。フレンド機能を利用したストーキング・しつこい申請送信・嫌がらせは禁止されています。フレンド関係はいつでも解除できます。</p>
+            </div>
+        </div>
+
+        <div class="terms-section" id="s33">
+            <h3>第33条（タグ機能）</h3>
+            <div class="article">
+                <p class="mb-0">登録ユーザーは投稿にタグを付与できます。タグは投稿の分類・検索に利用されます。既存のタグを選択するか、新しいタグを作成できます。差別的・侮辱的・宣伝的・性的なタグの作成は禁止されています。運営者は不適切なタグを予告なく削除できます。タグは本サービス全体で共有されます。</p>
+            </div>
+        </div>
+
+        <div class="terms-section" id="s34">
+            <h3>第34条（地図・位置情報）</h3>
+            <div class="article">
+                <p class="mb-0">投稿時に地図上で場所を選択することで、緯度（ido）・経度（keido）情報を投稿に紐付けることができます。記録した位置情報は、地図ページで他の利用者に表示される場合があります。自宅・学校等の特定個人の行動を示す場所の記録には十分にご注意ください。位置情報の記録は任意です。地図表示には国土地理院タイル及びLeaflet.jsを使用しています。</p>
+                <p class="law-ref mb-0">参照：個人情報保護法第2条（位置情報の取扱い）</p>
+            </div>
+        </div>
+
+        <div class="terms-section" id="s35">
+            <h3>第35条（通知機能）</h3>
+            <div class="article">
+                <p class="mb-0">自分の投稿へのいいね・コメントが発生した際に、登録ユーザーに通知が送られます。通知はナビバーの🔔ボタンから最新3件を確認でき、「すべて表示」で通知ログページを閲覧できます。通知ページを開いた時点で既読（is_read）になります。通知データは一定期間経過後または退会時に削除される場合があります。</p>
+            </div>
+        </div>
+
+        <div class="terms-section" id="s36">
+            <h3>第36条（学校機能の概要）</h3>
+            <div class="article">
+                <p class="mb-0">学校機能は、学校・教育機関での利用を目的とした特別な機能群です。学校管理者（school_admin）・教師（teacher）・生徒（student）という役割（ロール）に基づき、クラス管理・課題の出題と提出・学校内チャット・観察記録の共有等の機能を提供します。学校機能は教育目的に限り使用してください。</p>
+            </div>
+        </div>
+
+        <div class="terms-section" id="s37">
+            <h3>第37条（学校管理者の責任）</h3>
+            <div class="article">
+                <p class="mb-0">学校管理者は、所属する学校アカウントの適正な運用について責任を負います。生徒アカウントの管理・指導を適切に行ってください。生徒の不適切な利用が確認された場合、学校管理者は速やかに対処する義務を負います。</p>
+            </div>
+        </div>
+
+        <div class="terms-section" id="s38">
+            <h3>第38条（生徒の個人情報保護）</h3>
+            <div class="article">
+                <p class="mb-0">学校機能を通じて収集される生徒の情報（氏名・所属クラス・投稿内容等）は、個人情報保護法に基づき適切に管理されます。生徒の個人情報を教育目的以外に利用することは禁止されています。学校管理者・教師は、生徒のプライバシー保護に最大限配慮する義務を負います。</p>
+                <p class="law-ref mb-0">参照：個人情報の保護に関する法律、学校教育法</p>
+            </div>
+        </div>
+
+        <div class="terms-section" id="s39">
+            <h3>第39条（課題機能）</h3>
+            <div class="article">
+                <p class="mb-0">教師・学校管理者は締切付きの課題（assignment）を作成し、生徒が投稿を提出できます。課題への提出は締切前のみ受け付けます。締切後の提出は受理されません。なりすまし提出・他者の投稿の流用は禁止されています。課題に関するチャット（assignment_chat）も教育目的に限り使用してください。</p>
+            </div>
+        </div>
+
+        <div class="terms-section" id="s40">
+            <h3>第40条（学校チャット）</h3>
+            <div class="article">
+                <p class="mb-0">学校内メッセージ（school_message）・クラスチャット（class_chat）は、教育目的に限り使用してください。いじめ・ハラスメント・不適切なメッセージの送信は禁止されており、発見次第対処します。チャットの履歴はデータベースに保存され、運営者・学校管理者・教師が閲覧できる場合があります。</p>
+            </div>
+        </div>
+
+        <div class="terms-section" id="s41">
+            <h3>第41条(個人情報の収集)</h3>
+            <div class="article">
+                <p class="mb-2">本サービスは以下の情報を収集します。</p>
+                <ul class="mb-0">
+                    <li>アカウント情報（ユーザー名・パスワード（ハッシュ化済み）・ロール等）</li>
+                    <li>投稿コンテンツ（写真・テキスト・タグ・位置情報等）</li>
+                    <li>行動ログ（アクセスログ：アクセス日時・ページ・IPアドレス）</li>
+                    <li>フレンド関係・通知データ</li>
+                    <li>学校アカウントの場合：所属学校・クラス情報</li>
+                    <li>セッション情報（ログイン状態管理のため）</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="terms-section" id="s42">
+            <h3>第42条（個人情報の利用目的）</h3>
+            <div class="article">
+                <p class="mb-2">収集した情報は以下の目的にのみ使用します。</p>
+                <ul class="mb-0">
+                    <li>本サービスの提供・改善・運営</li>
+                    <li>不正利用の防止・セキュリティの確保</li>
+                    <li>統計データの作成（個人を特定しない形式）</li>
+                    <li>法令に基づく対応</li>
+                    <li>運営者からの重要なお知らせの送信</li>
+                </ul>
+                <p class="law-ref mb-0">参照：個人情報の保護に関する法律第15条</p>
+            </div>
+        </div>
+
+        <div class="terms-section" id="s43">
+            <h3>第43条（アクセスログ）</h3>
+            <div class="article">
+                <p class="mb-0">本サービスはアクセスログ（日時・ページ・IPアドレス・ユーザーID）を記録します（access_logテーブル）。このログはシステムの安全管理・不正利用の調査・統計目的に使用されます。管理者（ID=2）のみが閲覧できます。法令に基づく場合を除き、第三者には提供しません。</p>
+            </div>
+        </div>
+
+        <div class="terms-section" id="s44">
+            <h3>第44条（セキュリティ）</h3>
+            <div class="article">
+                <p class="mb-0">パスワードはハッシュ化アルゴリズム（werkzeug.security）によりハッシュ化して保存されます。画像はCloudinaryの暗号化ストレージに保存されます。データベースはRailwayが提供するPostgreSQLを使用しています。ただし、完全なセキュリティを保証するものではありません。重要な情報の入力には十分ご注意ください。</p>
+            </div>
+        </div>
+
+        <div class="terms-section" id="s45">
+            <h3>第45条（運営者の権限）</h3>
+            <div class="article">
+                <p class="mb-2">運営者は以下の権限を有します。</p>
+                <ul class="mb-0">
+                    <li>本規約に違反すると判断したコンテンツを予告なく削除・非表示にすること</li>
+                    <li>本規約に違反したアカウントを停止または削除すること</li>
+                    <li>長期間ログインのないアカウントを削除すること</li>
+                    <li>システムメンテナンスを実施すること</li>
+                    <li>法執行機関の要請に応じて利用者情報を提供すること</li>
+                    <li>本サービスの内容を変更・改善すること</li>
+                </ul>
+                <p class="law-ref mb-0">参照：刑事訴訟法第197条</p>
+            </div>
+        </div>
+
+        <div class="terms-section" id="s46">
+            <h3>第46条（メンテナンス）</h3>
+            <div class="article">
+                <p class="mb-0">運営者は、システムの保守・改善のためメンテナンスを実施することがあります（MAINTENANCE_MODE）。メンテナンス中は本サービスの一部または全部が利用できなくなります。可能な限り事前にお知らせしますが、緊急の場合は予告なく実施することがあります。1時間ごとに自動的にシステムテスト（APScheduler）が実施されます。</p>
+            </div>
+        </div>
+
+        <div class="terms-section" id="s47">
+            <h3>第47条（免責事項）</h3>
+            <div class="article">
+                <div class="article-title">1. サービスの中断・停止</div>
+                <p class="mb-0">本サービスの中断・停止・遅延・データの消失・改ざんにより利用者に生じた損害について、運営者は故意または重大な過失がある場合を除き、一切の責任を負いません。</p>
             </div>
             <div class="article">
-                <div class="article-title">2. 著作権</div>
-                <p class="mb-0">投稿された画像は、利用者自身が撮影したものに限ります。他者の著作権を無断で投稿してはなりません。</p>
+                <div class="article-title">2. 利用者間のトラブル</div>
+                <p class="mb-0">利用者間または利用者と第三者との間で生じたトラブル（誹謗中傷・著作権侵害・プライバシー侵害等）について、運営者は一切関与せず、責任を負いません。ただし、プロバイダ責任制限法に基づく適切な対応は行います。</p>
             </div>
             <div class="article">
-                <div class="article-title">3. コンテンツ削除</div>
-                <p class="mb-0">運営者は、不適当と判断したコンテンツを予告なく削除・非表示にすることができます。</p>
+                <div class="article-title">3. 外部サービスの利用</div>
+                <p class="mb-0">本サービスはCloudinary・Leaflet/国土地理院・Bootstrap・jQuery等の外部サービスを利用しています。これらに起因する障害・データ消失について、運営者は責任を負いません。</p>
+            </div>
+            <div class="article">
+                <div class="article-title">4. 投稿情報の正確性</div>
+                <p class="mb-0">利用者が投稿した生物・植物等の情報の正確性について、運営者は保証しません。医療・学術目的での利用には専門家への確認をお勧めします。</p>
+            </div>
+        </div>
+
+        <div class="terms-section" id="s48">
+            <h3>第48条（サービスの変更・終了）</h3>
+            <div class="article">
+                <p class="mb-0">運営者は、利用者への事前通知なく本サービスの内容を変更・機能を追加・削除することができます。また、やむを得ない事情がある場合は本サービスを終了することがあります。サービス終了の際は、可能な限り事前にお知らせします。変更・終了によって利用者に生じた損害について、運営者は責任を負いません。</p>
+            </div>
+        </div>
+
+        <div class="terms-section" id="s49">
+            <h3>第49条（規約の変更）</h3>
+            <div class="article">
+                <p class="mb-0">運営者は、必要と判断した場合に本規約を変更できます。重要な変更がある場合は本サービス上でお知らせします。変更後も本サービスを継続して利用した場合、変更後の規約に同意したとみなされます。定期的に本ページをご確認ください。</p>
+                <p class="law-ref mb-0">参照：消費者契約法第10条、民法第548条の4</p>
+            </div>
+        </div>
+
+        <div class="terms-section" id="s50">
+            <h3>第50条（準拠法・管轄裁判所）</h3>
+            <div class="article">
+                <div class="article-title">1. 準拠法</div>
+                <p class="mb-0">本規約の解釈・適用は日本国法に準拠します。</p>
+            </div>
+            <div class="article">
+                <div class="article-title">2. 管轄裁判所</div>
+                <p class="mb-0">本規約に関して紛争が生じた場合は、運営者の所在地を管轄する日本の裁判所を第一審の専属的合意管轄裁判所とします。</p>
             </div>
         </div>
 
         <div class="terms-section">
-            <h3>第5条（アカウント管理）</h3>
-            <div class="article">
-                <div class="article-title">1. パスワード管理</div>
-                <p class="mb-0">利用者は、自己のパスワードを適切に管理する義務を負います。第三者に使用させたり、貸与・譲渡してはなりません。</p>
-            </div>
-            <div class="article">
-                <div class="article-title">2. アカウント停止</div>
-                <p class="mb-0">運営者は、利用者が本規約に違反した場合、予告なくアカウントを停止または削除することができます。</p>
-            </div>
-        </div>
-
-        <div class="terms-section">
-            <h3>第6条（免責事項）</h3>
-            <div class="article">
-                <p class="mb-0">運営者は、本サービスの中断・停止・データの消失による損害について、一切の責任を負いません。利用者間または利用者と第三者との間で生じたトラブルについても、運営者は一切関与せず、責任を負いません。</p>
-            </div>
-        </div>
-
-        <div class="terms-section">
-            <h3>第7条（サービスの変更・終了）</h3>
-            <div class="article">
-                <p class="mb-0">運営者は、利用者への事前通知なく本サービスの内容を変更・終了することができます。これによって利用者に生じた損害について、運営者は一切の責任を負いません。</p>
-            </div>
-        </div>
-
-        <div class="terms-section">
-            <h3>第8条（規約の変更）</h3>
-            <div class="article">
-                <p class="mb-0">運営者は、必要と判断した場合に、利用者への事前通知なく本規約を変更することができます。変更後の規約は、本サービス上に掲載された時点で効力を生じるものとします。</p>
-            </div>
-        </div>
-
-        <div class="terms-section">
-            <h3>お問い合わせ</h3>
-            <p>本規約についてのご質問、お疲れは、<a href="/feedback" style="color:#007bff; text-decoration:underline;">フィードバックページ</a>からお知らせください。</p>
+            <h3>お問い合わせ・フィードバック</h3>
+            <p>本規約・本サービスに関するご質問・ご意見・規約違反の通報は、<a href="/feedback" style="color:#ff6b6b; text-decoration:underline;">フィードバックページ</a>からお知らせください。</p>
+            <p class="mb-0">不正コンテンツ・著作権侵害・個人情報侵害については迅速に対応いたします。</p>
         </div>
 
         <div class="text-center mt-4 mb-4">
-            <a href="/privacy" class="btn btn-outline-primary">プライバシーポリシーを見る</a>
+            <a href="/privacy" class="btn btn-outline-danger me-2">🔐 プライバシーポリシーを見る</a>
+            <a href="/help" class="btn btn-outline-secondary">❓ ヘルプページへ</a>
         </div>
     </div>
 
+    <a href="#top" class="back-to-top" title="トップへ戻る">↑</a>
+
     <footer class="footer text-center">
         <div class="container">
-            <small>© {{ now().year }} 図鑑 — {{ verj }}</small>
+            <small>&copy; 2026 図鑑 — オンライン図鑑をみんなで作ろう</small>
         </div>
     </footer>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-<div id="maintenance_overlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(255,247,240,0.97); z-index:99999; align-items:center; justify-content:center; flex-direction:column;">
-    <div style="text-align:center; background:white; border-radius:2rem; padding:3rem; box-shadow:0 10px 40px rgba(0,0,0,0.1); max-width:400px;">
-        <div style="font-size:4rem; animation:spin 2s linear infinite; display:inline-block;">🔧</div>
-        <h2 style="color:#ff6b6b; margin-top:1rem;">メンテナンス中</h2>
-        <p style="color:#666;">ただいまシステムのメンテナンスを行っています。</p>
-        <div style="background:#fff3cd; border-radius:0.5rem; padding:0.5rem 1rem; font-size:0.85rem;">
-            <span id="maintenance_check_count">復旧確認中...</span>
+    <div id="maintenance_overlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(255,247,240,0.97); z-index:99999; align-items:center; justify-content:center; flex-direction:column;">
+        <div style="text-align:center; background:white; border-radius:2rem; padding:3rem; box-shadow:0 10px 40px rgba(0,0,0,0.1); max-width:400px;">
+            <div style="font-size:4rem; animation:spin 2s linear infinite; display:inline-block;">🔧</div>
+            <h2 style="color:#ff6b6b; margin-top:1rem;">メンテナンス中</h2>
+            <p style="color:#666;">ただいまシステムのメンテナンスを行っています。</p>
+            <div style="background:#fff3cd; border-radius:0.5rem; padding:0.5rem 1rem; font-size:0.85rem;">
+                <span id="maintenance_check_count">復旧確認中...</span>
+            </div>
         </div>
     </div>
-</div>
-<style>@keyframes spin { 0% { transform:rotate(0deg); } 100% { transform:rotate(360deg); } }</style>
-<script>
-(function() {
-    const IS_MAINTENANCE_PAGE = window.location.pathname.startsWith('/maintenance');
-    if (IS_MAINTENANCE_PAGE) return;
-    const overlay = document.getElementById('maintenance_overlay');
-    let isMaintenance = false; let checkCount = 0;
-    async function checkMaintenance() {
-        try {
-            const res = await fetch('/api/health', { cache: 'no-store' });
-            if (!res.ok) {
-                if (!isMaintenance) { isMaintenance = true; overlay.style.display = 'flex'; }
-                checkCount++;
-                document.getElementById('maintenance_check_count').textContent = `復旧確認中... (${checkCount}回目)`;
-            } else {
-                if (isMaintenance) { isMaintenance = false; overlay.style.display = 'none'; checkCount = 0; }
-            }
-        } catch(e) {}
-    }
-    setInterval(checkMaintenance, 300);
-})();
-</script>
+    <style>@keyframes spin { 0% { transform:rotate(0deg); } 100% { transform:rotate(360deg); } }</style>
+    <script>
+    (function() {
+        const IS_MAINTENANCE_PAGE = window.location.pathname.startsWith('/maintenance');
+        if (IS_MAINTENANCE_PAGE) return;
+        const overlay = document.getElementById('maintenance_overlay');
+        let isMaintenance = false; let checkCount = 0;
+        async function checkMaintenance() {
+            try {
+                const res = await fetch('/api/health', { cache: 'no-store' });
+                if (!res.ok) {
+                    if (!isMaintenance) { isMaintenance = true; overlay.style.display = 'flex'; }
+                    checkCount++;
+                    document.getElementById('maintenance_check_count').textContent = '復旧確認中... (' + checkCount + '回目)';
+                } else {
+                    if (isMaintenance) { isMaintenance = false; overlay.style.display = 'none'; checkCount = 0; }
+                }
+            } catch(e) {}
+        }
+        setInterval(checkMaintenance, 300);
+    })();
+    </script>
 </body>
 </html>
