@@ -3,20 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>プライバシーポリシー</title>
+    <title>プライバシーポリシー - 図鑑</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body { background: linear-gradient(135deg, #fff7f0 0%, #f0f9ff 100%); color: #333; min-height: 100vh; }
         .brand-color { color: #ff6b6b; }
         .footer { color: #666; padding: 1rem 0; }
-        .privacy-section { background: white; border-radius: 1.5rem; padding: 2rem; margin-bottom: 1.5rem; box-shadow: 0 5px 20px rgba(0,0,0,0.05); }
+        .privacy-section { background: white; border-radius: 1.5rem; padding: 2rem; margin-bottom: 1.5rem; box-shadow: 0 5px 20px rgba(0,0,0,0.05); scroll-margin-top: 80px; }
         .privacy-section h3 { color: #ff6b6b; border-bottom: 3px solid #ffd4d4; padding-bottom: 0.5rem; margin-bottom: 1.5rem; }
         .article { background: #fafafa; padding: 1rem 1.5rem; border-left: 4px solid #ff9a9e; border-radius: 0.5rem; margin-bottom: 1rem; }
         .article-title { font-weight: bold; color: #ff6b6b; margin-bottom: 0.5rem; }
+        .toc { background: white; border-radius: 1.5rem; padding: 2rem; margin-bottom: 1.5rem; box-shadow: 0 5px 20px rgba(0,0,0,0.05); }
+        .toc a { color: #ff6b6b; text-decoration: none; }
+        .toc a:hover { text-decoration: underline; }
+        .toc ol { margin-bottom: 0; columns: 2; }
+        @media (max-width: 768px) { .toc ol { columns: 1; } }
+        .important-box { background: #d1ecf1; border: 1px solid #17a2b8; border-radius: 0.75rem; padding: 1rem 1.5rem; margin-bottom: 1rem; }
+        .law-ref { font-size: 0.78rem; color: #999; margin-top: 0.3rem; font-style: italic; }
+        .data-table { width: 100%; border-collapse: collapse; margin-bottom: 1rem; font-size: 0.9rem; }
+        .data-table th, .data-table td { border: 1px solid #dee2e6; padding: 0.5rem 0.8rem; text-align: left; }
+        .data-table th { background: #f8d7da; color: #721c24; font-weight: bold; }
+        .data-table tr:nth-child(even) { background: #fafafa; }
+        .back-to-top { position: fixed; bottom: 2rem; right: 2rem; background: #ff6b6b; color: white; width: 3rem; height: 3rem; border-radius: 50%; display: flex; align-items: center; justify-content: center; text-decoration: none; box-shadow: 0 4px 15px rgba(0,0,0,0.2); z-index: 9998; }
+        .back-to-top:hover { background: #ff4757; color: white; }
     </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top">
         <div class="container">
             <a class="navbar-brand d-flex align-items-center" href="/">
                 <span class="fs-4 brand-color">📖 図鑑</span>
@@ -26,173 +39,397 @@
         </div>
     </nav>
 
-    <div class="container py-4">
-        <h2 class="brand-color text-center fw-bold mb-2">🔒 プライバシーポリシー</h2>
-        <p class="text-center text-muted mb-4">最終更新日：2026年4月</p>
+    <div class="container py-4" style="max-width: 880px;">
+        <h2 class="brand-color text-center fw-bold mb-2" id="top">🔒 プライバシーポリシー（全30条）</h2>
+        <p class="text-center text-muted mb-4">最終更新日：2026年4月　／　制定日：2025年1月</p>
+
+        <div class="important-box">
+            <strong>📘 このポリシーについて</strong><br>
+            本ポリシーは、オンライン図鑑（以下「本サービス」）における<strong>個人情報の取り扱い</strong>について詳しく定めるものです。利用規約と合わせてお読みください。本ポリシーは、利用規約とは異なる視点（プライバシー保護・データ管理）から、利用者の権利と運営者の義務を明らかにしています。
+        </div>
+
+        <div class="toc">
+            <h5 class="fw-bold mb-3">📋 目次（全30条）</h5>
+            <ol>
+                <li><a href="#p1">第1条（個人情報の定義）</a></li>
+                <li><a href="#p2">第2条（取得する情報の種類）</a></li>
+                <li><a href="#p3">第3条（情報取得の方法）</a></li>
+                <li><a href="#p4">第4条（Cookieとセッション）</a></li>
+                <li><a href="#p5">第5条（IPアドレスの取得）</a></li>
+                <li><a href="#p6">第6条（位置情報の取り扱い）</a></li>
+                <li><a href="#p7">第7条（画像データの取り扱い）</a></li>
+                <li><a href="#p8">第8条（パスワードの暗号化）</a></li>
+                <li><a href="#p9">第9条（情報の利用目的の明示）</a></li>
+                <li><a href="#p10">第10条（目的外利用の禁止）</a></li>
+                <li><a href="#p11">第11条（第三者提供の制限）</a></li>
+                <li><a href="#p12">第12条（業務委託先への提供）</a></li>
+                <li><a href="#p13">第13条（外部サービスとの連携）</a></li>
+                <li><a href="#p14">第14条（Cloudinaryの利用）</a></li>
+                <li><a href="#p15">第15条（データベースの管理）</a></li>
+                <li><a href="#p16">第16条（データの保管期間）</a></li>
+                <li><a href="#p17">第17条（データの削除方法）</a></li>
+                <li><a href="#p18">第18条（バックアップ）</a></li>
+                <li><a href="#p19">第19条（データ漏えい時の対応）</a></li>
+                <li><a href="#p20">第20条（情報開示請求権）</a></li>
+                <li><a href="#p21">第21条（情報訂正請求権）</a></li>
+                <li><a href="#p22">第22条（情報削除請求権）</a></li>
+                <li><a href="#p23">第23条（利用停止請求権）</a></li>
+                <li><a href="#p24">第24条（請求の手続き）</a></li>
+                <li><a href="#p25">第25条（子どものプライバシー）</a></li>
+                <li><a href="#p26">第26条（学校機能とプライバシー）</a></li>
+                <li><a href="#p27">第27条（公開設定の管理）</a></li>
+                <li><a href="#p28">第28条（プライバシー侵害の通報）</a></li>
+                <li><a href="#p29">第29条（ポリシーの変更通知）</a></li>
+                <li><a href="#p30">第30条（お問い合わせ窓口）</a></li>
+            </ol>
+        </div>
 
         <div class="privacy-section">
             <h3>はじめに</h3>
-            <p>オンライン図鑑（以下「本サービス」といいます）は、利用者のプライバシーを尊重し、個人情報の保護に努めます。本ポリシーは、本サービスにおける個人情報の取り扱いについて定めるものです。</p>
+            <p>オンライン図鑑（以下「本サービス」）は、利用者のプライバシーを最大限尊重し、個人情報の保護に努めます。本プライバシーポリシー（以下「本ポリシー」）は、利用者の個人情報をどのように取得・利用・保管・削除するかを明確に定めるものです。</p>
+            <p class="mb-0">本ポリシーは、個人情報の保護に関する法律（個人情報保護法）、特定電子メール法、電気通信事業法、その他関連法令を遵守して定められています。本ポリシーは利用規約とは別個の文書として、プライバシー保護に関する事項のみを扱います。</p>
         </div>
 
-        <div class="privacy-section">
-            <h3>第1条（収集する情報）</h3>
-            <p>本サービスでは、以下の情報を収集することがあります。</p>
+        <div class="privacy-section" id="p1">
+            <h3>第1条（個人情報の定義）</h3>
             <div class="article">
-                <div class="article-title">1. 登録情報</div>
-                <ul class="mb-0">
-                    <li>ユーザー名</li>
-                    <li>パスワード（ハッシュ化して保存）</li>
-                    <li>プロフィール画像</li>
-                </ul>
-            </div>
-            <div class="article">
-                <div class="article-title">2. 投稿情報</div>
-                <ul class="mb-0">
-                    <li>アップロードされた画像</li>
-                    <li>投稿内容（名前・場所・説明文など）</li>
-                    <li>位置情報（緯度・経度）</li>
-                    <li>コメント・いいね・閲覧履歴</li>
-                </ul>
-            </div>
-            <div class="article">
-                <div class="article-title">3. 利用情報</div>
-                <ul class="mb-0">
-                    <li>アクセス日時</li>
-                    <li>IPアドレス</li>
-                    <li>使用ブラウザ</li>
-                </ul>
+                <p class="mb-0">本ポリシーにおいて「個人情報」とは、個人情報保護法第2条第1項に定める「個人情報」を指します。具体的には、生存する個人に関する情報であって、氏名・ユーザー名・写真・位置情報など、特定の個人を識別できる情報、または他の情報と照合することで特定の個人を識別できる情報を意味します。</p>
+                <p class="law-ref mb-0">参照：個人情報の保護に関する法律第2条第1項</p>
             </div>
         </div>
 
-        <div class="privacy-section">
-            <h3>第2条（情報の利用目的）</h3>
-            <p>収集した情報は、以下の目的で利用します。</p>
+        <div class="privacy-section" id="p2">
+            <h3>第2条（取得する情報の種類）</h3>
             <div class="article">
+                <p class="mb-2">本サービスは、以下の情報を取得します。</p>
+                <table class="data-table">
+                    <tr><th>カテゴリ</th><th>具体的な内容</th></tr>
+                    <tr><td>アカウント情報</td><td>ユーザー名、パスワード（ハッシュ化）、ロール</td></tr>
+                    <tr><td>投稿データ</td><td>写真、植物・動物名、場所名、説明文</td></tr>
+                    <tr><td>位置情報</td><td>緯度（ido）、経度（keido）</td></tr>
+                    <tr><td>交流データ</td><td>いいね、コメント、フレンド関係</td></tr>
+                    <tr><td>タグ</td><td>付与されたタグ名</td></tr>
+                    <tr><td>通知データ</td><td>通知メッセージ、既読状態</td></tr>
+                    <tr><td>アクセスログ</td><td>アクセス日時、ページ、IPアドレス、ユーザーID</td></tr>
+                    <tr><td>学校データ</td><td>所属学校、クラス、課題提出データ</td></tr>
+                </table>
+            </div>
+        </div>
+
+        <div class="privacy-section" id="p3">
+            <h3>第3条（情報取得の方法）</h3>
+            <div class="article">
+                <p class="mb-2">本サービスは、以下の方法で情報を取得します。</p>
                 <ul class="mb-0">
-                    <li>本サービスの提供・運営</li>
-                    <li>利用者からのお問い合わせ対応</li>
-                    <li>サービスの改善・新機能の開発</li>
-                    <li>不正利用の防止</li>
-                    <li>統計情報の作成（個人を特定しない形式）</li>
+                    <li>登録時のフォーム入力</li>
+                    <li>投稿時のフォーム入力・ファイルアップロード</li>
+                    <li>地図上での位置選択（クリック操作）</li>
+                    <li>ブラウザから自動送信されるアクセスログ</li>
+                    <li>Cookieによるセッション情報</li>
                 </ul>
             </div>
         </div>
 
-        <div class="privacy-section">
-            <h3>第3条（第三者への提供）</h3>
+        <div class="privacy-section" id="p4">
+            <h3>第4条（Cookieとセッション）</h3>
             <div class="article">
-                <p>運営者は、以下の場合を除き、収集した個人情報を第三者に提供しません。</p>
+                <p class="mb-0">本サービスは、ログイン状態を維持するためにCookieおよびセッションを使用します。これらの情報は、利用者を識別し、ログイン状態を保持する目的のみに使用されます。Cookieはブラウザの設定で無効にできますが、無効にした場合は本サービスの一部機能が利用できなくなる場合があります。本サービスはトラッキング目的の第三者Cookie（広告等）は使用しません。</p>
+            </div>
+        </div>
+
+        <div class="privacy-section" id="p5">
+            <h3>第5条（IPアドレスの取得）</h3>
+            <div class="article">
+                <p class="mb-0">本サービスは、利用者のIPアドレスをアクセスログ（access_logテーブル）に記録します。IPアドレスは、不正アクセスの検知・スパム対策・統計処理のために使用されます。IPアドレスは個人情報ではない場合もありますが、本サービスでは個人情報と同等の扱いで保護します。</p>
+            </div>
+        </div>
+
+        <div class="privacy-section" id="p6">
+            <h3>第6条（位置情報の取り扱い）</h3>
+            <div class="article">
+                <p class="mb-0">本サービスでは、利用者が地図上で選択した場所の緯度・経度を投稿に紐付けて保存します。位置情報の登録は<strong>完全に任意</strong>です。登録された位置情報は他の利用者に公開される場合があります。自宅や学校など、個人を特定しうる場所の登録は、利用者ご自身の判断と責任で行ってください。位置情報を登録したくない場合は、地図上で選択しないか、別の場所を選択してください。</p>
+                <p class="law-ref mb-0">参照：個人情報保護法施行令第1条</p>
+            </div>
+        </div>
+
+        <div class="privacy-section" id="p7">
+            <h3>第7条（画像データの取り扱い）</h3>
+            <div class="article">
+                <p class="mb-0">利用者がアップロードした画像は、第14条に定めるCloudinaryのストレージサーバーに保存されます。画像のファイル名・URLはデータベースに保存されます。画像のExif情報（撮影日時・GPS情報・カメラ機種等）が含まれている場合、これらの情報も画像と共に保存される場合があります。プライバシー保護のため、画像のExif情報を削除してからアップロードすることを推奨します。</p>
+            </div>
+        </div>
+
+        <div class="privacy-section" id="p8">
+            <h3>第8条（パスワードの暗号化）</h3>
+            <div class="article">
+                <p class="mb-0">利用者のパスワードは、werkzeug.securityライブラリを用いて<strong>ハッシュ化（一方向暗号化）</strong>して保存されます。これにより、運営者であっても利用者のパスワードを知ることはできません。万が一データベースが漏洩した場合でも、パスワードが直接読み取られることはありません。ただし、推測されやすいパスワードは避けてください。</p>
+            </div>
+        </div>
+
+        <div class="privacy-section" id="p9">
+            <h3>第9条（情報の利用目的の明示）</h3>
+            <div class="article">
+                <p class="mb-2">取得した個人情報は、以下の目的に限り利用します。</p>
                 <ul class="mb-0">
-                    <li>利用者の同意がある場合</li>
-                    <li>法令に基づく場合</li>
+                    <li>本サービスの提供・機能の実現</li>
+                    <li>ログイン認証・セッション管理</li>
+                    <li>投稿コンテンツの保存・表示</li>
+                    <li>通知の送信</li>
+                    <li>不正利用の防止・調査</li>
+                    <li>サービスの改善・新機能開発</li>
+                    <li>統計データの作成（個人を識別しない形）</li>
+                    <li>法令に基づく対応</li>
+                </ul>
+                <p class="law-ref mb-0">参照：個人情報保護法第17条（利用目的の特定）</p>
+            </div>
+        </div>
+
+        <div class="privacy-section" id="p10">
+            <h3>第10条（目的外利用の禁止）</h3>
+            <div class="article">
+                <p class="mb-0">取得した個人情報は、第9条に定めた利用目的の達成に必要な範囲を超えて利用しません。利用目的を変更する場合は、利用者の同意を得るか、本ポリシーを改定して通知します。</p>
+                <p class="law-ref mb-0">参照：個人情報保護法第18条（利用目的による制限）</p>
+            </div>
+        </div>
+
+        <div class="privacy-section" id="p11">
+            <h3>第11条（第三者提供の制限）</h3>
+            <div class="article">
+                <p class="mb-2">運営者は、以下の場合を除き、利用者の個人情報を第三者に提供しません。</p>
+                <ul class="mb-0">
+                    <li>利用者本人の同意がある場合</li>
+                    <li>法令に基づく場合（裁判所・警察等からの正当な要請）</li>
                     <li>人の生命・身体・財産の保護のために必要な場合</li>
-                    <li>公衆衛生や児童の健全育成のために特に必要な場合</li>
+                    <li>公衆衛生・児童の健全な育成のために必要な場合</li>
+                    <li>国の機関への協力が必要な場合</li>
                 </ul>
+                <p class="law-ref mb-0">参照：個人情報保護法第27条（第三者提供の制限）</p>
             </div>
         </div>
 
-        <div class="privacy-section">
-            <h3>第4条（情報の公開範囲）</h3>
+        <div class="privacy-section" id="p12">
+            <h3>第12条（業務委託先への提供）</h3>
             <div class="article">
-                <div class="article-title">公開される情報</div>
-                <p>以下の情報は他の利用者から閲覧できます。</p>
+                <p class="mb-0">本サービスの運営にあたり、業務の一部を外部の事業者に委託することがあります（例：サーバー運用、画像保存等）。委託先には、個人情報を適切に取り扱うよう契約等で監督します。委託先の業者の故意・過失による情報漏えいについて、運営者は適切な注意を払いますが、完全な保証はできません。</p>
+            </div>
+        </div>
+
+        <div class="privacy-section" id="p13">
+            <h3>第13条（外部サービスとの連携）</h3>
+            <div class="article">
+                <p class="mb-2">本サービスは、以下の外部サービスを利用しています。各サービスの利用に伴い、それぞれのプライバシーポリシーが適用される場合があります。</p>
+                <table class="data-table">
+                    <tr><th>サービス</th><th>用途</th></tr>
+                    <tr><td>Railway</td><td>サーバーホスティング・PostgreSQLデータベース</td></tr>
+                    <tr><td>Cloudinary</td><td>画像ファイルの保存・配信</td></tr>
+                    <tr><td>国土地理院タイル</td><td>地図表示</td></tr>
+                    <tr><td>Leaflet.js</td><td>地図表示ライブラリ</td></tr>
+                    <tr><td>Bootstrap</td><td>UIフレームワーク（CDN経由）</td></tr>
+                    <tr><td>jQuery</td><td>JavaScriptライブラリ（CDN経由）</td></tr>
+                </table>
+            </div>
+        </div>
+
+        <div class="privacy-section" id="p14">
+            <h3>第14条（Cloudinaryの利用）</h3>
+            <div class="article">
+                <p class="mb-0">投稿画像はCloudinary（米国法人）のサーバーに保存されます。これは「外国にある第三者」への個人データ提供にあたります。Cloudinaryは独自のプライバシーポリシーに基づき画像を管理します。本サービスを利用することにより、画像がCloudinaryに保存されることに同意したものとみなされます。</p>
+                <p class="law-ref mb-0">参照：個人情報保護法第28条（外国にある第三者への提供の制限）</p>
+            </div>
+        </div>
+
+        <div class="privacy-section" id="p15">
+            <h3>第15条（データベースの管理）</h3>
+            <div class="article">
+                <p class="mb-0">本サービスのデータは、本番環境ではPostgreSQL（Railway提供）、ローカル環境ではSQLiteに保存されます。データベースへのアクセスは運営者のみに制限されています。データベースサーバーは、各サービスプロバイダーのセキュリティ基準に従って保護されています。</p>
+            </div>
+        </div>
+
+        <div class="privacy-section" id="p16">
+            <h3>第16条（データの保管期間）</h3>
+            <div class="article">
+                <p class="mb-2">取得した情報の保管期間は以下のとおりです。</p>
+                <table class="data-table">
+                    <tr><th>データ種別</th><th>保管期間</th></tr>
+                    <tr><td>アカウント情報</td><td>退会まで</td></tr>
+                    <tr><td>投稿コンテンツ</td><td>削除されるまで（退会後も残ることがあります）</td></tr>
+                    <tr><td>アクセスログ</td><td>原則6ヶ月以内</td></tr>
+                    <tr><td>通知データ</td><td>原則3ヶ月以内</td></tr>
+                    <tr><td>セッション情報</td><td>ログアウトまで、または一定期間後に自動削除</td></tr>
+                </table>
+                <p class="mb-0 mt-2">法令に基づく保存義務がある場合は、その期間に従います。</p>
+            </div>
+        </div>
+
+        <div class="privacy-section" id="p17">
+            <h3>第17条（データの削除方法）</h3>
+            <div class="article">
+                <p class="mb-0">不要になったデータは、データベースから物理的に削除します。一部データはバックアップに残る場合がありますが、復元には使用しません。利用者が削除を希望する場合は、第22条の手続きに従ってください。</p>
+            </div>
+        </div>
+
+        <div class="privacy-section" id="p18">
+            <h3>第18条（バックアップ）</h3>
+            <div class="article">
+                <p class="mb-0">運営者は、データの消失・障害に備えてバックアップを取得することがあります。バックアップデータも本ポリシーの対象であり、適切に管理されます。バックアップは一定期間後に削除されます。</p>
+            </div>
+        </div>
+
+        <div class="privacy-section" id="p19">
+            <h3>第19条（データ漏えい時の対応）</h3>
+            <div class="article">
+                <p class="mb-2">万が一、個人情報の漏えい・滅失・毀損が発生した場合、運営者は以下の対応を取ります。</p>
                 <ul class="mb-0">
-                    <li>ユーザー名</li>
-                    <li>プロフィール画像</li>
-                    <li>投稿したコンテンツ（画像・名前・場所・説明文等）</li>
-                    <li>いいね・コメント</li>
+                    <li>速やかに事実関係の調査を行う</li>
+                    <li>影響を受ける利用者に通知する</li>
+                    <li>個人情報保護委員会に報告する（重大な漏えいの場合）</li>
+                    <li>再発防止策を講じる</li>
+                </ul>
+                <p class="law-ref mb-0">参照：個人情報保護法第26条（漏えい等の報告）</p>
+            </div>
+        </div>
+
+        <div class="privacy-section" id="p20">
+            <h3>第20条（情報開示請求権）</h3>
+            <div class="article">
+                <p class="mb-0">利用者は、自己に関する個人情報について、運営者に対して開示を請求することができます。開示請求は第24条の手続きに従って行ってください。本人確認の上、合理的な期間内に開示します。法令に基づき開示できない場合があります。</p>
+                <p class="law-ref mb-0">参照：個人情報保護法第33条（開示請求権）</p>
+            </div>
+        </div>
+
+        <div class="privacy-section" id="p21">
+            <h3>第21条（情報訂正請求権）</h3>
+            <div class="article">
+                <p class="mb-0">利用者は、自己に関する個人情報の内容が事実と異なる場合、運営者に対して訂正・追加・削除を請求することができます。請求があった場合、合理的な期間内に必要な調査を行い、対応します。</p>
+                <p class="law-ref mb-0">参照：個人情報保護法第34条（訂正等請求権）</p>
+            </div>
+        </div>
+
+        <div class="privacy-section" id="p22">
+            <h3>第22条（情報削除請求権）</h3>
+            <div class="article">
+                <p class="mb-0">利用者は、自己に関する個人情報の削除を請求することができます。投稿コンテンツについては利用者自身でも削除できます。アカウント全体の削除（退会）を希望する場合は、運営者に連絡してください。削除されたデータは原則として復元できません。</p>
+            </div>
+        </div>
+
+        <div class="privacy-section" id="p23">
+            <h3>第23条（利用停止請求権）</h3>
+            <div class="article">
+                <p class="mb-0">利用者は、自己に関する個人情報の利用停止を請求することができます。請求が法令に基づき正当である場合、合理的な期間内に対応します。利用停止により本サービスの一部または全部が利用できなくなる場合があります。</p>
+                <p class="law-ref mb-0">参照：個人情報保護法第35条（利用停止等請求権）</p>
+            </div>
+        </div>
+
+        <div class="privacy-section" id="p24">
+            <h3>第24条（請求の手続き）</h3>
+            <div class="article">
+                <p class="mb-2">第20〜23条の請求は、以下の手続きで行ってください。</p>
+                <ol class="mb-0">
+                    <li><a href="/feedback" style="color:#ff6b6b;">フィードバックページ</a>から請求内容を送信</li>
+                    <li>運営者が本人確認を行います</li>
+                    <li>本人確認が完了次第、合理的な期間内に対応します</li>
+                </ol>
+                <p class="mb-0 mt-2">なりすまし防止のため、本人確認に必要な情報の提示を求めることがあります。</p>
+            </div>
+        </div>
+
+        <div class="privacy-section" id="p25">
+            <h3>第25条（子どものプライバシー）</h3>
+            <div class="article">
+                <p class="mb-0">本サービスは小学生以上を対象としていますが、未成年者（特に13歳未満の子ども）の個人情報については特別な配慮を行います。13歳未満の子どもの利用には、保護者の同意が必要です。子どもが個人情報を入力する際は、自宅住所・本名・電話番号・通学路等を入力しないよう、保護者・教師の指導をお願いします。</p>
+            </div>
+        </div>
+
+        <div class="privacy-section" id="p26">
+            <h3>第26条（学校機能とプライバシー）</h3>
+            <div class="article">
+                <p class="mb-2">学校機能の利用において、特に以下のプライバシー保護措置を講じます。</p>
+                <ul class="mb-0">
+                    <li>生徒の投稿は所属学校・クラス内のみで共有</li>
+                    <li>学校外の利用者には生徒情報が公開されない</li>
+                    <li>クラスチャット・課題チャットは関係者のみがアクセス可能</li>
+                    <li>学校管理者・教師は必要最小限の情報のみアクセス</li>
+                    <li>学校が本サービスの利用を停止した場合、関連データは適切に処理</li>
                 </ul>
             </div>
+        </div>
+
+        <div class="privacy-section" id="p27">
+            <h3>第27条（公開設定の管理）</h3>
             <div class="article">
-                <div class="article-title">公開されない情報</div>
-                <p class="mb-0">パスワード・IPアドレス・個人を特定する情報などは他の利用者には公開されません。</p>
+                <p class="mb-0">投稿には公開設定があります。<code>is_hidden</code>フラグにより非公開設定が可能です。利用者は自分の投稿の公開範囲を確認・変更できます。学校アカウントの投稿は自動的に学校内限定公開となります。プロフィール情報の一部は他の利用者に表示される場合があります。</p>
             </div>
         </div>
 
-        <div class="privacy-section">
-            <h3>第5条（データの保管）</h3>
+        <div class="privacy-section" id="p28">
+            <h3>第28条（プライバシー侵害の通報）</h3>
             <div class="article">
-                <p class="mb-0">収集した個人情報は、適切なセキュリティ対策を施したサーバー上で保管します。画像はCloudinary、データベースはPostgreSQLを使用しています。</p>
+                <p class="mb-0">他の利用者によるプライバシー侵害（無断で個人情報を投稿される、ストーキング被害等）があった場合は、<a href="/feedback" style="color:#ff6b6b;">フィードバックページ</a>から速やかに通報してください。運営者は事実関係を調査し、必要な対応（コンテンツ削除・アカウント停止等）を行います。緊急性が高い場合は、警察等の関係機関への相談も検討してください。</p>
+                <p class="law-ref mb-0">参照：プロバイダ責任制限法（送信防止措置等）</p>
             </div>
         </div>
 
-        <div class="privacy-section">
-            <h3>第6条（Cookieの使用）</h3>
+        <div class="privacy-section" id="p29">
+            <h3>第29条（ポリシーの変更通知）</h3>
             <div class="article">
-                <p class="mb-0">本サービスでは、ログイン状態の維持のためにCookie（セッション情報）を使用しています。ブラウザの設定でCookieを無効にすると、本サービスの一部機能が使用できなくなる場合があります。</p>
+                <p class="mb-0">本ポリシーは法令の変更・サービスの拡充等により改定されることがあります。重要な変更を行う場合、本サービス上でお知らせします。改定後も本サービスを継続して利用した場合、改定後のポリシーに同意したものとみなされます。最新のポリシーは本ページで常に確認できます。</p>
             </div>
         </div>
 
-        <div class="privacy-section">
-            <h3>第7条（アカウントの削除）</h3>
+        <div class="privacy-section" id="p30">
+            <h3>第30条（お問い合わせ窓口）</h3>
             <div class="article">
-                <p class="mb-0">利用者がアカウントの削除を希望する場合は、<a href="/feedback" style="color:#007bff; text-decoration:underline;">フィードバックページ</a>よりお知らせください。削除依頼を受け付けた後、合理的な期間内に個人情報を削除いたします。</p>
+                <p class="mb-0">本ポリシー・個人情報の取り扱いに関するご質問・ご請求・苦情は、<a href="/feedback" style="color:#ff6b6b; text-decoration:underline;">フィードバックページ</a>からお寄せください。運営者は誠実に対応します。個人情報保護に関する苦情の相談は、個人情報保護委員会（電話：03-6457-9849）にも申し出ることができます。</p>
+                <p class="law-ref mb-0">参照：個人情報保護法第40条（苦情処理）</p>
             </div>
-        </div>
-
-        <div class="privacy-section">
-            <h3>第8条（未成年者の利用）</h3>
-            <div class="article">
-                <p class="mb-0">未成年者が本サービスを利用する場合、保護者の同意を得た上でご利用ください。保護者の方は、お子様の利用状況を適切に確認・管理してください。</p>
-            </div>
-        </div>
-
-        <div class="privacy-section">
-            <h3>第9条（ポリシーの変更）</h3>
-            <div class="article">
-                <p class="mb-0">本ポリシーは、必要に応じて変更することがあります。変更後のポリシーは、本サービス上に掲載された時点で効力を生じます。</p>
-            </div>
-        </div>
-
-        <div class="privacy-section">
-            <h3>お問い合わせ</h3>
-            <p>本ポリシーについてのご質問は、<a href="/feedback" style="color:#007bff; text-decoration:underline;">フィードバックページ</a>からご連絡ください。</p>
         </div>
 
         <div class="text-center mt-4 mb-4">
-            <a href="/terms" class="btn btn-outline-primary">利用規約を見る</a>
+            <a href="/terms" class="btn btn-outline-danger me-2">📄 利用規約を見る</a>
+            <a href="/help" class="btn btn-outline-secondary">❓ ヘルプページへ</a>
         </div>
     </div>
 
+    <a href="#top" class="back-to-top" title="トップへ戻る">↑</a>
+
     <footer class="footer text-center">
         <div class="container">
-            <small>© {{ now().year }} 図鑑 — {{ verj }}</small>
+            <small>&copy; 2026 図鑑 — オンライン図鑑をみんなで作ろう</small>
         </div>
     </footer>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-<div id="maintenance_overlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(255,247,240,0.97); z-index:99999; align-items:center; justify-content:center; flex-direction:column;">
-    <div style="text-align:center; background:white; border-radius:2rem; padding:3rem; box-shadow:0 10px 40px rgba(0,0,0,0.1); max-width:400px;">
-        <div style="font-size:4rem; animation:spin 2s linear infinite; display:inline-block;">🔧</div>
-        <h2 style="color:#ff6b6b; margin-top:1rem;">メンテナンス中</h2>
-        <p style="color:#666;">ただいまシステムのメンテナンスを行っています。</p>
-        <div style="background:#fff3cd; border-radius:0.5rem; padding:0.5rem 1rem; font-size:0.85rem;">
-            <span id="maintenance_check_count">復旧確認中...</span>
+    <div id="maintenance_overlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(255,247,240,0.97); z-index:99999; align-items:center; justify-content:center; flex-direction:column;">
+        <div style="text-align:center; background:white; border-radius:2rem; padding:3rem; box-shadow:0 10px 40px rgba(0,0,0,0.1); max-width:400px;">
+            <div style="font-size:4rem; animation:spin 2s linear infinite; display:inline-block;">🔧</div>
+            <h2 style="color:#ff6b6b; margin-top:1rem;">メンテナンス中</h2>
+            <p style="color:#666;">ただいまシステムのメンテナンスを行っています。</p>
+            <div style="background:#fff3cd; border-radius:0.5rem; padding:0.5rem 1rem; font-size:0.85rem;">
+                <span id="maintenance_check_count">復旧確認中...</span>
+            </div>
         </div>
     </div>
-</div>
-<style>@keyframes spin { 0% { transform:rotate(0deg); } 100% { transform:rotate(360deg); } }</style>
-<script>
-(function() {
-    const IS_MAINTENANCE_PAGE = window.location.pathname.startsWith('/maintenance');
-    if (IS_MAINTENANCE_PAGE) return;
-    const overlay = document.getElementById('maintenance_overlay');
-    let isMaintenance = false; let checkCount = 0;
-    async function checkMaintenance() {
-        try {
-            const res = await fetch('/api/health', { cache: 'no-store' });
-            if (!res.ok) {
-                if (!isMaintenance) { isMaintenance = true; overlay.style.display = 'flex'; }
-                checkCount++;
-                document.getElementById('maintenance_check_count').textContent = `復旧確認中... (${checkCount}回目)`;
-            } else {
-                if (isMaintenance) { isMaintenance = false; overlay.style.display = 'none'; checkCount = 0; }
-            }
-        } catch(e) {}
-    }
-    setInterval(checkMaintenance, 300);
-})();
-</script>
+    <style>@keyframes spin { 0% { transform:rotate(0deg); } 100% { transform:rotate(360deg); } }</style>
+    <script>
+    (function() {
+        const IS_MAINTENANCE_PAGE = window.location.pathname.startsWith('/maintenance');
+        if (IS_MAINTENANCE_PAGE) return;
+        const overlay = document.getElementById('maintenance_overlay');
+        let isMaintenance = false; let checkCount = 0;
+        async function checkMaintenance() {
+            try {
+                const res = await fetch('/api/health', { cache: 'no-store' });
+                if (!res.ok) {
+                    if (!isMaintenance) { isMaintenance = true; overlay.style.display = 'flex'; }
+                    checkCount++;
+                    document.getElementById('maintenance_check_count').textContent = '復旧確認中... (' + checkCount + '回目)';
+                } else {
+                    if (isMaintenance) { isMaintenance = false; overlay.style.display = 'none'; checkCount = 0; }
+                }
+            } catch(e) {}
+        }
+        setInterval(checkMaintenance, 300);
+    })();
+    </script>
 </body>
 </html>
