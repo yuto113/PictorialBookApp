@@ -1360,6 +1360,43 @@ def notification_log():
     from datetime import timedelta
     return render_template('notification_log.html', pagination=pagination, timedelta=timedelta)
 
+@app.route('/api/notification/<int:notif_id>')
+def notification_detail_api(notif_id):
+    user_id = session.get('user_id')
+    if not user_id:
+        return {'error': 'ログインが必要です'}, 401
+    notif = Notification.query.get(notif_id)
+    if not notif or notif.user_id != user_id:
+        return {'error': '通知が見つかりません'}, 404
+    from datetime import timedelta
+    jst_time = (notif.created_at.replace(tzinfo=None) + timedelta(hours=9)).strftime('%Y/%m/%d %H:%M')
+    result = {
+        'id': notif.id,
+        'message': notif.message,
+        'link': notif.link,
+        'created_at': jst_time,
+        'related_date': None
+    }
+    if notif.link and notif.link.startswith('/date/'):
+        try:
+            date_id = int(notif.link.split('/')[-1])
+            date_obj = Date.query.get(date_id)
+            if date_obj:
+                poster = User.query.get(date_obj.user_id)
+                result['related_date'] = {
+                    'id': date_obj.id,
+                    'name': date_obj.name or '(名前なし)',
+                    'place': date_obj.place or '場所不明',
+                    'subject': date_obj.subject or '',
+                    'imagepass': date_obj.imagepass or '',
+                    'goodpoint': date_obj.goodpoint or 0,
+                    'knowledge': date_obj.knowledge or '',
+                    'poster_name': poster.name if poster else '不明'
+                }
+        except Exception:
+            pass
+    return result
+
 @app.route('/like/<int:id>', methods=['GET','POST'])
 def like(id):
     user_id = session.get('user_id')
