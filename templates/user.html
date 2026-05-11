@@ -499,6 +499,49 @@
         loadNotifications();
         setInterval(loadNotifications, 30000);
     </script>
+
+    <!-- ===== 5/12限定お知らせモーダル ===== -->
+    <div class="modal fade" id="maintenanceNotice" tabindex="-1" data-bs-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow-lg" style="border-radius:1.2rem;overflow:hidden;">
+                <div class="modal-header border-0" style="background:linear-gradient(135deg,#ff6b6b,#ff8e53);color:white;">
+                    <h5 class="modal-title fw-bold">⚠️ 大切なお知らせ</h5>
+                </div>
+                <div class="modal-body p-4">
+                    <p class="mb-3">いつもオンライン図鑑をご利用いただき、ありがとうございます。</p>
+                    <div class="alert alert-warning rounded-3">
+                        <strong>📢 現在のデータについて</strong><br>
+                        本日より、<strong>新規登録・画像のアップロード・いいね・コメントなどのデータが消える可能性があります。</strong>大切なデータは手元に保存しておいてください。
+                    </div>
+                    <div class="alert alert-info rounded-3 mb-0">
+                        <strong>🚚 サイト移転のお知らせ</strong><br>
+                        オンライン図鑑は現在、<strong>より安定したサーバーへの移転作業中</strong>です。移転完了後も引き続きご利用いただけます。ご不便をおかけして申し訳ございません。
+                    </div>
+                </div>
+                <div class="modal-footer border-0 pt-0">
+                    <button type="button" class="btn btn-danger w-100 fw-bold" onclick="closeNotice()">
+                        了解しました
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+    // 今日(2026/05/12)だけ表示、1回閉じたら再表示しない
+    function closeNotice() {
+        localStorage.setItem('notice_shown_20260512', '1');
+        bootstrap.Modal.getInstance(document.getElementById('maintenanceNotice')).hide();
+    }
+    (function() {
+        const today = new Date();
+        const isToday = today.getFullYear() === 2026 && today.getMonth() === 4 && today.getDate() === 12;
+        const alreadyShown = localStorage.getItem('notice_shown_20260512');
+        if (isToday && !alreadyShown) {
+            const modal = new bootstrap.Modal(document.getElementById('maintenanceNotice'));
+            modal.show();
+        }
+    })();
+    </script>
 </body>
 
 </html>
